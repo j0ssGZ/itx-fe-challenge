@@ -1,6 +1,6 @@
 # Decision register, open questions, and risks
 
-Status: M01 verification, 2026-11-09. Approved design decisions remain closed; B-01 is accepted as an open integration risk, not resolved. M00 is complete; M02/application work remains unauthorized. R-IDs and dated observations are in [requirements.md](requirements.md); architecture and milestones are in [design.md](design.md) and [tasks.md](tasks.md). Fresh evidence is retained [here](../evidence/m01/2026-11-09/README.md).
+Status: M02 shell/tooling completed under explicit authorization. Approved design decisions remain closed; B-01 stays accepted and open. M00/M01 history and [dated API evidence](../evidence/m01/2026-11-09/README.md) are preserved. M03 onward remain unauthorized. R-IDs are in [requirements.md](requirements.md); architecture/milestones in [design.md](design.md) and [tasks.md](tasks.md).
 
 ## Historical Phase 1.1 review and subsequent checkpoints
 
@@ -64,25 +64,25 @@ The bullets above describe **historical Phase 1.1**, not the present repository 
 
 ### Q-07 — Responsive layout, frontend paths, and hosting
 
-- **Status:** nonblocking architectural defaults proposed for the overall implementation approval; not unresolved product requirements.
+- **Status:** the two routes/mobile shell and unknown-route default are implemented in M02; product layouts remain for M04/M05, not unresolved new requirements.
 - **Source:** A pp.3–4 requires adaptive list columns, at most four cards per row, and a two-column detail reference; mobile stacking, breakpoints, frontend paths, and unknown-route policy are not prescribed.
-- **Default:** preserve desktop hierarchy, stack PDP image/description/actions on narrow screens, and use one-to-four list columns. BrowserRouter with `/` and `/products/:id`; unknown-detail errors stay within PDP; unmatched frontend routes replace-navigate to PLP. Do not assume the API's unknown-ID error is a 404.
+- **Default:** preserve desktop hierarchy, stack future PDP image/description/actions on narrow screens, and use one-to-four list columns later. M02 uses BrowserRouter with `/` and `/products/:id`; unmatched paths replace-navigate to PLP with a Spanish not-found notice. This reconciles the requested simple 404 fallback with the approved two-view design. Real product errors/layouts are not implemented, and the API unknown-ID error is not assumed to be 404.
 - **Later verification:** eventual hosting must support SPA deep-link rewrites. Choose HashRouter only if a real hosting constraint requires it. Hosting is not a reason to introduce SSR or another business page.
 - **Gate:** no separate clarification is needed to plan local code; actual host compatibility is checked before delivery. Related: R-01, R-06, R-11, R-12, R-25.
 
 ### Q-08 — Script names and dependency choices
 
-- **Status:** nonblocking engineering defaults proposed; literal uppercase script keys are not established by A's START/BUILD/TEST/LINT operation labels.
+- **Status:** conventional scripts and compatible pinned tooling selected/verified in M02. Literal uppercase script keys are not established by A's operation labels.
 - **Default:** lowercase `start`, `build`, `test`, `lint`, with a finite `vitest run` for `test`; optional watch/E2E/preview scripts. Use the preferred React/Vite/JavaScript/Router/CSS Modules/Vitest/RTL/Playwright/ESLint stack, npm, one lockfile, and a compatible Node LTS chosen during setup.
 - **Boundary:** no exact version, arbitrary coverage target, CI vendor, formatter, state library, or API/schema package is mandated by the PDF. Add uppercase aliases only if a real evaluator requirement emerges.
-- **Gate:** overall implementation approval, not an additional question about routine defaults. Related: R-02, R-22, R-27.
+- **Verified choice/limit:** Node 24.19.0/npm 11.17.0; exact direct dependencies and one lockfile are committed. Lint, 3 unit/integration tests, build and 2 Chromium smokes passed. ESLint 9.39.5 is deprecated upstream but satisfies stable jsx-a11y 6.10.2's peer range (which excludes ESLint 10); this maintenance limit is documented, with no forced peers or new architecture. M02 `npm audit` reported zero vulnerabilities, not a permanent guarantee. Related: R-02, R-22, R-27.
 
 ### Q-09 — Repository destination and first commit
 
-- **Status:** initial local repository/README completed by M00 in `e08a674`. Remote destination/visibility is a deferred delivery choice, not an M02 blocker.
+- **Status:** M00 repository/README in `e08a674`; M01 in `8a0f325`. M02 verified existing `origin` is the public `j0ssGZ/itx-fe-challenge` repository and remote main already contained M00/M01 before changes. Normal push of verified M02 is explicitly authorized; no remote was created/replaced.
 - **Source:** A p.2 requests an open-code repository and prefers a README in the first commit. That preference is satisfied locally; no remote/publication is authorized by M01. The PDF is ignored and no redistribution permission has been established.
-- **Plan:** preserve progressive history, including this focused M01 commit, without creating another initial commit or publishing the source PDF. Decide host/owner/visibility before any later authorized publication.
-- **Gate:** explicit M02 approval for tooling; separate authorization before remote publication/PR. Never merge or deploy automatically. Related: R-23, R-24, R-28.
+- **Plan:** preserve progressive conventional history; from M02 follow implement/test/lint/build/review/commit/push/verify/STOP for each approved milestone. PDF stays excluded and no force-push is permitted.
+- **Gate:** M03 needs explicit approval. PR/merge/deploy are not part of M02; preserve the one-check CI stop rule. Related: R-23, R-24, R-28.
 
 ## B-01 — Unresolved direct cross-origin cumulative-cart integration
 
@@ -120,4 +120,4 @@ Keep API/persistence boundaries because the required TTL and response-authoritat
 - Compare desktop structure directly with both wireframes, then check narrow screens, long content, zoom, focus, and image failure. Mocked tests cannot resolve B-01 or prove production deep-link/session behavior.
 - Record progressive commits only after implementation authorization. After a later push/PR update, check CI once; if pending/running, report and stop until the user returns. No polling/watching/waiting agents, automatic merge, or automatic deployment.
 
-M01 has recorded current evidence, preserved historical observations and retained B-01 as an accepted open risk. The exact next gate is explicit **M02** approval; do not ask again about already accepted risk or approved product decisions just to configure tools. Final cumulative integration, unverified currency/units, unsampled schema/error variants, session lifetime and real application behavior remain limitations, not grounds to fabricate a contract or expand architecture.
+M02 has verified the shell/tools while preserving M01 evidence and B-01 as accepted/open; it makes no API calls and establishes no new integration facts. The next gate is explicit **M03** approval. Final cumulative integration, unverified currency/units, unsampled schema/error variants and session lifetime remain limitations, not grounds to fabricate a contract or expand architecture. Development-tool maintenance limits are recorded in Q-08; no product decision was reopened.

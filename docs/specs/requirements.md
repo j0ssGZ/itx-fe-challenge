@@ -1,6 +1,6 @@
 # Requirements specification
 
-Status: Phase 1.1 approved decisions preserved; M00 completed and M01 contract verification performed on 2026-11-09. Only M01 is authorized in this increment. M02 and application implementation remain pending explicit approval.
+Status: approved decisions preserved; M00/M01 complete and M02 shell/tooling implemented and verified under explicit authorization. Product/API/cache/cart implementation remains future work. M03 requires separate approval. Historical API evidence is unchanged.
 
 ## Sources and interpretation
 
@@ -10,6 +10,7 @@ Status: Phase 1.1 approved decisions preserved; M00 completed and M01 contract v
 - **W**: the user's supplied AGENTS.md instructions governing CI, approval gates, merges, and deployments.
 - **O**: Phase 1's list GET timed out after 30 seconds. Phase 1.1 probes on 2026-11-06, 10:57–11:02 UTC, succeeded for the list, four real product details, and valid cart POSTs. An unknown-ID GET and cart OPTIONS request were also inspected. A separate installed-Chrome diagnostic checked actual cross-origin fetch behavior. Requests were bounded; there were no automatic POST retries. Detailed evidence and limits are recorded below. No cookie values are included in these specs.
 - **M**: [M01 evidence, 2026-11-09](../evidence/m01/2026-11-09/README.md), with versioned [request metadata](../evidence/m01/2026-11-09/verification.json) and [response snapshots](../evidence/m01/2026-11-09/responses.json). Fresh curl and Chrome observations are separate from O. M includes exactly one cart POST; same-session cart accumulation was not replayed. B-01 remains an accepted open integration risk.
+- **S**: the user's M02 authorization: install/configure the approved stack, implement only shell/placeholders, unit/browser smoke checks, and a focused commit plus normal push to existing origin. Its permanent workflow is recorded in README/tasks; the one-check CI stop rule W still applies. The requested 404 fallback follows the approved unknown-route policy: replace-navigation to PLP with a notice, not a third business view.
 
 Evidence labels: **explicit** means stated in the assignment or user instructions; **approved decision** means agreed in D; **observed** means demonstrated in O, not guaranteed by the PDF; **preference** means encouraged rather than mandatory; **proposal** means an architectural recommendation; **unknown** means not established. Approved design decisions do not become quoted PDF requirements.
 
@@ -125,7 +126,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 22. **R-22 — Development, production, test, and lint scripts**
     - Source/classification: A p.2, START/BUILD/TEST/LINT; explicit tooling requirement. Priority: P0.
     - Acceptance: project exposes scripts for development mode, production compilation, running tests, and checking code. Proposal: conventional names `start`, `build`, `test`, `lint`; capitalization interpretation is Q-08. No framework, coverage percentage, E2E suite, or CI provider is prescribed by the PDF.
-    - Verification: execute the documented commands after implementation; `test` must have a finite CI-friendly mode. Milestones: M02, M08.
+    - Verification: M02 actually passed `npm run lint`, finite `npm test` (3 RTL integration tests), `npm run build` and `npm run test:e2e` (2 Chromium viewport smokes). These verify only shell/tooling; M08 must still check the final application. Milestones: M02, M08.
 
 23. **R-23 — Repository and progressive history**
     - Source/classification: A p.2; explicit submission requirement and stated expectation of incremental milestones. Priority: P0.
@@ -134,7 +135,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 24. **R-24 — Execution README**
     - Source/classification: A p.2; README and execution explanation are explicit; inclusion in the first commit is a preference. Priority: P0 for README, P1 for first-commit placement.
-    - Acceptance: README explains prerequisites, setup, execution, and relevant notes; claims reflect actual implementation and verification. M00's first commit includes the specs and initial README before scaffolding. In M01 the README records contract-verification results and unavailable development commands; executable setup instructions remain conditional on M02 tooling.
+    - Acceptance: README explains prerequisites, setup, execution, and relevant notes; claims reflect actual implementation and verification. M00 included the first README; M01 recorded contracts; M02 documents the actual runtime, lockfile installation, browser setup, available scripts and shell-check results. Product functionality is still explicitly pending.
     - Verification: clean-checkout instructions checked in M08. Milestones: M00, M02, M08.
 
 25. **R-25 — Visual structure and attention to detail**
@@ -154,7 +155,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 28. **R-28 — Phase and CI approval gates**
     - Source/classification: U and W; explicit process constraints. Priority: P0.
-    - Acceptance: Phases 1/1.1 were specification/endpoint review only; M00 initialized local Git and the README. This authorized M01 increment verifies contracts, retains documentary response samples, updates evidence/status, and creates one local commit. It does not authorize application code, dependency installation, Vite setup, M02, a remote, push, or PR. Later, after a push or PR update, check CI once; if pending/running, report and stop, asking the user to return when CI completes/fails. No polling, watch commands, waiting agents, automatic merging, or automatic deployment. Preserve existing security/approval gates.
+    - Acceptance: honor each milestone's explicit scope. M02 authorizes shell/tooling and a verified normal push to existing `j0ssGZ/itx-fe-challenge` origin, preserving M00/M01 ancestry. From M02: implement -> test -> lint -> build -> review diff -> commit -> push -> verify -> STOP. No force-push, secrets/local environments/PDF in commits, failing/unverified pushes, PR, automatic merge/deploy, or next milestone without approval. After each push/PR update, inspect CI once; if pending/running, report and immediately stop, asking the user to return on completion/failure. No polling/watch/waiting agents. Preserve all security/approval gates.
     - Verification: working-tree/file inventory in Phase 1; workflow review at subsequent checkpoints. Milestones: M00–M08.
 
 29. **R-29 — Spanish interface**
@@ -267,7 +268,7 @@ Source M contains timestamps, methods, paths, timeout budgets, selected headers,
 - Actual Chrome GET with credentials omitted returned HTTP 200; GET with `include` failed without a JavaScript-readable HTTP status. Exactly one browser JSON POST using a freshly verified string ID and numeric option codes returned HTTP 200 and `{"count":1}`. No POST retry or fresh same-session accumulation test occurred; the historical returned `2` remains O only. Browser virtual-time readings are not real API-latency measurements.
 - B-01 remains **open and accepted as an integration risk** for subsequent local tooling after explicit approval. It is not resolved by a valid independent POST, persisted client count, curl cookie reuse, or a mocked accumulated response. No proxy, credential change, client session substitute, or local increment was introduced.
 
-The versioned snapshots are documentary samples, not production fallback data, app code, or a configured test environment. M01 supplies the contract baseline and accepted-risk disposition. M02 can be proposed for approval; full live cumulative-cart completeness still requires evidence beyond this baseline. Traceability: R-07, R-13–R-21, R-23/R-24/R-28; Q-01/Q-05; B-01.
+The versioned snapshots are documentary samples, not production fallback data or app code. At the historical M01 checkpoint there was no configured test environment. M02 subsequently adds shell-only tests, without using these snapshots or calling the API. Full live cumulative-cart completeness still requires evidence beyond this baseline. Traceability: R-07, R-13–R-21, R-23/R-24/R-28; Q-01/Q-05; B-01.
 
 ## Visual reference interpretation
 

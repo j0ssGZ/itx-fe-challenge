@@ -1,6 +1,6 @@
 # Proposed design
 
-Status: approved Phase 1.1 decisions preserved; M00 is complete and M01 has verified contracts with [versioned evidence](../evidence/m01/2026-11-09/README.md). No application implementation or M02 work is authorized by M01. Requirements refer to [requirements.md](requirements.md); accepted open risk B-01 is in [open-questions.md](open-questions.md). README/specifications exist; application folders and scripts below remain prospective.
+Status: M02 shell/tooling implemented under explicit M02 authorization; approved architectural decisions and [M01 evidence](../evidence/m01/2026-11-09/README.md) preserved. The full design below is still a target: M02 implements App, Header, two placeholders, global/CSS Modules styles and validation tools only. API/cache/product/cart modules and M03 onward remain pending. B-01 stays open and accepted.
 
 ## Architecture overview
 
@@ -92,7 +92,7 @@ The page owns requests and user interaction state; child components receive valu
 - Put the shell and provider above the route switch so the header/count survive navigation. Breadcrumbs show “Productos” on the list and a “Productos” link plus “Detalle del producto” on detail. A model-specific current label is optional, not another shared-state requirement.
 - Product cards use real links. Observed IDs are strings; encode them for URLs and preserve that string value in POST payloads. Do not parse them as integers.
 - PDP's explicit return link targets `/`, rather than calling history back. Direct PDP entry, refresh, and browser Back/Forward must work.
-- Unknown product is an error state inside PDP; the actual API returned 500 for the invalid-ID probe, so do not assume a 404 or mislabel every 500 as a confirmed missing product. Unmatched frontend paths use replace-navigation to `/` rather than adding a third page. Q-07 records this architectural default.
+- Unknown product is a future error state inside PDP; the actual API returned 500 for the invalid-ID probe, so do not assume a 404 or mislabel every 500 as a confirmed missing product. Unmatched frontend paths use replace-navigation to `/` rather than adding a third page. M02 implements this with a Spanish notice in PLP as its simple not-found fallback, preserving Q-07 instead of introducing a third view.
 - BrowserRouter requires static hosting to return `index.html` for frontend deep links. Document that requirement; verify it against the eventual host. Choose HashRouter only if the host cannot provide a rewrite, documenting the trade-off. No deployment occurs in these phases without explicit authorization.
 - Search is local PLP state initially; preserving it across route remounts is optional. Do not add URL-state synchronization solely for this small scope.
 
@@ -205,4 +205,4 @@ The reviewed architecture remains appropriate for a two-page SPA after simplifyi
 
 Page-level reads and one Context keep data flow visible; they require deliberate cancellation, cache, and mutation tests. A query library would be reconsidered only if actual behavior expands beyond this scope. Native controls and CSS Modules preserve accessibility and styling freedom with few dependencies. A small E2E suite validates routing/layout that DOM tests cannot; it complements targeted component tests rather than duplicating them all. Session/CORS incompatibility is a backend/integration finding, not justification to enlarge the frontend by default.
 
-M01 closes contract verification with retained samples and an accepted-risk disposition, not a B-01 resolution. M02 awaits explicit approval; no tool installation or application code has started. Do not reopen approved decisions or the already accepted integration risk to perform routine setup. Q-07/Q-08 remain engineering defaults; B-01 and live integration limits remain visible until actually resolved or explicitly accepted at final delivery. No application tests have been run.
+M01 closed contract verification with an accepted-risk disposition, not a B-01 resolution. M02 now has the shell and installed quality tools: 3 route/header integration tests, 2 desktop/mobile Chromium smokes, lint and production build actually passed. Source has no API, cache, search, product data or cart state/persistence; no CartProvider/API/storage abstractions were created prematurely. See README/package.json for exact runtime/dependencies, setup/results and the ESLint-9 maintenance trade-off. M03 awaits explicit approval. B-01 and historical API evidence remain unchanged; shell checks do not prove live integration.

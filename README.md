@@ -1,111 +1,114 @@
 # ITX Frontend Challenge
 
-Miniaplicación para consultar dispositivos móviles, ver sus características y añadir una combinación de color y almacenamiento al carrito mediante la API del enunciado.
-
-El objetivo es desarrollar una SPA React pequeña, accesible, adaptable y bien probada, manteniendo la trazabilidad entre los requisitos, las decisiones de diseño y cada incremento de implementación.
+SPA React del reto frontend ITX para consultar dispositivos móviles y añadir opciones de producto mediante la API del enunciado. El desarrollo sigue Spec-Driven Development (SDD), con hitos pequeños y verificables.
 
 ## Estado actual
 
-**M01: verificación documental de contratos API completada, con B-01 abierto y aceptado como riesgo. La aplicación todavía no está implementada.**
+**M02 completado: shell React, rutas y herramientas de calidad. Las vistas contienen placeholders.**
 
-- Las fases de especificación y revisión 1.1 están documentadas.
-- M00 creó Git, README y `.gitignore` en el primer commit. M01 actualiza las especificaciones y conserva metadatos y respuestas reales de la API en [sus evidencias versionadas](docs/evidence/m01/2026-11-09/README.md).
-- No existen código de aplicación, `package.json`, dependencias instaladas, configuración Vite, scripts de desarrollo ni infraestructura de pruebas.
-- No se han ejecutado pruebas de aplicación, lint ni compilaciones. Las comprobaciones previas de la API son exploraciones del servicio, no pruebas de una aplicación terminada.
-- Esta autorización cubre únicamente M01. M02 y los hitos posteriores requieren aprobación explícita.
-- El repositorio es local; no se ha configurado un remoto ni realizado una publicación.
+- `/`: placeholder del listado, con enlace a un detalle de ejemplo.
+- `/products/:id`: placeholder del detalle, con identificador de ruta y retorno explícito al listado.
+- Cabecera persistente, enlace al inicio, breadcrumbs, contador estático `0`, idioma español, enlace para saltar al contenido, foco y título actualizados al navegar.
+- Las rutas desconocidas redirigen al listado mediante reemplazo de historial y muestran un aviso de página no encontrada. Se sigue el diseño aprobado, sin añadir una tercera vista de negocio ni simular un estado HTTP 404 del servidor.
+- No hay llamadas a la API, productos reales, búsqueda, caché, selectores ni operaciones/persistencia de carrito. El estado compartido del carrito se incorporará en su hito correspondiente.
+- M00 y M01 conservan sus commits y las evidencias API del 9 de noviembre de 2026. B-01 sigue abierto como riesgo aceptado.
+- Repositorio: [j0ssGZ/itx-fe-challenge](https://github.com/j0ssGZ/itx-fe-challenge). No hay PR ni despliegue. M03 no está autorizado.
 
-Las observaciones históricas de la revisión del 6 de noviembre están separadas de la verificación M01 del 9 de noviembre de 2026. No se presentan muestras antiguas como resultados recién obtenidos. El código, las herramientas y las pruebas de aplicación siguen siendo planes, no entregables existentes.
+## Requisitos e instalación
 
-## Alcance del enunciado
+Entorno verificado: **Node 24.19.0 y npm 11.17.0**. `.nvmrc` fija la versión probada; `package.json` admite Node `>=24.15.0 <25` y npm `>=11 <12`, compatibles con las dependencias elegidas. Las versiones distintas de la probada dentro de esos rangos no han sido ejecutadas en esta entrega.
 
-La aplicación tendrá únicamente dos vistas:
+Desde la raíz del proyecto, con ese entorno disponible:
 
-1. **Listado de productos:** todos los productos devueltos por la API, con imagen, marca, modelo y precio; búsqueda inmediata por marca/modelo; cuadrícula adaptable con un máximo de cuatro productos por fila.
-2. **Detalle de producto:** imagen, al menos los once atributos exigidos, selectores de color y almacenamiento, acción de añadir al carrito y enlace explícito de vuelta al listado.
+```sh
+npm ci
+npx playwright install chromium
+```
 
-Ambas vistas compartirán cabecera con enlace al inicio, breadcrumbs y contador del carrito. La composición seguirá las referencias visuales del enunciado, con libertad de estilo y adaptación a pantallas pequeñas.
+`npm ci` utiliza el único lockfile versionado. Playwright descarga su Chromium de prueba fuera del repositorio; no se necesita un navegador global. En sistemas Linux, las bibliotecas del navegador pueden requerir `npx playwright install --with-deps chromium`; esta variante no se ha probado en este entorno macOS.
 
-No se incluyen una página de carrito, checkout, autenticación, ordenación ni funcionalidades comerciales adicionales.
+No hacen falta variables de entorno, credenciales ni acceso a la API para ejecutar M02.
 
-## Decisiones aprobadas
+## Desarrollo y validación
 
-- Interfaz en español.
-- Búsqueda en tiempo real, parcial y sin distinguir mayúsculas/minúsculas sobre marca y modelo.
-- Selectores de una sola opción visibles y preseleccionados; grupos con varias opciones inicialmente sin selección.
-- Caché de productos con TTL de una hora y revalidación de los datos caducados.
-- Contador persistido de forma independiente de la caducidad de productos.
-- El valor `count` devuelto por la API será la fuente de verdad del contador, sin incrementos locales artificiales.
+- `npm run start`: inicia Vite; URL predeterminada `http://localhost:5173`. Consultar el puerto que informe Vite si está ocupado.
+- `npm test`: ejecuta una vez los tests de Vitest/React Testing Library y termina.
+- `npm run test:watch`: modo interactivo de Vitest.
+- `npm run lint`: ESLint; los warnings hacen fallar el comando.
+- `npm run build`: compila la SPA en `dist/`.
+- `npm run preview`: sirve el build localmente; URL predeterminada `http://localhost:4173`.
+- `npm run test:e2e`: ejecuta Playwright contra el build de producción. **Ejecutar primero `npm run build`.** Playwright inicia y detiene su propio preview en `127.0.0.1:4173`; ese puerto debe estar libre.
 
-## Stack previsto
+Secuencia de comprobación local:
 
-Estas herramientas están planificadas; todavía no se han instalado ni configurado:
+```sh
+npm test
+npm run lint
+npm run build
+npm run test:e2e
+```
 
-- React y React DOM con JavaScript ES6+/JSX, sin TypeScript.
-- Vite para desarrollo y compilación de la SPA.
-- React Router para las dos rutas de cliente.
-- CSS Modules y una hoja global pequeña.
-- `fetch`, estado local y un Context acotado al contador; persistencia y caché separadas de la presentación.
-- Vitest y React Testing Library para pruebas unitarias y de integración.
-- Playwright para los recorridos E2E críticos.
-- ESLint para comprobación estática.
+El build contiene recursos estáticos. Un alojamiento futuro debe devolver `index.html` para rutas frontend como `/products/ejemplo`; la recarga directa se ha verificado con el preview local, no con un despliegue público. Preview no es un servidor de producción.
 
-Se propone npm con un único lockfile. Las versiones compatibles y los requisitos de Node/npm se fijarán durante la configuración de herramientas. No se prescribe todavía un entorno de ejecución verificable.
+## Stack instalado
 
-## Metodología SDD y especificaciones
+Versiones directas fijadas, sin TypeScript en el código/configuración del proyecto:
 
-El desarrollo sigue Spec-Driven Development: requisitos identificados, decisiones explícitas, tareas pequeñas y criterios verificables antes de implementar. Cada incremento incorporará sus comprobaciones relevantes y un commit que refleje el trabajo real, sin presentar planes como funcionalidad terminada.
+- React / React DOM **19.3.1**; React Router **8.5.1**, en modo declarativo.
+- Vite **8.3.7**; plugin React **6.3.0**; CSS Modules y estilos globales nativos.
+- Vitest **5.1.0**; React Testing Library **16.3.3**; jsdom **31.0.0**.
+- DOM Testing Library **10.4.2**, user-event **14.6.8**, jest-dom **7.0.1**.
+- Playwright Test **1.65.0**, Chromium **158.0.8127.18** para el smoke.
+- ESLint / @eslint/js **9.39.5**, React Hooks **7.1.1**, JSX accessibility **6.10.2**, globals **17.14.0**.
 
-Los cuatro documentos son la referencia del proyecto:
+ESLint 9 se mantiene para respetar el peer range de `eslint-plugin-jsx-a11y` 6.10.2, que no admite ESLint 10. npm marca esta versión de ESLint como deprecada/sin soporte: es una limitación de mantenimiento documentada, no una garantía de soporte futuro. No se han forzado peers ni ignorado incompatibilidades. Una actualización compatible del conjunto podrá evaluarse en un hito aprobado. `npm audit` informó de cero vulnerabilidades durante la verificación de M02; no es una garantía permanente.
 
-- [Requisitos y criterios de aceptación](docs/specs/requirements.md): matriz R-01–R-29, referencias al PDF y observaciones de la API.
-- [Diseño y arquitectura](docs/specs/design.md): responsabilidades, rutas, componentes, estado, persistencia y estrategia de pruebas.
-- [Hitos y tareas](docs/specs/tasks.md): objetivos, dependencias, entregables, comprobaciones y checkpoints de Git.
-- [Decisiones, preguntas y riesgos](docs/specs/open-questions.md): decisiones cerradas, límites conocidos y riesgo B-01.
+## Estructura actual
 
-La [evidencia M01](docs/evidence/m01/2026-11-09/README.md) añade respuestas de referencia, metadatos HTTP, límites de espera, comparación de credenciales en Chrome y comprobaciones de integridad. Son datos documentales para futuros tests, no un backend alternativo ni funcionalidad de aplicación.
+```text
+src/
+  main.jsx                 montaje React y BrowserRouter
+  app/                     App, sus estilos y tests de navegación
+  components/              Header con breadcrumbs e indicador estático
+  pages/                   placeholders PLP/PDP y estilos compartidos
+  styles/                  estilos globales y foco accesible
+  test/                    configuración de DOM/matchers y limpieza
+e2e/                       smoke del shell en dos tamaños de pantalla
+```
 
-Los documentos distinguen requisitos del enunciado, decisiones aprobadas, propuestas técnicas y comportamiento observado. No debe inferirse un contrato a partir de valores ilustrativos ni de un único resultado del servicio.
+Los módulos API, caché, productos y proveedor de carrito del diseño se crearán únicamente cuando sus hitos los requieran. No se han generado carpetas vacías ni abstracciones para funcionalidades futuras.
 
-## Hitos previstos
+## Verificación realizada en M02
 
-1. **M00 — Inicialización:** completado; repositorio local, README, exclusiones y primer commit documental.
-2. **M01 — Base de contratos e integración:** verificación completada con respuestas y metadatos versionados, límites explícitos y B-01 abierto como riesgo aceptado. No se ha implementado un cliente API ni configurado tests.
-3. **M02 — Herramientas y estructura:** configurar React/Vite, las dos rutas, la cabecera y los scripts de validación.
-4. **M03 — API y caché:** límites de acceso a datos, persistencia y expiración de una hora.
-5. **M04 — Listado:** productos, búsqueda y tarjetas adaptables.
-6. **M05 — Detalle:** atributos, imagen, navegación y estados de carga/error.
-7. **M06 — Carrito:** opciones, petición de añadir y contador compartido persistido.
-8. **M07 — Recorridos y calidad visual:** E2E críticos y revisión de accesibilidad y adaptación.
-9. **M08 — Entrega reproducible:** comprobación desde una copia limpia y documentación final basada en resultados reales.
+- `npm run lint`: código de salida 0, sin warnings de lint.
+- `npm test`: **3 tests, 1 archivo, aprobados**. Navegación desde listado, inicio/breadcrumbs, entrada directa/retorno y fallback de ruta desconocida.
+- `npm run build`: código de salida 0; compilación de producción generada correctamente.
+- `npm run test:e2e`: **2 tests aprobados**, Chromium a 1280 × 800 y 390 × 844. Comprueban navegación cliente sin recargar el documento, historial, enlaces de retorno/inicio, entrada y recarga directa, fallback, ausencia de errores JS y de solicitudes API.
+- Vite de desarrollo arrancó correctamente. Comprobación adicional de navegación por teclado, enlace de salto, idioma español y ausencia de desbordamiento horizontal a 320 px; revisión visual local del shell.
+- `npm ls --depth=0`: dependencias resueltas; `npm audit`: cero vulnerabilidades informadas.
 
-El siguiente hito es **M02 — herramientas y estructura**. No se ha iniciado y requiere aprobación explícita.
+Las pruebas cubren el shell de M02. No demuestran comportamiento de productos, caché ni integración acumulativa del carrito. Los tests de navegador bloquean cualquier solicitud `/api/` inesperada y fallan si aparece alguna; no mutan el carrito remoto.
 
-## Instalación y comandos de desarrollo
+## SDD y siguientes hitos
 
-**No disponibles en M00/M01. No ejecutar hasta autorizar y configurar M02.** M01 no incluye instalación de herramientas ni creación de scripts.
+- [Requisitos](docs/specs/requirements.md): matriz R-01–R-29, fuentes y criterios de aceptación.
+- [Diseño](docs/specs/design.md): responsabilidades, rutas, estado y estrategia de pruebas.
+- [Tareas](docs/specs/tasks.md): hitos, dependencias, entregables y checkpoints.
+- [Decisiones y riesgos](docs/specs/open-questions.md): acuerdos y B-01 abierto.
+- [Evidencias M01](docs/evidence/m01/2026-11-09/README.md): observaciones HTTP/navegador, respuestas y metadatos fechados, sin valores de cookies.
 
-No existe `package.json` y actualmente no hay una aplicación que instalar, iniciar, probar o compilar. Los siguientes nombres son únicamente el contrato de ejecución previsto:
+M00 inicializó el repositorio; M01 verificó contratos; M02 configura herramientas y navegación. El siguiente hito es **M03 — límite API y caché cliente con TTL de una hora**, pendiente de autorización. Después: M04 listado/búsqueda, M05 detalle, M06 acciones/carrito, M07 recorridos críticos y M08 entrega reproducible. No se adelantan funcionalidades de esos hitos.
 
-- `npm start`: futuro servidor de desarrollo; **no disponible**.
-- `npm run build`: futura compilación de producción; **no disponible**.
-- `npm test`: futura ejecución finita de pruebas; **no disponible**.
-- `npm run lint`: futura comprobación de código; **no disponible**.
+Las decisiones aprobadas se mantienen: interfaz española; búsqueda parcial en tiempo real sin distinguir mayúsculas; singleton visible/preseleccionado y opciones múltiples inicialmente sin selección; caché de productos de una hora con revalidación; contador persistido de forma independiente y tomado de la respuesta API.
 
-Los comandos de E2E, modo watch y vista previa se documentarán cuando existan. No hay resultados de pruebas, cobertura ni build que comunicar en este estado. Las instrucciones de instalación, versiones y configuración se añadirán con su implementación y verificación.
+## Flujo permanente por hito
 
-## API y riesgo abierto B-01
+**Implementar → Test → Lint → Build → Revisar diff → Commit → Push → Verificar → STOP.** Ejecutar también el smoke E2E cuando aplique. Usar conventional commits, un incremento coherente por hito, conservar el historial y mantener la documentación sincronizada. Antes de commit/push, revisar archivos y secretos y comprobar que PDF, entornos locales y artefactos siguen excluidos. No publicar implementación con comprobaciones fallidas, no hacer force-push ni reescribir historia, y no iniciar otro hito sin aprobación.
 
-El enunciado define la base `https://itx-frontend-test.onrender.com/` y tres operaciones: `GET /api/product`, `GET /api/product/:id` y `POST /api/cart`. Las estructuras y particularidades observadas están registradas en la especificación; no se presupone que la disponibilidad actual ni el comportamiento de sesión estén garantizados.
+Después de cada push o actualización de PR, comprobar CI una sola vez. Si hay checks pendientes/en ejecución, informar del estado, pedir al usuario que vuelva cuando terminen o fallen y detener la sesión; no hacer polling, watch ni agentes de espera. Las fusiones y despliegues nunca son automáticos. Este proyecto todavía no configura workflows de GitHub Actions; los resultados locales son los registrados arriba.
 
-En M01, el primer GET agotó 45 segundos sin respuesta HTTP; su único segundo intento respondió 200. Se conservaron el listado de 100 productos, cuatro detalles, el error 500 de un ID inexistente y el resultado 200 del único POST deliberado (`count: 1`). No se repitieron altas para comprobar acumulación. Los campos vacíos, tipos variables y claves con erratas permanecen tal como fueron recibidos.
+## API, B-01 y material original
 
-**B-01 permanece abierto como riesgo de integración aceptado, sin considerarse resuelto.** La exploración previa mostró acumulación del contador al conservar la cookie de sesión, mientras que las llamadas independientes devolvían `1`. La configuración CORS observada plantea una limitación para mantener esa sesión desde otro origen en el navegador.
+El servicio del enunciado es `https://itx-frontend-test.onrender.com/`. M02 no lo llama. La verificación M01 está fechada y no garantiza su disponibilidad futura. **B-01 permanece abierto y aceptado:** la sesión/CORS limita la acumulación del carrito entre orígenes; no se ha introducido proxy, cambio de credenciales ni contador local compensatorio.
 
-M00/M01 aceptan este riesgo para continuar con trabajo local autorizado. M01 volvió a observar GET legible en Chrome con credenciales omitidas y fallo con `include`, junto a cabeceras GET/OPTIONS de origen comodín sin permiso de credenciales. No se revalidó la acumulación de varias altas ni se introdujo un proxy, cambio de transporte o contador local alternativo. La aceptación no demuestra un carrito acumulativo funcional; véase [B-01](docs/specs/open-questions.md#b-01--unresolved-direct-cross-origin-cumulative-cart-integration).
-
-## Material original y entrega futura
-
-El PDF original se conserva únicamente como material local y está excluido de Git porque no se ha establecido permiso de redistribución. Las referencias relativas al PDF en las especificaciones requieren disponer de esa copia local; el documento no se distribuirá con un clon del repositorio.
-
-El README se ampliará de forma incremental con instrucciones ejecutables, decisiones verificadas, resultados reales de pruebas, limitaciones y documentación de entrega. No se ha creado un repositorio remoto, una PR ni un despliegue. La publicación futura será una acción independiente y autorizada.
+El PDF original sigue únicamente en el entorno local e ignorado por Git por falta de permiso de redistribución. Las referencias relativas de las especificaciones requieren esa copia local y no funcionan en un clon sin ella. No se han alterado las evidencias API ni distribuido el PDF.

@@ -1,6 +1,6 @@
 # Implementation milestones
 
-Status: M00 completed in `e08a674`; M01 contract verification completed on 2026-11-09 with [versioned evidence](../evidence/m01/2026-11-09/README.md) and B-01 retained as an accepted open risk. No application implementation, dependency installation, or M02 work is authorized by this increment. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md).
+Status: M00 completed in `e08a674`; M01 completed in `8a0f325`; M02 shell/tooling implemented and locally verified under explicit M02 authorization. B-01 remains an accepted open risk. M03 and later functionality are not authorized. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md). Historical M01 evidence is preserved unchanged.
 
 ## Working agreement and commit checkpoints
 
@@ -10,6 +10,7 @@ Status: M00 completed in `e08a674`; M01 contract verification completed on 2026-
 - Run the narrow checks relevant to a change, then the required lint/test/build gates before a delivery checkpoint. Do not report tests as passed before running them.
 - Publishing a repository, opening a PR, merging, and deploying are separate actions. Phases 1/1.1 authorize none of them. Never merge/deploy automatically. Preserve all security and approval gates.
 - After any later push or PR update, inspect CI status once. If pending/running, report the actual statuses, ask the user to return when CI finishes/fails, and end the turn immediately. No polling, watch commands, sleep loops, or agents solely waiting for CI. When the user returns, inspect results, fix actual failures, and apply the same rule after triggering new CI.
+- **Permanent workflow from M02:** Implement -> Test -> Lint -> Build -> Review diff -> Commit -> Push -> Verify -> STOP. Run relevant E2E checks too. Each approved milestone gets a coherent conventional commit unless independently valuable increments justify a split. Preserve history; never force-push, publish failing/unverified work, commit secrets/local environments/the PDF, or start the next milestone without explicit approval. Keep docs current. The single-check CI stop rule above applies after every push; no automatic merge/deploy.
 
 ## M00 — Specification approval and first repository checkpoint
 
@@ -39,11 +40,15 @@ Status: M00 completed in `e08a674`; M01 contract verification completed on 2026-
 
 ## M02 — Minimal tooling, routing, and shared shell
 
+- **Status:** completed after actual checks passed: lint exit 0; 3 Vitest/RTL integration tests passed; production build exit 0; 2 Playwright Chromium smokes passed at desktop/mobile widths. Development server, keyboard links/skip focus and 320 px layout were also verified. The implementation has no API requests, cache/search, real product data or cart operations; the header count is a static placeholder.
+- **Delivered:** React 19.3.1, Vite 8.3.7, React Router 8.5.1, CSS Modules, Vitest 5.1.0/RTL 16.3.3/jsdom 31.0.0, Playwright 1.65.0 and ESLint 9.39.5; exact direct versions and one npm lockfile. Runtime tested: Node 24.19.0/npm 11.17.0. ESLint 9 is deprecated upstream but retained for the stable accessibility plugin's ESLint-9 peer compatibility; no forced peers. This maintenance limit is documented in README.
+- **SDD clarification:** the requested simple 404 fallback follows the approved unknown-route policy: replace-navigation to `/` with a Spanish not-found notice in PLP, not a third business page. CartProvider/persistence stay in M06; M02 provides only the documented static count indicator. Playwright setup/smoke was explicitly authorized in M02; M07 will extend it for product journeys.
+
 - **Objective:** establish runnable development and validation commands with the two-view structure.
 - **Scope:** proposed React/Vite JavaScript setup after approval; compatible versions and Node/npm prerequisite; committed lockfile; required start/build/test/lint scripts; Vitest/RTL setup; ESLint; two route placeholders; App's persistent shell and Header with Spanish home/breadcrumb/count markup. Add CSS Modules/global tokens only as needed. Do not pre-create separate layout/search/request-state component files.
 - **Acceptance criteria:** all four required operations are documented and executable; test command has a finite mode; routing is client-side; shell appears in both routes; home links work; no SSR, TypeScript, or third business view. README describes only this actual state.
 - **Required tests/checks:** meaningful route/header navigation integration checks; initial lint, finite test, and production build; manual development-server start check. A route/header test replaces a trivial mount-only smoke test.
-- **Dependencies:** M00/M01 complete and explicit M02 approval still required. Spanish language and product decisions are settled. Conventional script names/routing remain engineering defaults. Accepted open B-01 does not block tooling or the shared shell; it does limit later live-integration claims.
+- **Dependencies:** M00/M01 complete; explicit M02 approval obtained. The existing `origin` was verified as `j0ssGZ/itx-fe-challenge`, with M00/M01 already at remote main before M02. Existing history/remote are preserved; push of this verified increment is authorized. M03 still requires separate approval.
 - **Expected deliverable:** small runnable skeleton, documented scripts/runtime, shared layout, initial tests.
 - **Suggested commit:** `chore: establish React tooling and two-view application shell`.
 - **Traceability/checkpoint:** R-01, R-02, R-08–R-10, R-22, R-24, R-26–R-29. Review dependency necessity before domain code.
@@ -95,7 +100,7 @@ Status: M00 completed in `e08a674`; M01 contract verification completed on 2026-
 ## M07 — Critical browser journeys and visual/accessibility review
 
 - **Objective:** verify that the two views work together in a real browser and respect the wireframes.
-- **Scope:** minimal Playwright setup and command; contract-based network interception; isolated storage; browse/search/detail/back and direct refresh; add/count/navigation/reload; read retry and mutation error; responsive and keyboard checks. Resolve defects without expanding product scope.
+- **Scope:** extend M02's existing Playwright setup/smoke with contract-based network interception, isolated storage, product browse/search/detail/back and direct refresh, add/count/navigation/reload, read retry and mutation error, responsive and keyboard checks. Resolve defects without expanding product scope.
 - **Acceptance criteria:** journeys are deterministic, issue no accidental live POSTs, and exercise real routes/components with Spanish visible/accessibility copy. The maximum four-column rule holds at ultrawide width; PDP columns/mobile stack follow the reviewed design; count remains visible; focus, contrast, zoom, and long content are usable. Deep-link serving works locally. A mock returning accumulated counts is not described as proof that B-01 is resolved.
 - **Required tests/checks:** focused E2E suite in desktop/narrow Chromium; layout checks at representative widths; manual keyboard/focus, image/error states, 200% zoom, and visual comparison against both PDF wireframes. Existing lint/unit/build checks after any fixes. Add broader browsers only if evaluation/support needs justify them.
 - **Dependencies:** M04–M06; installed browser tooling only in the approved implementation phase.
@@ -116,8 +121,8 @@ Status: M00 completed in `e08a674`; M01 contract verification completed on 2026-
 
 ## Recommended order and stopping conditions
 
-Completed: M00 initialization and M01 contract/evidence baseline. Next, only after explicit approval: M02 shell/tooling -> M03 boundary/cache -> M04 PLP -> M05 PDP -> M06 cart -> M07 browser/UX review -> M08 final verification. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not every local tooling milestone.
+Completed: M00 initialization, M01 contract/evidence baseline, and M02 shell/tooling with local checks. Next, only after explicit approval: M03 boundary/cache -> M04 PLP -> M05 PDP -> M06 cart -> M07 browser/UX review -> M08 final verification. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not local tooling.
 
 Stop for a decision when a material source conflict, unresolved integration policy, or unavailable contract prevents the dependent work. Empty values with the documented honest fallback do not independently block implementation. Do not reopen approved decisions or ask the user to decide routine engineering defaults. After a push/PR update with pending CI, follow the mandatory CI stop rule even if further monitoring would be convenient.
 
-Current checkpoint: M01 documentary contract verification, with retained current evidence and historical results dated separately. M00's commit exists; this increment produces one additional local documentation commit without remote/push. No application files, dependencies, scripts, tests or M02 setup exist. Stop after M01 and wait for explicit M02 approval.
+Current checkpoint: M02 shell/tooling verified; one focused commit and normal push to existing origin are authorized. Verify remote ancestry/synchronization, inspect CI once and apply the stop rule. No M03 work, API calls, PR, force-push, merge or deployment. Stop after M02 and wait for explicit M03 approval.
