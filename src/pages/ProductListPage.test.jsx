@@ -146,6 +146,9 @@ describe('PLP catalogue and derived live search', () => {
 
   it('supports keyboard search, clear and Enter navigation with correct route focus', async () => {
     const user = userEvent.setup()
+    fetch.mockImplementation(async url => new Response(JSON.stringify(
+      new URL(url).pathname.endsWith(`/${first.id}`) ? productDetails[0] : samples,
+    )))
     render(<MemoryRouter><App /></MemoryRouter>)
     await screen.findByRole('link', { name: firstLink })
     await user.tab()
@@ -161,8 +164,8 @@ describe('PLP catalogue and derived live search', () => {
     await user.tab()
     expect(screen.getByRole('link', { name: firstLink })).toHaveFocus()
     await user.keyboard('{Enter}')
-    expect(await screen.findByRole('heading', { name: 'Detalle del producto', level: 1 })).toBeInTheDocument()
-    expect(screen.getByText(first.id)).toBeInTheDocument()
+    expect(await screen.findByRole('heading', { name: first.model, level: 1 })).toBeInTheDocument()
+    expect(fetch).toHaveBeenCalledWith(expect.stringContaining(`/api/product/${first.id}`), expect.objectContaining({ method: 'GET' }))
     expect(screen.getByRole('main')).toHaveFocus()
   })
 

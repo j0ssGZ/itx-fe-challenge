@@ -46,8 +46,11 @@ test('catalogue: responsive grid, search placement, live filtering and keyboard 
   await page.keyboard.press('Enter')
   await expect(page).toHaveURL(`/products/${firstProduct.id}`)
   await expect(page.getByRole('main')).toBeFocused()
-  await expect(page.getByText(firstProduct.id, { exact: true })).toBeVisible()
-  expect(requests).toEqual([{ url: `${apiBase}/api/product`, method: 'GET' }])
+  await expect(page.getByRole('heading', { name: firstProduct.model, level: 1 })).toBeVisible()
+  expect(requests).toEqual([
+    { url: `${apiBase}/api/product`, method: 'GET' },
+    { url: `${apiBase}/api/product/${firstProduct.id}`, method: 'GET' },
+  ])
 })
 
 test('catalogue: accessible loading then empty response', async ({ page }) => {

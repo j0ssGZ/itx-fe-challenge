@@ -22,3 +22,11 @@
   font-size: 0.8125rem;
   text-align: center;
 }
+
+.detail {
+  height: clamp(16rem, 35vw, 25rem);
+}
+
+.detail .image {
+  max-height: 100%;
+}

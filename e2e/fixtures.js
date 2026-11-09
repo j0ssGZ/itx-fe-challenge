@@ -1,7 +1,9 @@
 import { readFileSync } from 'node:fs'
 
 // Actual, unchanged M01 response data, consumed only by browser tests.
-export const catalogue = JSON.parse(readFileSync(new URL('../docs/evidence/m01/2026-11-09/responses.json', import.meta.url), 'utf8')).productList
+const evidence = JSON.parse(readFileSync(new URL('../docs/evidence/m01/2026-11-09/responses.json', import.meta.url), 'utf8'))
+export const catalogue = evidence.productList
+export const productDetails = evidence.productDetails
 export const apiBase = 'https://itx-frontend-test.onrender.com'
 export const firstProduct = catalogue[0]
 export const firstProductLink = `Ver detalle de ${firstProduct.brand} ${firstProduct.model}`
@@ -18,6 +20,8 @@ export async function mockCatalogue(page, products = catalogue) {
     if (request.url() === `${apiBase}/api/product` && request.method() === 'GET') {
       return route.fulfill({ json: products })
     }
+    const detail = productDetails.find(product => request.url() === `${apiBase}/api/product/${encodeURIComponent(product.id)}`)
+    if (detail && request.method() === 'GET') return route.fulfill({ json: detail })
     return route.abort()
   })
   await page.route('**/images/**', route => route.fulfill({ contentType: 'image/svg+xml', body: imageFixture }))

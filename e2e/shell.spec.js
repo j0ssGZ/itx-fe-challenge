@@ -1,5 +1,5 @@
 import { expect, test } from '@playwright/test'
-import { apiBase, firstProduct, firstProductLink, mockCatalogue } from './fixtures.js'
+import { apiBase, firstProduct, firstProductLink, mockCatalogue, productDetails } from './fixtures.js'
 
 test('shell SPA: navegación, entrada directa, recarga y fallback', async ({ page }) => {
   const apiRequests = await mockCatalogue(page)
@@ -13,7 +13,7 @@ test('shell SPA: navegación, entrada directa, recarga y fallback', async ({ pag
 
   await page.getByRole('link', { name: firstProductLink }).click()
   await expect(page).toHaveURL(`/products/${firstProduct.id}`)
-  await expect(page.getByRole('heading', { name: 'Detalle del producto', level: 1 })).toBeVisible()
+  await expect(page.getByRole('heading', { name: firstProduct.model, level: 1 })).toBeVisible()
   await expect(page.locator('html')).toHaveAttribute('data-navigation-marker', 'same-document')
   await expect(page.getByRole('main')).toBeFocused()
 
@@ -24,9 +24,9 @@ test('shell SPA: navegación, entrada directa, recarga y fallback', async ({ pag
   await page.getByRole('link', { name: 'Volver a productos' }).click()
   await expect(page).toHaveURL('/')
 
-  await page.goto('/products/entrada-directa')
+  await page.goto(`/products/${productDetails[1].id}`)
   await page.reload()
-  await expect(page.getByText('entrada-directa', { exact: true })).toBeVisible()
+  await expect(page.getByRole('heading', { name: productDetails[1].model, level: 1 })).toBeVisible()
   await page.getByRole('link', { name: 'ITX Mobile, inicio' }).click()
   await expect(page).toHaveURL('/')
 
@@ -34,6 +34,10 @@ test('shell SPA: navegación, entrada directa, recarga y fallback', async ({ pag
   await expect(page).toHaveURL('/')
   await expect(page.getByText('Página no encontrada. Te mostramos el inicio.')).toHaveAttribute('role', 'status')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
-  expect(apiRequests).toEqual([{ url: `${apiBase}/api/product`, method: 'GET' }])
+  expect(apiRequests).toEqual([
+    { url: `${apiBase}/api/product`, method: 'GET' },
+    { url: `${apiBase}/api/product/${firstProduct.id}`, method: 'GET' },
+    { url: `${apiBase}/api/product/${productDetails[1].id}`, method: 'GET' },
+  ])
   expect(pageErrors).toEqual([])
 })

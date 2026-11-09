@@ -1,6 +1,6 @@
 # Implementation milestones
 
-Status: M00 in `e08a674`, M01 in `8a0f325`, M02 in `f5eb658`, M03 in `0cf9841`; M04 catalogue/search implemented and verified under explicit authorization. B-01 remains accepted and open. M05 onward require approval. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md). Historical M01 evidence is preserved unchanged.
+Status: M00 in `e08a674`, M01 in `8a0f325`, M02 in `f5eb658`, M03 in `0cf9841`, M04 in `cebff55`; M05 read-only PDP implemented and verified under explicit approval. B-01 remains accepted/open. M06 onward require approval. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md). Historical M01 evidence is preserved unchanged.
 
 ## Working agreement and commit checkpoints
 
@@ -87,11 +87,16 @@ Status: M00 in `e08a674`, M01 in `8a0f325`, M02 in `f5eb658`, M03 in `0cf9841`; 
 
 ## M05 — Product details and required navigation/content
 
+- **Status:** completed on 2026-11-10 after actual checks: 156 Vitest tests passed (25 added, 131 existing retained), lint exit 0 without warnings, production build exit 0, and 36 Chromium E2E cases passed (16 new viewport cases). Old navigation tests were adapted to real detail fixture data rather than placeholder IDs/headings; their original checks remain.
+- **Delivered:** ProductDetailsPage connects M03 `getProduct(id, { signal })`; its local child is keyed by ID for immediate state reset, with abort/late-response guards and explicit retry. ProductDescription renders all eleven semantic label/value mappings with honest fallbacks. ProductImage gains only a larger detail variant; its card/fallback behavior remains. Unused Placeholder CSS was removed. No API/cache, dependency, PLP production, header, cart or transport changes.
+- **Verified:** all four M01 details, screen/typo mappings, mixed strings/arrays, missing/invalid values, images/fallback, loading, network/HTTP/JSON/invalid-data feedback, direct entry, breadcrumbs/back/keyboard, StrictMode/unmount, A-to-B loading reset, late A success/failure after B, and independent cached reads. Unknown-ID 500 stays a generic load error, not a fabricated 404. Browser checks cover image-left/details-right and mobile stack, refresh, no horizontal overflow at 320/768/1280/1920 px and preserved PLP journeys.
+- **Visual/limits:** development server launched and desktop/mobile/tablet/wide captures inspected against PDF p.4; mobile loading/error/missing-data captures also inspected. Files stay outside Git and show the existing image fallback with M01 data. Automated images reuse M04's existing synthetic test fixture. No live API/photo probe was repeated; M04 photo timeouts remain historical, and B-01 is unchanged/open. No option/action placeholders or purchasing controls were added; M06 remains unauthorized.
+
 - **Objective:** complete the read-only detail view while preserving the reference structure.
 - **Scope:** detail fetch by route ID; image-left/details-right desktop layout; mobile stack; all eleven required attributes; breadcrumb label; explicit return link; direct entry; error/unavailable/loading states; abort/late-response protection when IDs change. Do not add cart behavior in this increment.
 - **Acceptance criteria:** each of the eleven required Spanish label/value mappings is correct; “Resolución de pantalla” uses the observed pixel-bearing `displaySize`; cameras use actual `secondaryCmera` and dimensions use `dimentions`; CPU/camera arrays are readable. Empty/dash fields show “No disponible”, and raw weight has no invented unit. Image proportions, description-above-actions structure, direct entry/return, and obsolete-response protection hold.
 - **Required tests/checks:** all eleven attributes; typo/reversed-field mappings; mixed string/array CPU/cameras; empty price/battery/weight and dash dimensions; Spanish back/breadcrumb links; direct route; non-OK responses including the observed unknown-ID 500 without assuming 404; route A-to-B late response. Browser comparison with PDF p.4 at desktop plus narrow-screen reading order/overflow check.
-- **Dependencies:** M02–M04; observed detail baseline. Q-06 Spanish is approved; Q-07 mobile stacking is a nonblocking engineering proposal reviewed with the architecture.
+- **Dependencies:** M02–M04 and observed M01 baseline; explicit M05 approval obtained, including focused commit/normal push. Q-06 language and Q-07 mobile layout follow the approved design. M06 needs separate approval.
 - **Expected deliverable:** styled read-only PDP, route-state tests, and documented field mappings.
 - **Suggested commit:** `feat: add product details and return navigation`.
 - **Traceability/checkpoint:** R-09, R-11–R-13, R-19, R-25–R-27, R-29. Check all eleven attributes explicitly.
@@ -131,8 +136,8 @@ Status: M00 in `e08a674`, M01 in `8a0f325`, M02 in `f5eb658`, M03 in `0cf9841`; 
 
 ## Recommended order and stopping conditions
 
-Completed: M00 initialization, M01 evidence, M02 shell/tooling, M03 boundary/cache and M04 PLP/search. Next, only after explicit approval: M05 PDP -> M06 cart -> M07 browser/UX review -> M08 final verification. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not local tooling.
+Completed: M00 initialization, M01 evidence, M02 shell/tooling, M03 boundary/cache, M04 PLP/search and M05 read-only PDP. Next, only after explicit approval: M06 cart -> M07 browser/UX review -> M08 final verification. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not local tooling.
 
 Stop for a decision when a material source conflict, unresolved integration policy, or unavailable contract prevents the dependent work. Empty values with the documented honest fallback do not independently block implementation. Do not reopen approved decisions or ask the user to decide routine engineering defaults. After a push/PR update with pending CI, follow the mandatory CI stop rule even if further monitoring would be convenient.
 
-Current checkpoint: M04 verified; one focused commit/normal push to existing origin are authorized. Preserve previous history/M01 evidence/PDF exclusion, verify synchronization and inspect CI once. No M05, Astryx installation, cart mutation, PR, force-push, merge or deployment. Stop after M04 and wait for explicit M05 approval.
+Current checkpoint: M05 verified; one focused commit/normal push to existing origin are authorized. Preserve history/M01 evidence/PDF exclusion, verify synchronization and inspect CI once. No M06, dependency installation, cart mutation/persistence, PR, force-push, merge or deployment. Stop after M05 and wait for explicit M06 approval.

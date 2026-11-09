@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import styles from './ProductImage.module.css'
 
-export default function ProductImage({ src, alt }) {
+export default function ProductImage({ src, alt, variant = 'card' }) {
   const [failedSrc, setFailedSrc] = useState(null)
   const missing = !src || failedSrc === src
 
   return (
-    <div className={styles.frame}>
+    <div className={`${styles.frame} ${variant === 'detail' ? styles.detail : ''}`}>
       {missing ? (
         <div className={styles.fallback} role="img" aria-label={`Imagen no disponible: ${alt}`}>
           <svg width="36" height="48" viewBox="0 0 36 48" fill="none" aria-hidden="true">
