@@ -1,6 +1,6 @@
 # Implementation milestones
 
-Status: M00 completed in `e08a674`; M01 completed in `8a0f325`; M02 shell/tooling implemented and locally verified under explicit M02 authorization. B-01 remains an accepted open risk. M03 and later functionality are not authorized. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md). Historical M01 evidence is preserved unchanged.
+Status: M00 completed in `e08a674`; M01 in `8a0f325`; M02 in `f5eb658`; M03 API/cache implemented and verified under explicit M03 authorization. B-01 remains an accepted open risk. M04 and later functionality are not authorized. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md). Historical M01 evidence is preserved unchanged.
 
 ## Working agreement and commit checkpoints
 
@@ -40,7 +40,7 @@ Status: M00 completed in `e08a674`; M01 completed in `8a0f325`; M02 shell/toolin
 
 ## M02 — Minimal tooling, routing, and shared shell
 
-- **Status:** completed after actual checks passed: lint exit 0; 3 Vitest/RTL integration tests passed; production build exit 0; 2 Playwright Chromium smokes passed at desktop/mobile widths. Development server, keyboard links/skip focus and 320 px layout were also verified. The implementation has no API requests, cache/search, real product data or cart operations; the header count is a static placeholder.
+- **Status:** completed after actual checks passed: lint exit 0; 3 Vitest/RTL integration tests passed; production build exit 0; 2 Playwright Chromium smokes passed at desktop/mobile widths. Development server, keyboard links/skip focus and 320 px layout were also verified. M02 itself added no API/cache/search, real product data or cart operations; the header count remains a static placeholder after M03.
 - **Delivered:** React 19.3.1, Vite 8.3.7, React Router 8.5.1, CSS Modules, Vitest 5.1.0/RTL 16.3.3/jsdom 31.0.0, Playwright 1.65.0 and ESLint 9.39.5; exact direct versions and one npm lockfile. Runtime tested: Node 24.19.0/npm 11.17.0. ESLint 9 is deprecated upstream but retained for the stable accessibility plugin's ESLint-9 peer compatibility; no forced peers. This maintenance limit is documented in README.
 - **SDD clarification:** the requested simple 404 fallback follows the approved unknown-route policy: replace-navigation to `/` with a Spanish not-found notice in PLP, not a third business page. CartProvider/persistence stay in M06; M02 provides only the documented static count indicator. Playwright setup/smoke was explicitly authorized in M02; M07 will extend it for product journeys.
 
@@ -48,18 +48,23 @@ Status: M00 completed in `e08a674`; M01 completed in `8a0f325`; M02 shell/toolin
 - **Scope:** proposed React/Vite JavaScript setup after approval; compatible versions and Node/npm prerequisite; committed lockfile; required start/build/test/lint scripts; Vitest/RTL setup; ESLint; two route placeholders; App's persistent shell and Header with Spanish home/breadcrumb/count markup. Add CSS Modules/global tokens only as needed. Do not pre-create separate layout/search/request-state component files.
 - **Acceptance criteria:** all four required operations are documented and executable; test command has a finite mode; routing is client-side; shell appears in both routes; home links work; no SSR, TypeScript, or third business view. README describes only this actual state.
 - **Required tests/checks:** meaningful route/header navigation integration checks; initial lint, finite test, and production build; manual development-server start check. A route/header test replaces a trivial mount-only smoke test.
-- **Dependencies:** M00/M01 complete; explicit M02 approval obtained. The existing `origin` was verified as `j0ssGZ/itx-fe-challenge`, with M00/M01 already at remote main before M02. Existing history/remote are preserved; push of this verified increment is authorized. M03 still requires separate approval.
+- **Dependencies:** M00/M01 complete; explicit M02 approval obtained. The existing `origin` was verified as `j0ssGZ/itx-fe-challenge`, with M00/M01 already at remote main before M02. Existing history/remote were preserved by M02; M03 was subsequently authorized separately.
 - **Expected deliverable:** small runnable skeleton, documented scripts/runtime, shared layout, initial tests.
 - **Suggested commit:** `chore: establish React tooling and two-view application shell`.
 - **Traceability/checkpoint:** R-01, R-02, R-08–R-10, R-22, R-24, R-26–R-29. Review dependency necessity before domain code.
 
 ## M03 — API boundary and one-hour read cache
 
+- **Status:** completed after actual verification: 112 tests in 4 files passed (109 added, 3 M02 tests preserved), lint exit 0 without warnings, production build exit 0, and both existing desktop/mobile Chromium E2E smokes passed. Existing dependencies were verified with `npm ls --depth=0`; package/lockfile are unchanged and no install was needed.
+- **Delivered:** `api/client.js` (GET/JSON/normalized errors/abort), `api/products.js` (minimal validation, optional-field normalization and cached list/detail reads), `storage/storage.js` (guarded JSON storage/memory fallback), `storage/productCache.js` (versioned URL-specific keys and fixed TTL), contract-based fixtures and deterministic tests. The default test fetch cannot reach the live service.
+- **Verified behavior:** one-hour boundary and no sliding expiry, receipt-time timestamps, list/detail/ID/base isolation, reload reuse, malformed JSON/data, future/invalid timestamps, version mismatch, storage access/quota/removal failures, failed revalidation and cancellation. Only validated successful reads are stored; expired failures do not return stale data. An independent test-only count key remains untouched.
+- **Boundary decisions:** ID is the minimum product identity; duplicate list IDs and mismatched detail IDs fail. Optional unusable fields become null/empty option groups without invented values; CPU/camera string arrays become display text. Dot-segment/non-encodable IDs are rejected for URL safety, not asserted as a server rule. Details and limits are in README/design. No React hooks, page imports/rendering changes, search, cart operations/persistence, new dependency, live API probe or B-01 resolution.
+
 - **Objective:** make data access and expiry reliable before wiring views.
 - **Scope:** fetch client; product list/detail operations; minimal response checks using M01's observed baseline; guarded storage; versioned per-endpoint cache; successful-response timestamps; approved one-hour TTL and on-demand revalidation; read abort/error behavior. Keep cart mutations and persisted count outside the read cache.
 - **Acceptance criteria:** correct URLs/methods; fresh list/detail cache hits avoid requests; different IDs cannot share detail entries; no sliding expiration; expired/corrupt entries fetch again; errors/aborts never become fresh entries; storage denial falls back predictably. No made-up schema or HTTP cache support.
 - **Required tests/checks:** request/HTTP/JSON failure assertions; cache miss and fresh hit; just-before/at/after TTL; per-ID isolation; future/invalid timestamps; malformed storage; quota/access errors; failed revalidation. Use fake time, reset storage between cases, and prevent real network calls.
-- **Dependencies:** M01 baseline/fixtures and M02 tooling. Q-02 is approved and must not become another permission gate.
+- **Dependencies:** M01 baseline/fixtures and M02 tooling; explicit M03 authorization obtained, including a focused commit/normal push. Q-02 remains approved. M04 needs separate approval.
 - **Expected deliverable:** tested API and persistence modules without page-specific rendering logic.
 - **Suggested commit:** `feat: add product API access with one-hour client cache`.
 - **Traceability/checkpoint:** R-19–R-21, R-26, R-27. Review cache against the exact one-hour rule.
@@ -121,8 +126,8 @@ Status: M00 completed in `e08a674`; M01 completed in `8a0f325`; M02 shell/toolin
 
 ## Recommended order and stopping conditions
 
-Completed: M00 initialization, M01 contract/evidence baseline, and M02 shell/tooling with local checks. Next, only after explicit approval: M03 boundary/cache -> M04 PLP -> M05 PDP -> M06 cart -> M07 browser/UX review -> M08 final verification. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not local tooling.
+Completed: M00 initialization, M01 contract/evidence baseline, M02 shell/tooling, and M03 boundary/cache with deterministic checks. Next, only after explicit approval: M04 PLP -> M05 PDP -> M06 cart -> M07 browser/UX review -> M08 final verification. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not local tooling.
 
 Stop for a decision when a material source conflict, unresolved integration policy, or unavailable contract prevents the dependent work. Empty values with the documented honest fallback do not independently block implementation. Do not reopen approved decisions or ask the user to decide routine engineering defaults. After a push/PR update with pending CI, follow the mandatory CI stop rule even if further monitoring would be convenient.
 
-Current checkpoint: M02 shell/tooling verified; one focused commit and normal push to existing origin are authorized. Verify remote ancestry/synchronization, inspect CI once and apply the stop rule. No M03 work, API calls, PR, force-push, merge or deployment. Stop after M02 and wait for explicit M03 approval.
+Current checkpoint: M03 API/cache verified; one focused commit and normal push to existing origin are authorized. Preserve previous commits/evidence/PDF exclusion, verify synchronization and inspect CI once. No live API calls, M04 work, PR, force-push, merge or deployment. Stop after M03 and wait for explicit M04 approval.

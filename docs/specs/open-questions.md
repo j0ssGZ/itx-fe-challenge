@@ -1,6 +1,6 @@
 # Decision register, open questions, and risks
 
-Status: M02 shell/tooling completed under explicit authorization. Approved design decisions remain closed; B-01 stays accepted and open. M00/M01 history and [dated API evidence](../evidence/m01/2026-11-09/README.md) are preserved. M03 onward remain unauthorized. R-IDs are in [requirements.md](requirements.md); architecture/milestones in [design.md](design.md) and [tasks.md](tasks.md).
+Status: M03 API/cache completed under explicit authorization. Approved design decisions remain closed; B-01 stays accepted and open. M00–M02 history and [dated API evidence](../evidence/m01/2026-11-09/README.md) are preserved. M04 onward remain unauthorized. R-IDs are in [requirements.md](requirements.md); architecture/milestones in [design.md](design.md) and [tasks.md](tasks.md).
 
 ## Historical Phase 1.1 review and subsequent checkpoints
 
@@ -19,7 +19,7 @@ The bullets above describe **historical Phase 1.1**, not the present repository 
 - **Status:** representative list/detail/payload structure freshly verified and versioned in M01; not an exhaustive permanent schema. Cart transport remains B-01. The first current GET timed out; its sole retry and the subsequent probes succeeded, without establishing the timeout's cause.
 - **Established:** list records contain string `id`, `brand`, `model`, `price`, and `imgUrl`. Four real detail responses expose the required display data, option codes, missing values, and type variations. A valid cart body uses a string ID and numeric codes from `options.colors` / `options.storages`; a successful response has numeric `count`.
 - **Remaining limits:** all 100 detail variants, nullability, every error type, image loading, currency/weight units, inventory/combination rules, and session lifetime were not exhaustively established. A snapshot does not guarantee future server behavior.
-- **Action:** documentary samples now exist in the M01 evidence directory. Reuse them for focused validators/tests when the relevant implementation is approved; do not create test tooling in M01. Handle honest absent values and generic HTTP failures. No blanket wire-requiredness or nullability promise follows from four details. Images remain for later UI verification.
+- **M03 action/result:** unchanged M01 samples are now imported through test-only fixtures. Minimum ID/list/detail checks, optional-field normalization, generic HTTP failures and invalid JSON/network/abort behavior passed deterministic tests. Synthetic malformed inputs are labeled as robustness cases. No fresh live probe, blanket wire-requiredness or nullability promise follows. Images remain for later UI verification.
 - **Gate:** sufficient product evidence exists for local implementation after approval. No blanket API-unavailable blocker remains. Related: R-07, R-13–R-19.
 
 ### Q-02 — Product TTL and independent count persistence
@@ -28,7 +28,8 @@ The bullets above describe **historical Phase 1.1**, not the present repository 
 - **Approved decision:** product data has a one-hour TTL and expired data is revalidated. Persist the API-returned cart count independently from product-cache expiration. Product expiry must not reset it.
 - **Implementation defaults:** successful list/detail GETs have distinct keys, each detail is keyed by ID, expiry is measured from successful receipt at `>= 3,600,000 ms`, and the next read revalidates. Reading does not renew TTL. Use guarded localStorage with memory fallback. POST actions are never cached or replayed. There is no product-TTL-driven cart reset.
 - **Source distinction:** one-hour client caching is explicit in A p.8; the separate count policy is the user's approved interpretation of A pp.6,8. Exact boundary/storage/on-demand details are engineering defaults rather than additional PDF claims.
-- **Gate:** no further permission is needed for these decisions; implementation itself still awaits approval. Related: R-18, R-20, R-21.
+- **M03 result:** product cache implemented with versioned absolute-URL keys, exact TTL tests, receipt timestamps, validation/eviction, reload reuse and memory fallback after storage errors. Fallback is volatile and lasts for that storage instance; it does not extend expiry or guarantee reload persistence. Cart/count persistence remains M06.
+- **Gate:** this product-cache decision has been implemented under M03 approval. M04 still requires authorization; count policy remains approved. Related: R-18, R-20, R-21.
 
 ### Q-03 — Search behavior
 
@@ -82,7 +83,7 @@ The bullets above describe **historical Phase 1.1**, not the present repository 
 - **Status:** M00 repository/README in `e08a674`; M01 in `8a0f325`. M02 verified existing `origin` is the public `j0ssGZ/itx-fe-challenge` repository and remote main already contained M00/M01 before changes. Normal push of verified M02 is explicitly authorized; no remote was created/replaced.
 - **Source:** A p.2 requests an open-code repository and prefers a README in the first commit. That preference is satisfied locally; no remote/publication is authorized by M01. The PDF is ignored and no redistribution permission has been established.
 - **Plan:** preserve progressive conventional history; from M02 follow implement/test/lint/build/review/commit/push/verify/STOP for each approved milestone. PDF stays excluded and no force-push is permitted.
-- **Gate:** M03 needs explicit approval. PR/merge/deploy are not part of M02; preserve the one-check CI stop rule. Related: R-23, R-24, R-28.
+- **Gate:** M03 received explicit approval for its focused commit/normal push; preserve previous history and the existing origin. M04 needs separate approval; no PR/merge/deploy. Preserve the one-check CI stop rule. Related: R-23, R-24, R-28.
 
 ## B-01 — Unresolved direct cross-origin cumulative-cart integration
 
@@ -120,4 +121,4 @@ Keep API/persistence boundaries because the required TTL and response-authoritat
 - Compare desktop structure directly with both wireframes, then check narrow screens, long content, zoom, focus, and image failure. Mocked tests cannot resolve B-01 or prove production deep-link/session behavior.
 - Record progressive commits only after implementation authorization. After a later push/PR update, check CI once; if pending/running, report and stop until the user returns. No polling/watching/waiting agents, automatic merge, or automatic deployment.
 
-M02 has verified the shell/tools while preserving M01 evidence and B-01 as accepted/open; it makes no API calls and establishes no new integration facts. The next gate is explicit **M03** approval. Final cumulative integration, unverified currency/units, unsampled schema/error variants and session lifetime remain limitations, not grounds to fabricate a contract or expand architecture. Development-tool maintenance limits are recorded in Q-08; no product decision was reopened.
+M03 has verified the isolated API/cache modules while preserving the M02 shell, M01 evidence and B-01 as accepted/open. It added 109 tests (112 total passing), and lint/build plus both existing E2E smokes passed. No live API calls or new integration facts are claimed. The next gate is explicit **M04** approval; there is no remaining blocker to proposing the isolated PLP milestone under the accepted risk. Final cumulative integration, unverified currency/units, unsampled schema/error variants and session lifetime remain limitations, not grounds to fabricate a contract or expand architecture. Development-tool maintenance limits are recorded in Q-08; no product decision was reopened.

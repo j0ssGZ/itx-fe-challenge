@@ -1,6 +1,6 @@
 # Requirements specification
 
-Status: approved decisions preserved; M00/M01 complete and M02 shell/tooling implemented and verified under explicit authorization. Product/API/cache/cart implementation remains future work. M03 requires separate approval. Historical API evidence is unchanged.
+Status: approved decisions preserved; M00–M02 complete and M03 API/product-cache modules implemented and verified under explicit authorization. Product rendering/search/cart and M04 onward remain future work requiring separate approval. Historical API evidence is unchanged; no new live probes are claimed.
 
 ## Sources and interpretation
 
@@ -11,6 +11,7 @@ Status: approved decisions preserved; M00/M01 complete and M02 shell/tooling imp
 - **O**: Phase 1's list GET timed out after 30 seconds. Phase 1.1 probes on 2026-11-06, 10:57–11:02 UTC, succeeded for the list, four real product details, and valid cart POSTs. An unknown-ID GET and cart OPTIONS request were also inspected. A separate installed-Chrome diagnostic checked actual cross-origin fetch behavior. Requests were bounded; there were no automatic POST retries. Detailed evidence and limits are recorded below. No cookie values are included in these specs.
 - **M**: [M01 evidence, 2026-11-09](../evidence/m01/2026-11-09/README.md), with versioned [request metadata](../evidence/m01/2026-11-09/verification.json) and [response snapshots](../evidence/m01/2026-11-09/responses.json). Fresh curl and Chrome observations are separate from O. M includes exactly one cart POST; same-session cart accumulation was not replayed. B-01 remains an accepted open integration risk.
 - **S**: the user's M02 authorization: install/configure the approved stack, implement only shell/placeholders, unit/browser smoke checks, and a focused commit plus normal push to existing origin. Its permanent workflow is recorded in README/tasks; the one-check CI stop rule W still applies. The requested 404 fallback follows the approved unknown-route policy: replace-navigation to PLP with a notice, not a third business view.
+- **T**: the user's M03 authorization: native-fetch read boundary, product list/detail validation, one-hour versioned client cache, deterministic mocked tests and a verified normal push. No page integration, hooks, search, cart operations, new views or M04.
 
 Evidence labels: **explicit** means stated in the assignment or user instructions; **approved decision** means agreed in D; **observed** means demonstrated in O, not guaranteed by the PDF; **preference** means encouraged rather than mandatory; **proposal** means an architectural recommendation; **unknown** means not established. Approved design decisions do not become quoted PDF requirements.
 
@@ -111,17 +112,17 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 19. **R-19 — Product API integration**
     - Source/classification: A p.7, Integración API; explicit API requirement. Priority: P0.
     - Acceptance: use base URL `https://itx-frontend-test.onrender.com/`, `GET /api/product` for the list, and `GET /api/product/:id` for detail. Production behavior must use the service rather than bundled sample data. M freshly verifies and preserves the full list plus four representative detail responses; these do not guarantee an exhaustive permanent schema. Evidence snapshots may later support isolated tests, never replace production integration.
-    - Verification: request URL/method assertions and a separate documented live integration check. Milestones: M01, M03.
+    - Verification: M03 mocked URL/method/credentials/abort assertions and contract tests against M01 samples passed; no live requests were repeated. M01 remains the dated live baseline, not proof of completed page integration. Milestones: M01, M03.
 
 20. **R-20 — Client-side response cache**
     - Source/classification: A p.8, Persistencia de datos; explicit technical requirement. Priority: P0.
     - Acceptance: retain API data on the client and reuse it to avoid unnecessary requests. Both browser storage and memory are permitted by A. D approves product-data caching separately from cart-count persistence. Cache successful list/detail GETs; never suppress or replay a POST from a read cache. Q-02 is closed.
-    - Verification: repeated list/detail reads reuse their respective fresh entries and keep product IDs separate. Milestone: M03.
+    - Verification: M03 passed repeated list/detail hits, per-ID/base isolation, reload reuse, corrupt/invalid payload/version checks and storage-failure memory fallback. An independent count test key stays untouched; no cart persistence is implemented. Milestone: M03.
 
 21. **R-21 — One-hour cache expiration**
     - Source/classification: A p.8, Persistencia de datos; explicit technical requirement, confirmed by D. Priority: P0.
     - Acceptance: product data expires after one hour and expired data is revalidated. Implementation default: expire at elapsed time `>= 3,600,000 ms` from successful receipt; the next read fetches fresh data. Reads do not extend expiry. Timer-driven revalidation and conditional HTTP requests are not specified or needed.
-    - Verification: fake-clock checks immediately before, at, and after expiry; revalidation failure must not produce a fresh cache entry. Milestone: M03.
+    - Verification: M03 fake-clock tests passed at 3,599,999 / 3,600,000 / 3,600,001 ms, receipt-time stamping, no sliding expiry, future/invalid timestamps, failed/aborted revalidation and memory fallback with the same TTL. Milestone: M03.
 
 22. **R-22 — Development, production, test, and lint scripts**
     - Source/classification: A p.2, START/BUILD/TEST/LINT; explicit tooling requirement. Priority: P0.
@@ -155,7 +156,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 28. **R-28 — Phase and CI approval gates**
     - Source/classification: U and W; explicit process constraints. Priority: P0.
-    - Acceptance: honor each milestone's explicit scope. M02 authorizes shell/tooling and a verified normal push to existing `j0ssGZ/itx-fe-challenge` origin, preserving M00/M01 ancestry. From M02: implement -> test -> lint -> build -> review diff -> commit -> push -> verify -> STOP. No force-push, secrets/local environments/PDF in commits, failing/unverified pushes, PR, automatic merge/deploy, or next milestone without approval. After each push/PR update, inspect CI once; if pending/running, report and immediately stop, asking the user to return on completion/failure. No polling/watch/waiting agents. Preserve all security/approval gates.
+    - Acceptance: honor each milestone's explicit scope. M02 authorized shell/tooling; M03 authorizes API/cache modules and a verified normal push to existing `j0ssGZ/itx-fe-challenge` origin, preserving M00–M02 ancestry. From M02: implement -> test -> lint -> build -> review diff -> commit -> push -> verify -> STOP. No force-push, secrets/local environments/PDF in commits, failing/unverified pushes, PR, automatic merge/deploy, or next milestone without approval. After each push/PR update, inspect CI once; if pending/running, report and immediately stop, asking the user to return on completion/failure. No polling/watch/waiting agents. Preserve all security/approval gates.
     - Verification: working-tree/file inventory in Phase 1; workflow review at subsequent checkpoints. Milestones: M00–M08.
 
 29. **R-29 — Spanish interface**
@@ -268,7 +269,7 @@ Source M contains timestamps, methods, paths, timeout budgets, selected headers,
 - Actual Chrome GET with credentials omitted returned HTTP 200; GET with `include` failed without a JavaScript-readable HTTP status. Exactly one browser JSON POST using a freshly verified string ID and numeric option codes returned HTTP 200 and `{"count":1}`. No POST retry or fresh same-session accumulation test occurred; the historical returned `2` remains O only. Browser virtual-time readings are not real API-latency measurements.
 - B-01 remains **open and accepted as an integration risk** for subsequent local tooling after explicit approval. It is not resolved by a valid independent POST, persisted client count, curl cookie reuse, or a mocked accumulated response. No proxy, credential change, client session substitute, or local increment was introduced.
 
-The versioned snapshots are documentary samples, not production fallback data or app code. At the historical M01 checkpoint there was no configured test environment. M02 subsequently adds shell-only tests, without using these snapshots or calling the API. Full live cumulative-cart completeness still requires evidence beyond this baseline. Traceability: R-07, R-13–R-21, R-23/R-24/R-28; Q-01/Q-05; B-01.
+The versioned snapshots are documentary samples, not production fallback data or app code. At the historical M01 checkpoint there was no configured test environment. M02 subsequently added shell-only tests. M03 now imports the snapshots exclusively through test fixtures and adds 109 deterministic tests; production modules and the shell do not import the fixtures, and no new live API calls were made. Full live cumulative-cart completeness still requires evidence beyond this baseline. Traceability: R-07, R-13–R-21, R-23/R-24/R-28; Q-01/Q-05; B-01.
 
 ## Visual reference interpretation
 
@@ -287,6 +288,6 @@ No cart view, checkout, authentication, quantity picker, product sorting, server
 
 ## Completion and traceability
 
-Implementation completion requires evidence for R-01–R-29, explicit treatment of B-01 and other relevant limitations, and M08's clean-checkout checks. Acceptance of B-01 permits the agreed limited scope; it is not evidence of cumulative-cart correctness. A passing mocked test suite alone cannot prove live compatibility. Phase 1.1 and M01 performed endpoint/browser diagnostics only; this document records no implemented features or passing application tests.
+Implementation completion requires evidence for R-01–R-29, explicit treatment of B-01 and other relevant limitations, and M08's clean-checkout checks. Acceptance of B-01 permits the agreed limited scope; it is not evidence of cumulative-cart correctness. A passing mocked test suite alone cannot prove live compatibility. Phase 1.1/M01 performed endpoint/browser diagnostics only. M02 supplied the shell; M03 adds isolated API/cache modules, with 112 unit/integration tests, lint, build and 2 shell E2E smokes actually passed. This verifies the scoped implementation, not product views or live cumulative-cart integration.
 
 Related documents: [design](design.md), [tasks](tasks.md), [open questions](open-questions.md).
