@@ -1,6 +1,6 @@
 # Proposed design
 
-Status: Phase 1.1 reviewed proposal. The user's approved cache, cart-count, selector, search, and Spanish-language decisions are incorporated. Implementation is still unauthorized. Requirements and live API evidence refer to [requirements.md](requirements.md); unresolved integration blocker B-01 is in [open-questions.md](open-questions.md). Folder trees and script plans remain prospective.
+Status: approved Phase 1.1 decisions preserved; M00 is complete and M01 has verified contracts with [versioned evidence](../evidence/m01/2026-11-09/README.md). No application implementation or M02 work is authorized by M01. Requirements refer to [requirements.md](requirements.md); accepted open risk B-01 is in [open-questions.md](open-questions.md). README/specifications exist; application folders and scripts below remain prospective.
 
 ## Architecture overview
 
@@ -29,7 +29,7 @@ React Context distributes the count to distant consumers without routing it thro
 
 ```text
 docs/specs/                 requirements, design, tasks, open questions
-README.md                   actual setup and delivery evidence, added later
+README.md                   present since M00; planned commands/status/evidence
 src/
   main.jsx                  mount React and the router
   app/
@@ -100,13 +100,15 @@ The page owns requests and user interaction state; child components receive valu
 
 ### Observed baseline and remaining integration gate
 
-The PDF defines three paths and the cart field names. The initial timeout was superseded by successful Phase 1.1 live checks: 100 list records, four representative details, real-code POSTs, session reuse, unknown-ID behavior, OPTIONS headers, and a real Chrome cross-origin diagnostic. The exact observations, sample IDs, key names/types, and limitations are centralized in requirements.md instead of duplicated as a second schema.
+The PDF defines three paths and the cart field names. Historical 2026-11-06 observations remain dated separately from M01's 2026-11-09 verification. M01 preserves the complete current list, four detail samples, one valid browser POST, an unknown-ID error, sanitized HTTP metadata, and a browser credentials comparison in [the evidence directory](../evidence/m01/2026-11-09/README.md). The first GET timed out; its sole retry and subsequent probes succeeded. No cause or long-term availability is inferred. Field mappings and samples remain centralized rather than becoming another schema framework.
 
-There is enough current evidence to prepare list/detail boundary code and representative fixtures after approval. O is not an exhaustive permanent schema: nullable/type variants not sampled must still be handled defensively. Missing specs/prices are data-quality cases with honest fallbacks, not a reason to invent data or block all local development. Image URLs were observed, but image rendering/failure still needs UI verification.
+There is enough representative evidence and retained documentary data to prepare list/detail boundaries and test fixtures once the corresponding work is authorized. M01 creates no `src/`, package manifest, test setup, Vite configuration, or dependency installation. Neither historical nor current samples establish exhaustive type/nullability guarantees. Missing specs/prices use honest fallbacks; image rendering and a real application remain unverified.
 
-**B-01: direct cross-origin cart accumulation is unresolved.** Shell calls returned `1` without retaining a session and `2` when reusing the server's HttpOnly `session_id` cookie. Chrome from localhost could read the list and JSON cart POST without credentials, but a credentialed GET failed. Inspected responses use wildcard origin and omit credential permission. A credentialed cross-origin browser mode cannot simply be enabled against that policy; see the [Fetch credential/CORS rules](https://fetch.spec.whatwg.org/#cors-protocol-and-credentials).
+**B-01 remains open and accepted as an integration risk.** Historical shell additions returned `1` without retaining a session and `2` when reusing the session cookie; that accumulation was not replayed in M01. Fresh Chrome reads show 200 with credentials omitted and an unreadable failed fetch with `include`; the sole current JSON POST with `omit` returned `1`. Current GET/OPTIONS headers show wildcard origin and no credential permission. This is consistent with the [Fetch credential/CORS rules](https://fetch.spec.whatwg.org/#cors-protocol-and-credentials), not proof of a working cumulative browser cart. A passive curl GET with a session cookie is not evidence of cart continuity.
 
-Do not add a local counter, read the HttpOnly cookie in JavaScript, put a session ID in localStorage, use `no-cors`, disable browser security, or silently introduce a proxy/backend. Resolve B-01 by obtaining a browser-compatible API/session policy, or explicitly accepting and documenting the direct-API limitation that independent calls may return `1`. A same-origin proxy would be a separately justified architecture/hosting change and would need to work in production, not only Vite development. Product work and isolated mutation tests can proceed after implementation approval; an end-to-end cumulative live-cart claim cannot.
+Do not add a local counter, read the HttpOnly cookie in JavaScript, put a session ID in localStorage, use `no-cors`, disable browser security, or silently introduce a proxy/backend. The user has accepted the risk for continued local work after each milestone's authorization; do not reopen that acceptance as a prerequisite for M02. A complete cumulative live-cart claim still needs a verified browser-compatible policy or an explicitly documented final limitation. Any proposed proxy remains a separate architecture/hosting change that must also work in production.
+
+`credentials: 'include'` does not bypass CORS, SameSite rules, or browser third-party-cookie restrictions. HttpOnly prevents JavaScript reading the cookie, not browser transport by itself. Response Set-Cookie is not readable by frontend JavaScript. M01's raw cookie values are not retained in Git; current attributes and the manual nonmutating reuse operation are recorded instead. No fresh claim is made about session duration or credentialed POST behavior.
 
 ### Boundary contract
 
@@ -178,7 +180,7 @@ MSW and an automated accessibility scanner can be added only if the initial boun
 
 Proposed script mapping: `npm start` -> Vite development server; `npm run build` -> production build; `npm test` -> finite `vitest run`; `npm run lint` -> ESLint. Optional developer commands: `test:watch`, `test:e2e`, and `preview`. Exact script capitalization is Q-08. The four required operations remain explicit even if optional commands are omitted.
 
-Create the actual README in the first future commit after approval, before scaffolding. Planned structure:
+M00's initial commit already created the README before scaffolding. M01 updates its status and evidence links; executable instructions remain pending M02. Preserve this planned final structure as later milestones add real behavior:
 
 1. **Purpose and status:** assignment scope, two views, current milestone; clearly identify incomplete work.
 2. **Prerequisites:** exact supported Node/npm versions chosen at setup and later Playwright browser prerequisites.
@@ -203,4 +205,4 @@ The reviewed architecture remains appropriate for a two-page SPA after simplifyi
 
 Page-level reads and one Context keep data flow visible; they require deliberate cancellation, cache, and mutation tests. A query library would be reconsidered only if actual behavior expands beyond this scope. Native controls and CSS Modules preserve accessibility and styling freedom with few dependencies. A small E2E suite validates routing/layout that DOM tests cannot; it complements targeted component tests rather than duplicating them all. Session/CORS incompatibility is a backend/integration finding, not justification to enlarge the frontend by default.
 
-Implementation awaits explicit approval. Do not ask again about the decisions already approved in D. Product contract discovery has sufficient representative evidence; B-01 still needs a disposition before claiming a fully cumulative cross-origin live cart. Other routine choices in Q-07/Q-08 are nonblocking architectural defaults. No application tests have been run in this phase.
+M01 closes contract verification with retained samples and an accepted-risk disposition, not a B-01 resolution. M02 awaits explicit approval; no tool installation or application code has started. Do not reopen approved decisions or the already accepted integration risk to perform routine setup. Q-07/Q-08 remain engineering defaults; B-01 and live integration limits remain visible until actually resolved or explicitly accepted at final delivery. No application tests have been run.

@@ -1,0 +1,616 @@
+{
+  "artifactSchemaVersion": 1,
+  "milestone": "M01",
+  "baseUrl": "https://itx-frontend-test.onrender.com",
+  "collectedAtUTC": "2026-11-09T06:08:05.881885+00:00",
+  "assignment": {
+    "fileName": "1. ITX - Front End Test 1.pdf",
+    "pages": 8,
+    "sha256": "9ef62b392f72f85d0b94e5c336d37362aef7422794f5bb20eeef93e09b81a6ec",
+    "redistributed": false
+  },
+  "scope": {
+    "curlRequests": 9,
+    "browserReadFetches": 2,
+    "browserCartPosts": 1,
+    "automaticPostRetries": 0,
+    "listRetryCount": 1,
+    "credentialedCartPostAttempted": false,
+    "cartAccumulationReplayed": false,
+    "applicationImplemented": false,
+    "dependenciesInstalled": false
+  },
+  "curlVersion": "curl 8.7.1 (x86_64-apple-darwin26.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.69.0",
+  "curlRequests": [
+    {
+      "startedAtUTC": "2026-11-09T06:00:31.386183+00:00",
+      "method": "GET",
+      "path": "/api/product",
+      "attempt": 1,
+      "connectionTimeoutSeconds": 10,
+      "totalTimeoutSeconds": 45,
+      "curlExitCode": 28,
+      "httpStatus": null,
+      "elapsedSeconds": 45.00687,
+      "responseHeaders": {},
+      "error": "curl: (28) Operation timed out after 45006 milliseconds with 0 bytes received",
+      "bytes": 0,
+      "id": "list",
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Origin": "http://localhost:5173"
+      },
+      "setCookies": []
+    },
+    {
+      "startedAtUTC": "2026-11-09T06:03:01.797002+00:00",
+      "method": "GET",
+      "path": "/api/product",
+      "attempt": 2,
+      "connectionTimeoutSeconds": 10,
+      "totalTimeoutSeconds": 60,
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "elapsedSeconds": 0.242969,
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Origin": "http://localhost:5173"
+      },
+      "responseHeaders": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-origin": "*",
+        "vary": "Accept-Encoding"
+      },
+      "setCookies": [
+        {
+          "name": "session_id",
+          "value": "[REDACTED]",
+          "attributes": {
+            "path": "/",
+            "httponly": true
+          }
+        }
+      ],
+      "error": "",
+      "bytes": 16627,
+      "timingSeconds": {
+        "time_namelookup": 0.011904,
+        "time_connect": 0.035048,
+        "time_appconnect": 0.062772,
+        "time_starttransfer": 0.240753
+      },
+      "id": "list-retry",
+      "responseBodyReference": "responses.json#/productList",
+      "parsedBodySha256": "63f29412a683c9fcbc5882e0f29ede1d572245cb6b38a520cfcb00c5f4312d57"
+    },
+    {
+      "startedAtUTC": "2026-11-09T06:03:01.798160+00:00",
+      "method": "GET",
+      "path": "/api/product/ZmGrkLRPXOTpxsU4jjAcv",
+      "attempt": 1,
+      "connectionTimeoutSeconds": 10,
+      "totalTimeoutSeconds": 45,
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "elapsedSeconds": 0.221402,
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Origin": "http://localhost:5173"
+      },
+      "responseHeaders": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-origin": "*",
+        "vary": "Accept-Encoding"
+      },
+      "setCookies": [
+        {
+          "name": "session_id",
+          "value": "[REDACTED]",
+          "attributes": {
+            "path": "/",
+            "httponly": true
+          }
+        }
+      ],
+      "error": "",
+      "bytes": 1397,
+      "timingSeconds": {
+        "time_namelookup": 0.011826,
+        "time_connect": 0.032342,
+        "time_appconnect": 0.057074,
+        "time_starttransfer": 0.221191
+      },
+      "identifierSource": "Historical observed ID recorded on 2026-11-06; membership not freshly established before this probe.",
+      "id": "detail-historical-id",
+      "responseBodyReference": "responses.json#/productDetails/0",
+      "parsedBodySha256": "48b088083f3cf516edc1d081577376f9ea47ccfa7970b27ef9cd227a86050565",
+      "identifierConfirmedInFreshList": true
+    },
+    {
+      "startedAtUTC": "2026-11-09T06:03:01.799173+00:00",
+      "method": "OPTIONS",
+      "path": "/api/cart",
+      "attempt": 1,
+      "connectionTimeoutSeconds": 10,
+      "totalTimeoutSeconds": 45,
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "elapsedSeconds": 0.233896,
+      "requestHeaders": {
+        "Origin": "http://localhost:5173",
+        "Access-Control-Request-Method": "POST",
+        "Access-Control-Request-Headers": "content-type"
+      },
+      "responseHeaders": {
+        "content-type": "text/html; charset=utf-8",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-origin": "*",
+        "allow": "POST",
+        "vary": "Accept-Encoding"
+      },
+      "setCookies": [
+        {
+          "name": "session_id",
+          "value": "[REDACTED]",
+          "attributes": {
+            "path": "/",
+            "httponly": true
+          }
+        }
+      ],
+      "error": "",
+      "bytes": 4,
+      "timingSeconds": {
+        "time_namelookup": 0.011169,
+        "time_connect": 0.034227,
+        "time_appconnect": 0.06083,
+        "time_starttransfer": 0.233496
+      },
+      "id": "cart-preflight",
+      "responseBodyReference": "responses.json#/preflightBody",
+      "parsedBodySha256": "e46d3ae943664116b752137af856edb5f377c6d8012a39e3ef7f39f80a802cac"
+    },
+    {
+      "startedAtUTC": "2026-11-09T06:04:31.940599+00:00",
+      "method": "GET",
+      "path": "/api/product/cGjFJlmqNPIwU59AOcY8H",
+      "attempt": 1,
+      "connectionTimeoutSeconds": 10,
+      "totalTimeoutSeconds": 30,
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "elapsedSeconds": 0.111938,
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Origin": "http://localhost:5173"
+      },
+      "responseHeaders": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-origin": "*",
+        "vary": "Accept-Encoding"
+      },
+      "setCookies": [
+        {
+          "name": "session_id",
+          "value": "[REDACTED]",
+          "attributes": {
+            "path": "/",
+            "httponly": true
+          }
+        }
+      ],
+      "error": "",
+      "bytes": 1444,
+      "sessionCookieReused": false,
+      "returnedSessionCookieMatchesRequest": null,
+      "id": "detail-multiple-colors",
+      "responseBodyReference": "responses.json#/productDetails/1",
+      "parsedBodySha256": "c0326ea5e9b27534ed88c98c268d02d5fbd2d269b8dd65304750e404fd11a703"
+    },
+    {
+      "startedAtUTC": "2026-11-09T06:04:31.941923+00:00",
+      "method": "GET",
+      "path": "/api/product/pMZMhe_ZaAPZoaCCtlDrg",
+      "attempt": 1,
+      "connectionTimeoutSeconds": 10,
+      "totalTimeoutSeconds": 30,
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "elapsedSeconds": 0.166784,
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Origin": "http://localhost:5173"
+      },
+      "responseHeaders": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-origin": "*",
+        "vary": "Accept-Encoding"
+      },
+      "setCookies": [
+        {
+          "name": "session_id",
+          "value": "[REDACTED]",
+          "attributes": {
+            "path": "/",
+            "httponly": true
+          }
+        }
+      ],
+      "error": "",
+      "bytes": 1276,
+      "sessionCookieReused": false,
+      "returnedSessionCookieMatchesRequest": null,
+      "id": "detail-missing-fields",
+      "responseBodyReference": "responses.json#/productDetails/2",
+      "parsedBodySha256": "80ef716ed45801c2a4a7b19ccb9c3b6f3b2981f0d6a84a01e9457b73bbd38c20"
+    },
+    {
+      "startedAtUTC": "2026-11-09T06:04:31.943117+00:00",
+      "method": "GET",
+      "path": "/api/product/AasKFs5EGbyAEIKkcHQcF",
+      "attempt": 1,
+      "connectionTimeoutSeconds": 10,
+      "totalTimeoutSeconds": 30,
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "elapsedSeconds": 0.227244,
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Origin": "http://localhost:5173"
+      },
+      "responseHeaders": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-origin": "*",
+        "vary": "Accept-Encoding"
+      },
+      "setCookies": [
+        {
+          "name": "session_id",
+          "value": "[REDACTED]",
+          "attributes": {
+            "path": "/",
+            "httponly": true
+          }
+        }
+      ],
+      "error": "",
+      "bytes": 1572,
+      "sessionCookieReused": false,
+      "returnedSessionCookieMatchesRequest": null,
+      "id": "detail-array-cpu",
+      "responseBodyReference": "responses.json#/productDetails/3",
+      "parsedBodySha256": "c6e8e7714e818569274a00f73171cd7340b4e82a6149443f008f09051c903e80"
+    },
+    {
+      "startedAtUTC": "2026-11-09T06:04:32.061285+00:00",
+      "method": "GET",
+      "path": "/api/product/__m01_missing_product__",
+      "attempt": 1,
+      "connectionTimeoutSeconds": 10,
+      "totalTimeoutSeconds": 30,
+      "curlExitCode": 0,
+      "httpStatus": 500,
+      "elapsedSeconds": 0.184793,
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Origin": "http://localhost:5173"
+      },
+      "responseHeaders": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-origin": "*",
+        "vary": "Accept-Encoding"
+      },
+      "setCookies": [
+        {
+          "name": "session_id",
+          "value": "[REDACTED]",
+          "attributes": {
+            "path": "/",
+            "httponly": true
+          }
+        }
+      ],
+      "error": "",
+      "bytes": 51,
+      "sessionCookieReused": false,
+      "returnedSessionCookieMatchesRequest": null,
+      "id": "detail-unknown",
+      "responseBodyReference": "responses.json#/unknownProduct",
+      "parsedBodySha256": "1e2f2317c32032bcdbb50a9409844b3fdd12c5feb6cd25ba1f9f5ffa2549eb83"
+    },
+    {
+      "startedAtUTC": "2026-11-09T06:04:32.115753+00:00",
+      "method": "GET",
+      "path": "/api/product/ZmGrkLRPXOTpxsU4jjAcv",
+      "attempt": 1,
+      "connectionTimeoutSeconds": 10,
+      "totalTimeoutSeconds": 30,
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "elapsedSeconds": 0.134563,
+      "requestHeaders": {
+        "Accept": "application/json",
+        "Origin": "http://localhost:5173"
+      },
+      "responseHeaders": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-headers": "Origin, X-Requested-With, Content-Type, Accept",
+        "access-control-allow-origin": "*",
+        "vary": "Accept-Encoding"
+      },
+      "setCookies": [],
+      "error": "",
+      "bytes": 1397,
+      "sessionCookieReused": true,
+      "returnedSessionCookieMatchesRequest": null,
+      "id": "detail-session-reuse",
+      "responseBodyReference": "responses.json#/productDetails/0",
+      "parsedBodySha256": "48b088083f3cf516edc1d081577376f9ea47ccfa7970b27ef9cd227a86050565"
+    }
+  ],
+  "browserReads": {
+    "startedAtUTC": "2026-11-09T06:03:01.972268+00:00",
+    "browser": "Google Chrome 157.0.8103.38",
+    "origin": "http://localhost:49788",
+    "normalWebSecurity": true,
+    "fetchTimeoutMs": 12000,
+    "processTimeoutSeconds": 45,
+    "exitCode": 0,
+    "diagnostic": {
+      "origin": "http://localhost:49788",
+      "results": [
+        {
+          "name": "read-without-credentials",
+          "method": "GET",
+          "path": "/api/product",
+          "credentials": "omit",
+          "status": 200,
+          "elapsedMs": 10,
+          "bodyShape": "array",
+          "itemCount": 100
+        },
+        {
+          "name": "read-with-credentials",
+          "method": "GET",
+          "path": "/api/product",
+          "credentials": "include",
+          "status": null,
+          "elapsedMs": 10,
+          "error": "TypeError: Failed to fetch"
+        }
+      ],
+      "complete": true
+    },
+    "remoteCartPosts": 0,
+    "note": "elapsedMs is browser virtual time under a 30-second virtual-time budget; do not compare it as wall-clock API latency."
+  },
+  "browserCart": {
+    "startedAtUTC": "2026-11-09T06:04:31.952937+00:00",
+    "origin": "http://localhost:49823",
+    "normalWebSecurity": true,
+    "fetchTimeoutMs": 12000,
+    "processTimeoutSeconds": 35,
+    "processElapsedSeconds": 0.811,
+    "diagnostic": {
+      "method": "POST",
+      "path": "/api/cart",
+      "credentials": "omit",
+      "requestBody": {
+        "id": "ZmGrkLRPXOTpxsU4jjAcv",
+        "colorCode": 1000,
+        "storageCode": 2000
+      },
+      "postsAttempted": 1,
+      "automaticRetries": 0,
+      "status": 200,
+      "body": {
+        "count": 1
+      },
+      "exposedContentType": "application/json; charset=utf-8",
+      "elapsedMs": 10
+    },
+    "automaticRetries": 0,
+    "note": "One deliberate current-run add only. Browser elapsedMs uses virtual time; process duration is not isolated API latency."
+  },
+  "cartResponseReference": "responses.json#/cartResponse",
+  "cartResponseParsedSha256": "6aea6dfe6561984cdc5c54ead84d47d2cf29e48253ae282aef237404adad4661",
+  "statistics": {
+    "listItems": 100,
+    "uniqueListIds": 100,
+    "listFieldTypes": {
+      "id": {
+        "str": 100
+      },
+      "brand": {
+        "str": 100
+      },
+      "model": {
+        "str": 100
+      },
+      "price": {
+        "str": 100
+      },
+      "imgUrl": {
+        "str": 100
+      }
+    },
+    "emptyPriceIds": [
+      "pMZMhe_ZaAPZoaCCtlDrg",
+      "Cu6y7RudjqPTBIYvW6QXd",
+      "ND9m-Ujc5THD1F7tG2sNk",
+      "CbrppwKzpqRq_ScJDRbEy",
+      "F1v2jy0lBKeIiM9XeoqVo",
+      "AasKFs5EGbyAEIKkcHQcF"
+    ],
+    "brandCounts": {
+      "Acer": 99,
+      "alcatel": 1
+    },
+    "detailsSampled": 4,
+    "detailFieldObservations": {
+      "id": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "brand": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "model": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "price": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 2
+      },
+      "imgUrl": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "cpu": {
+        "types": {
+          "str": 3,
+          "list": 1
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "ram": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "os": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "displaySize": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "displayResolution": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "battery": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 1
+      },
+      "primaryCamera": {
+        "types": {
+          "list": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "secondaryCmera": {
+        "types": {
+          "list": 2,
+          "str": 2
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      },
+      "dimentions": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 1
+      },
+      "weight": {
+        "types": {
+          "str": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 1
+      },
+      "options": {
+        "types": {
+          "dict": 4
+        },
+        "absentKeys": 0,
+        "emptyNullOrDashValues": 0
+      }
+    },
+    "optionPatterns": [
+      {
+        "id": "ZmGrkLRPXOTpxsU4jjAcv",
+        "colors": 1,
+        "storages": 2
+      },
+      {
+        "id": "cGjFJlmqNPIwU59AOcY8H",
+        "colors": 2,
+        "storages": 1
+      },
+      {
+        "id": "pMZMhe_ZaAPZoaCCtlDrg",
+        "colors": 1,
+        "storages": 1
+      },
+      {
+        "id": "AasKFs5EGbyAEIKkcHQcF",
+        "colors": 1,
+        "storages": 1
+      }
+    ]
+  },
+  "evidenceBoundary": {
+    "current": "Only the requests and response values in these files were freshly observed in M01 on 2026-11-09.",
+    "historical": "The 2026-11-06 count=2 with cookie reuse remains a historical documented observation; original traces are not included or regenerated.",
+    "notEstablished": [
+      "Cause of the first 45-second timeout",
+      "Fresh same-session cart accumulation",
+      "Exhaustive schema/nullability/error guarantees",
+      "Currency and weight units",
+      "Current credentialed browser POST behavior",
+      "Persistence duration and recovery of server sessions",
+      "Image-resource loading",
+      "Full application behavior"
+    ]
+  },
+  "redaction": {
+    "cookieValuesRemoved": true,
+    "onlySelectedResponseHeadersRecorded": true,
+    "personalPathsRemoved": true,
+    "browserProfilesOrTemporaryArtifactsIncluded": false
+  },
+  "canonicalHashDefinition": "SHA-256 of the parsed response serialized as UTF-8 JSON with sorted object keys, no separator whitespace, ensure_ascii=False; references point into responses.json."
+}

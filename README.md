@@ -6,16 +6,16 @@ El objetivo es desarrollar una SPA React pequeña, accesible, adaptable y bien p
 
 ## Estado actual
 
-**M00: inicialización del repositorio local y documentación base. La aplicación todavía no está implementada.**
+**M01: verificación documental de contratos API completada, con B-01 abierto y aceptado como riesgo. La aplicación todavía no está implementada.**
 
 - Las fases de especificación y revisión 1.1 están documentadas.
-- Este primer incremento contiene el README, el `.gitignore` y los cuatro documentos SDD originales, conservados sin modificaciones.
+- M00 creó Git, README y `.gitignore` en el primer commit. M01 actualiza las especificaciones y conserva metadatos y respuestas reales de la API en [sus evidencias versionadas](docs/evidence/m01/2026-11-09/README.md).
 - No existen código de aplicación, `package.json`, dependencias instaladas, configuración Vite, scripts de desarrollo ni infraestructura de pruebas.
 - No se han ejecutado pruebas de aplicación, lint ni compilaciones. Las comprobaciones previas de la API son exploraciones del servicio, no pruebas de una aplicación terminada.
-- Solo M00 está autorizado. Los hitos posteriores requieren aprobación explícita.
+- Esta autorización cubre únicamente M01. M02 y los hitos posteriores requieren aprobación explícita.
 - El repositorio es local; no se ha configurado un remoto ni realizado una publicación.
 
-Los documentos SDD conservan su contexto de la revisión del 6 de noviembre de 2026. Las referencias a repositorio y herramientas futuros describen ese punto anterior; este README registra el avance de M00.
+Las observaciones históricas de la revisión del 6 de noviembre están separadas de la verificación M01 del 9 de noviembre de 2026. No se presentan muestras antiguas como resultados recién obtenidos. El código, las herramientas y las pruebas de aplicación siguen siendo planes, no entregables existentes.
 
 ## Alcance del enunciado
 
@@ -63,12 +63,14 @@ Los cuatro documentos son la referencia del proyecto:
 - [Hitos y tareas](docs/specs/tasks.md): objetivos, dependencias, entregables, comprobaciones y checkpoints de Git.
 - [Decisiones, preguntas y riesgos](docs/specs/open-questions.md): decisiones cerradas, límites conocidos y riesgo B-01.
 
+La [evidencia M01](docs/evidence/m01/2026-11-09/README.md) añade respuestas de referencia, metadatos HTTP, límites de espera, comparación de credenciales en Chrome y comprobaciones de integridad. Son datos documentales para futuros tests, no un backend alternativo ni funcionalidad de aplicación.
+
 Los documentos distinguen requisitos del enunciado, decisiones aprobadas, propuestas técnicas y comportamiento observado. No debe inferirse un contrato a partir de valores ilustrativos ni de un único resultado del servicio.
 
 ## Hitos previstos
 
-1. **M00 — Inicialización:** repositorio local, README, exclusiones y primer commit documental. Es el alcance de este incremento.
-2. **M01 — Base de contratos e integración:** consolidar las observaciones y muestras de la API, y registrar el tratamiento de sus limitaciones. El descubrimiento previo está documentado; el hito completo sigue pendiente.
+1. **M00 — Inicialización:** completado; repositorio local, README, exclusiones y primer commit documental.
+2. **M01 — Base de contratos e integración:** verificación completada con respuestas y metadatos versionados, límites explícitos y B-01 abierto como riesgo aceptado. No se ha implementado un cliente API ni configurado tests.
 3. **M02 — Herramientas y estructura:** configurar React/Vite, las dos rutas, la cabecera y los scripts de validación.
 4. **M03 — API y caché:** límites de acceso a datos, persistencia y expiración de una hora.
 5. **M04 — Listado:** productos, búsqueda y tarjetas adaptables.
@@ -77,11 +79,11 @@ Los documentos distinguen requisitos del enunciado, decisiones aprobadas, propue
 8. **M07 — Recorridos y calidad visual:** E2E críticos y revisión de accesibilidad y adaptación.
 9. **M08 — Entrega reproducible:** comprobación desde una copia limpia y documentación final basada en resultados reales.
 
-El siguiente hito es **M01**. No se ejecutará como parte de M00.
+El siguiente hito es **M02 — herramientas y estructura**. No se ha iniciado y requiere aprobación explícita.
 
 ## Instalación y comandos de desarrollo
 
-**No disponibles en M00. No ejecutar antes de autorizar M01.** El plan SDD vigente sitúa la creación de los scripts y la instalación de herramientas en **M02**; M01 no los habilita por sí solo.
+**No disponibles en M00/M01. No ejecutar hasta autorizar y configurar M02.** M01 no incluye instalación de herramientas ni creación de scripts.
 
 No existe `package.json` y actualmente no hay una aplicación que instalar, iniciar, probar o compilar. Los siguientes nombres son únicamente el contrato de ejecución previsto:
 
@@ -96,9 +98,11 @@ Los comandos de E2E, modo watch y vista previa se documentarán cuando existan. 
 
 El enunciado define la base `https://itx-frontend-test.onrender.com/` y tres operaciones: `GET /api/product`, `GET /api/product/:id` y `POST /api/cart`. Las estructuras y particularidades observadas están registradas en la especificación; no se presupone que la disponibilidad actual ni el comportamiento de sesión estén garantizados.
 
+En M01, el primer GET agotó 45 segundos sin respuesta HTTP; su único segundo intento respondió 200. Se conservaron el listado de 100 productos, cuatro detalles, el error 500 de un ID inexistente y el resultado 200 del único POST deliberado (`count: 1`). No se repitieron altas para comprobar acumulación. Los campos vacíos, tipos variables y claves con erratas permanecen tal como fueron recibidos.
+
 **B-01 permanece abierto como riesgo de integración aceptado, sin considerarse resuelto.** La exploración previa mostró acumulación del contador al conservar la cookie de sesión, mientras que las llamadas independientes devolvían `1`. La configuración CORS observada plantea una limitación para mantener esa sesión desde otro origen en el navegador.
 
-M00 acepta este riesgo para la inicialización documental. No introduce un proxy, cambios de credenciales ni un contador local alternativo. Su aceptación no demuestra que el carrito acumulativo funcione en una aplicación real. El tratamiento y la verificación de esa limitación deberán quedar explícitos antes de afirmar la integración completa; véase [B-01](docs/specs/open-questions.md#b-01--unresolved-direct-cross-origin-cumulative-cart-integration).
+M00/M01 aceptan este riesgo para continuar con trabajo local autorizado. M01 volvió a observar GET legible en Chrome con credenciales omitidas y fallo con `include`, junto a cabeceras GET/OPTIONS de origen comodín sin permiso de credenciales. No se revalidó la acumulación de varias altas ni se introdujo un proxy, cambio de transporte o contador local alternativo. La aceptación no demuestra un carrito acumulativo funcional; véase [B-01](docs/specs/open-questions.md#b-01--unresolved-direct-cross-origin-cumulative-cart-integration).
 
 ## Material original y entrega futura
 

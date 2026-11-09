@@ -1,6 +1,6 @@
 # Requirements specification
 
-Status: Phase 1.1 review completed on 2026-11-06; the decisions listed in D are approved, while implementation remains unauthorized. No application is implemented.
+Status: Phase 1.1 approved decisions preserved; M00 completed and M01 contract verification performed on 2026-11-09. Only M01 is authorized in this increment. M02 and application implementation remain pending explicit approval.
 
 ## Sources and interpretation
 
@@ -9,6 +9,7 @@ Status: Phase 1.1 review completed on 2026-11-06; the decisions listed in D are 
 - **D**: the user's Phase 1.1 approved decisions: one-hour product cache with revalidation; cart count persisted independently; singleton selectors visibly preselected; multiple-option groups initially unselected; real-time, partial, case-insensitive brand/model matching; Spanish UI; response-authoritative cart count.
 - **W**: the user's supplied AGENTS.md instructions governing CI, approval gates, merges, and deployments.
 - **O**: Phase 1's list GET timed out after 30 seconds. Phase 1.1 probes on 2026-11-06, 10:57–11:02 UTC, succeeded for the list, four real product details, and valid cart POSTs. An unknown-ID GET and cart OPTIONS request were also inspected. A separate installed-Chrome diagnostic checked actual cross-origin fetch behavior. Requests were bounded; there were no automatic POST retries. Detailed evidence and limits are recorded below. No cookie values are included in these specs.
+- **M**: [M01 evidence, 2026-11-09](../evidence/m01/2026-11-09/README.md), with versioned [request metadata](../evidence/m01/2026-11-09/verification.json) and [response snapshots](../evidence/m01/2026-11-09/responses.json). Fresh curl and Chrome observations are separate from O. M includes exactly one cart POST; same-session cart accumulation was not replayed. B-01 remains an accepted open integration risk.
 
 Evidence labels: **explicit** means stated in the assignment or user instructions; **approved decision** means agreed in D; **observed** means demonstrated in O, not guaranteed by the PDF; **preference** means encouraged rather than mandatory; **proposal** means an architectural recommendation; **unknown** means not established. Approved design decisions do not become quoted PDF requirements.
 
@@ -98,17 +99,17 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 17. **R-17 — Cart request contract**
     - Source/classification: A pp.6–8, ACTIONS and API; explicit API requirement. Priority: P0.
-    - Acceptance: send `POST /api/cart` with fields `id`, `colorCode`, and `storageCode`, using actual product/option values. O confirms a string ID and numeric codes from `options.colors` and `options.storages`. Do not send display labels, stringify codes accidentally through DOM input values, or add unsupported quantity fields.
+    - Acceptance: send `POST /api/cart` with fields `id`, `colorCode`, and `storageCode`, using actual product/option values. O and M confirm a string ID and numeric codes from `options.colors` and `options.storages`. Do not send display labels, stringify codes accidentally through DOM input values, or add unsupported quantity fields.
     - Verification: inspect the outgoing request in boundary/integration tests. Milestones: M01, M06.
 
 18. **R-18 — Authoritative, persistent cart count**
     - Source/classification: A p.6 and p.8 response example; explicit requirement. D approves response authority and persistence independent from product TTL. Priority: P0.
-    - Acceptance: replace the shared header count with successful response `count` and persist it independently of product-cache expiration. Do not increment locally or treat the response as a delta. Reload must restore the last confirmed count when browser storage is available. O shows cookie-dependent server accumulation; B-01 in open-questions.md prevents claiming that cross-origin cumulative behavior is resolved.
+    - Acceptance: replace the shared header count with successful response `count` and persist it independently of product-cache expiration. Do not increment locally or treat the response as a delta. Reload must restore the last confirmed count when browser storage is available. Cookie-dependent accumulation is historical evidence in O; M freshly confirms one count-bearing POST and the credentialed-browser constraint, without replaying accumulation. B-01 remains open despite acceptance of its risk.
     - Verification: responses deliberately different from previous count plus one, including repeated `1`; route changes; reload; product-cache expiry without resetting the count. Milestone: M06.
 
 19. **R-19 — Product API integration**
     - Source/classification: A p.7, Integración API; explicit API requirement. Priority: P0.
-    - Acceptance: use base URL `https://itx-frontend-test.onrender.com/`, `GET /api/product` for the list, and `GET /api/product/:id` for detail. Production behavior must use the service rather than bundled sample data. O establishes the current list shape and four representative detail shapes, not a guaranteed exhaustive schema for every product.
+    - Acceptance: use base URL `https://itx-frontend-test.onrender.com/`, `GET /api/product` for the list, and `GET /api/product/:id` for detail. Production behavior must use the service rather than bundled sample data. M freshly verifies and preserves the full list plus four representative detail responses; these do not guarantee an exhaustive permanent schema. Evidence snapshots may later support isolated tests, never replace production integration.
     - Verification: request URL/method assertions and a separate documented live integration check. Milestones: M01, M03.
 
 20. **R-20 — Client-side response cache**
@@ -133,7 +134,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 24. **R-24 — Execution README**
     - Source/classification: A p.2; README and execution explanation are explicit; inclusion in the first commit is a preference. Priority: P0 for README, P1 for first-commit placement.
-    - Acceptance: README explains prerequisites, setup, execution, and relevant notes; claims reflect actual implementation and verification. Future first commit should include the approved specs and initial README before scaffolding. Only the README plan is produced in this phase.
+    - Acceptance: README explains prerequisites, setup, execution, and relevant notes; claims reflect actual implementation and verification. M00's first commit includes the specs and initial README before scaffolding. In M01 the README records contract-verification results and unavailable development commands; executable setup instructions remain conditional on M02 tooling.
     - Verification: clean-checkout instructions checked in M08. Milestones: M00, M02, M08.
 
 25. **R-25 — Visual structure and attention to detail**
@@ -153,7 +154,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 28. **R-28 — Phase and CI approval gates**
     - Source/classification: U and W; explicit process constraints. Priority: P0.
-    - Acceptance: Phases 1 and 1.1 modify only the four specification documents; Phase 1.1 additionally authorizes live endpoint verification. No functionality, application edits, scaffolding, dependency installation, or PR. Approval of design decisions does not authorize implementation. Later, after a push or PR update, check CI once; if pending/running, report and stop, asking the user to return when CI completes/fails. No polling, watch commands, waiting agents, automatic merging, or automatic deployment. Preserve existing security/approval gates.
+    - Acceptance: Phases 1/1.1 were specification/endpoint review only; M00 initialized local Git and the README. This authorized M01 increment verifies contracts, retains documentary response samples, updates evidence/status, and creates one local commit. It does not authorize application code, dependency installation, Vite setup, M02, a remote, push, or PR. Later, after a push or PR update, check CI once; if pending/running, report and stop, asking the user to return when CI completes/fails. No polling, watch commands, waiting agents, automatic merging, or automatic deployment. Preserve existing security/approval gates.
     - Verification: working-tree/file inventory in Phase 1; workflow review at subsequent checkpoints. Milestones: M00–M08.
 
 29. **R-29 — Spanish interface**
@@ -172,7 +173,9 @@ Base URL: `https://itx-frontend-test.onrender.com/` (A p.7).
 
 The PDF's unquoted keys, leading-zero IDs (`0001`), and ellipses are illustrative pseudo-JSON, not a schema or copyable JSON fixture. Types, mappings, status/error behavior, and session details below are observations that supplement the PDF; they are not retroactively PDF guarantees. Exhaustive nullability, currency/weight units, stock/combination rules, and a general error schema remain unspecified.
 
-## Phase 1.1 observed API behavior
+## Historical Phase 1.1 API observations — 2026-11-06
+
+The following subsection preserves O as dated historical evidence. Original temporary traces are no longer available. The fresh M01 record below and its committed artifacts must be used when describing the 2026-11-09 verification; do not relabel historical repeated-add/session results as freshly reproduced.
 
 Scope: one full list snapshot, four selected details, one intentionally unknown ID, one OPTIONS request, three shell cart POSTs, and one additional browser cart POST. Shell requests used a 10-second connection timeout and 45-second total limit; all completed in under one second. Chrome diagnostics used a 12-second timeout per fetch and a 45-second process bound. No automatic POST retries occurred. This is live contract exploration, not a passing application test suite.
 
@@ -253,6 +256,19 @@ No explicit PDF requirement was missing from the original matrix. Page-level cov
 
 Corrections in Phase 1.1: close the approved decisions; replace the obsolete “API unavailable/schema unknown” baseline with bounded live observations; record malformed/missing values, screen/key mappings, and session/CORS limits; remove unnecessary component/file boundaries in design.md. The source distinguishes mandatory structure from styling freedom and does not mandate TypeScript, exact breakpoints, a specific test framework, a cart page, or a coverage percentage.
 
+## M01 verification — 2026-11-09
+
+Source M contains timestamps, methods, paths, timeout budgets, selected headers, redacted cookie attributes, current responses, and integrity hashes. The original PDF was reread; its content remains local and ignored by Git. This increment changes no approved product or architectural decision.
+
+- The first list GET timed out after 45.007 seconds with zero bytes and no HTTP response. The only second attempt returned HTTP 200 in 0.243 seconds. The cause of the first failure is unknown; a cold start is not established. Availability was verified during the successful probes, not guaranteed beyond them.
+- The current list again contains 100 records with unique string IDs, five string fields per record, and six empty prices. Four real details returned HTTP 200; they reproduce the documented typo keys, screen-field mapping, string/array CPU/camera values, and three singleton/multiple option patterns. All required display-attribute keys occur in those four samples; some values are empty or `-`. Neither the sample nor the abbreviated PDF establishes universal wire-field requiredness/nullability.
+- A fresh unknown-ID GET returned HTTP 500 with `{"message":"An Unexpected Error Occurred","code":0}`. Unsupported cart payloads were not fuzzed and no universal error contract is inferred.
+- Captured GET/OPTIONS headers again show `session_id` with Path `/` and HttpOnly, wildcard origin, and no credential permission. A nonmutating curl detail GET that reused the list cookie returned 200 without issuing another Set-Cookie. That does not establish cart-state persistence or session lifetime.
+- Actual Chrome GET with credentials omitted returned HTTP 200; GET with `include` failed without a JavaScript-readable HTTP status. Exactly one browser JSON POST using a freshly verified string ID and numeric option codes returned HTTP 200 and `{"count":1}`. No POST retry or fresh same-session accumulation test occurred; the historical returned `2` remains O only. Browser virtual-time readings are not real API-latency measurements.
+- B-01 remains **open and accepted as an integration risk** for subsequent local tooling after explicit approval. It is not resolved by a valid independent POST, persisted client count, curl cookie reuse, or a mocked accumulated response. No proxy, credential change, client session substitute, or local increment was introduced.
+
+The versioned snapshots are documentary samples, not production fallback data, app code, or a configured test environment. M01 supplies the contract baseline and accepted-risk disposition. M02 can be proposed for approval; full live cumulative-cart completeness still requires evidence beyond this baseline. Traceability: R-07, R-13–R-21, R-23/R-24/R-28; Q-01/Q-05; B-01.
+
 ## Visual reference interpretation
 
 - **PLP, A p.3:** a full-width header above the list region; search aligned to the upper right within that region; four evenly spaced item columns at the illustrated width. Two sample rows illustrate repetition, not a result limit. No sidebar, sort control, carousel, or pagination is shown or required.
@@ -270,6 +286,6 @@ No cart view, checkout, authentication, quantity picker, product sorting, server
 
 ## Completion and traceability
 
-Implementation completion requires evidence for R-01–R-29, resolution or explicit acceptance of B-01 and other relevant limitations, and M08's clean-checkout checks. A passing mocked test suite alone cannot prove compatibility with the live API. Phase 1.1 performed endpoint/browser diagnostics only; this document records no implemented features or passing application tests.
+Implementation completion requires evidence for R-01–R-29, explicit treatment of B-01 and other relevant limitations, and M08's clean-checkout checks. Acceptance of B-01 permits the agreed limited scope; it is not evidence of cumulative-cart correctness. A passing mocked test suite alone cannot prove live compatibility. Phase 1.1 and M01 performed endpoint/browser diagnostics only; this document records no implemented features or passing application tests.
 
 Related documents: [design](design.md), [tasks](tasks.md), [open questions](open-questions.md).

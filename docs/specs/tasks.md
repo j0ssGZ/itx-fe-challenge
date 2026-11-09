@@ -1,11 +1,11 @@
 # Implementation milestones
 
-Status: Phase 1.1 reviewed sequence. Approved design decisions are settled, but no implementation milestone is authorized yet. Live API/browser discovery has been performed and is explicitly distinguished from future application work. R-IDs refer to [requirements.md](requirements.md); Q-IDs and blocker B-01 refer to [open-questions.md](open-questions.md). Each future milestone should leave a coherent, independently verifiable repository state.
+Status: M00 completed in `e08a674`; M01 contract verification completed on 2026-11-09 with [versioned evidence](../evidence/m01/2026-11-09/README.md) and B-01 retained as an accepted open risk. No application implementation, dependency installation, or M02 work is authorized by this increment. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md).
 
 ## Working agreement and commit checkpoints
 
-- Current workspace contains the assignment PDF and these specifications; no Git repository was detected during Phases 1/1.1. Do not claim existing commit history, configured scripts, or passing application checks. Phase 1.1 endpoint/browser diagnostics are real observations, not application test results.
-- After approval, establish the local repository and write an initial honest README before application scaffolding. Suggested first commit: `docs: record approved specification and execution plan`, including the specs and README. This can satisfy the PDF's preference for a README in the first commit without adding one during the documentation-only phase.
+- Phases 1/1.1 originally had no Git repository. M00 initialized local `main`, added README/.gitignore and the four specs in `e08a674`, and excluded the PDF. M01 retains evidence and updates documentation only. No configured application scripts or passing application checks exist.
+- The first-commit README preference is satisfied by M00's actual commit, `docs: initialize ITX frontend challenge and SDD specifications`; do not fabricate earlier commits or initialize the repository again. M01's focused documentation commit follows that baseline.
 - Keep commits tied to working increments. Include relevant tests in the same milestone as the behavior. Commit messages below are suggestions; split further if needed, but do not fabricate historical progress or backdate commits.
 - Run the narrow checks relevant to a change, then the required lint/test/build gates before a delivery checkpoint. Do not report tests as passed before running them.
 - Publishing a repository, opening a PR, merging, and deploying are separate actions. Phases 1/1.1 authorize none of them. Never merge/deploy automatically. Preserve all security and approval gates.
@@ -13,25 +13,29 @@ Status: Phase 1.1 reviewed sequence. Approved design decisions are settled, but 
 
 ## M00 — Specification approval and first repository checkpoint
 
+- **Status:** completed and verified in `e08a6744ed1e0b1f26cb63293daef25905e9d5d4`. B-01 was accepted as an open risk, not resolved; no later milestone was executed under M00.
+
 - **Objective:** agree on scope, source interpretation, and delivery defaults before implementation.
 - **Scope:** review the Phase 1.1 updates and B-01; confirm the simplified architecture and implementation scope. Do not reopen approved cache/count/search/selector/Spanish decisions. Repository destination is deferred until publication, not a gate for local setup. After explicit implementation approval, initialize local Git if still absent and create the initial README described in design.md. Avoid publishing the source PDF without authorization.
 - **Acceptance criteria:** two-view boundary and source/observation/decision distinctions are accepted; B-01 has a disposition or a clear scope limit for work that may proceed. README says what is planned and how execution documentation will be added; no implemented/tested claims. Phase 1.1 ends before these later actions.
 - **Required tests/checks:** documentation/source-reference and file-inventory review only; no application tests exist yet.
 - **Dependencies:** Phase 1.1 deliverables; explicit user approval before any repository setup, README creation, dependency installation, or implementation.
 - **Expected deliverable:** approved baseline, decision updates, first local documentation commit after approval.
-- **Suggested commit:** `docs: record approved specification and execution plan`.
+- **Actual commit:** `docs: initialize ITX frontend challenge and SDD specifications`.
 - **Traceability/checkpoint:** R-23, R-24, R-28. Human approval before implementation; approved Phase 1.1 live discovery is already recorded under M01.
 
 ## M01 — Baseline the observed API and resolve integration limits
 
+- **Status:** verification/documentary baseline completed on 2026-11-09. Retained current responses and sanitized metadata demonstrate the verified scope; exhaustive contracts, current cart accumulation, and B-01 resolution are not claimed. Only one remote add occurred in this run. See the [evidence record](../evidence/m01/2026-11-09/README.md).
+
 - **Objective:** use the verified Phase 1.1 observations instead of guessed product/session contracts.
-- **Scope:** discovery already performed: successful list and four detail GETs; empty/string/array fields; numeric option codes; valid POST; cookie-dependent count; unknown-ID 500; OPTIONS and actual Chrome CORS behavior. After implementation approval, retain representative fixtures and minimal mappings, and resolve or explicitly accept B-01's cross-origin cumulative-cart limit. Do not re-run exploratory POSTs without a new verification need. Image URL presence is known; image rendering is checked with the views.
-- **Acceptance criteria:** representative mappings support every required display label without fabricated values; payload codes derive from real `options` objects. PDF guarantees and observed behavior remain separately labeled. Missing currency/units are documented with raw-value fallbacks rather than blocking the whole app. B-01 has a recorded disposition before claiming cumulative live integration; product discovery no longer blocks local product work after approval.
-- **Required tests/checks:** source/evidence review already performed; after tooling exists, review fixtures for empty-price/battery/weight, dash dimensions, mixed CPU/camera types, reversed screen keys, and three observed singleton/multiple patterns. No application test result is claimed. Repeat only checks needed by a changed contract or chosen transport.
-- **Dependencies:** Phase 1.1 discovery was explicitly authorized and completed without application setup. Fixture creation and transport changes depend on M00 implementation approval; B-01 disposition is needed for the final cart integration claim.
-- **Expected deliverable:** observed contract baseline in requirements.md, small evidence-based fixtures after setup, and a documented transport decision or accepted limitation. No extra API endpoint or production fallback dataset.
-- **Suggested commit:** `docs: record verified product API contracts`.
-- **Traceability/checkpoint:** R-07, R-13–R-21, Q-01, Q-05, B-01. Discovery is complete enough for product implementation; fixture/application work remains pending.
+- **Scope:** verify contracts and B-01 using bounded requests, preserve previous observations separately, and retain representative responses plus minimal field mappings as documentary test-data candidates. M01 includes no package manifest, dependency installation, Vite, test runner, API client implementation, PLP/PDP, or cart code. M02 tooling is unnecessary for these diagnostics and remains a separate authorization.
+- **Acceptance criteria:** satisfied for the verified baseline: current mappings support the required labels; valid POST codes derive from real options; HTTP errors, timeout, headers, cookie attributes and browser behavior are recorded; source guarantees/observations/unknowns are separate; B-01 is explicitly accepted and still open. Current repeated-add accumulation, universal nullability/error contracts, currency/units, and session lifetime remain unverified, with no fabricated workaround or data.
+- **Required tests/checks:** performed source/PDF review; nine bounded curl operations, two Chrome GET modes and one browser JSON POST; response/statistic checks; JSON/hash/reference verification; staged-content and Git checks. Future component tests will reuse the samples for missing values, type variants, screen/typo mappings and option patterns once tools exist. No application tests, lint or build were run.
+- **Dependencies:** M00 complete and explicit authorization of M01 obtained. B-01 is already accepted as a risk for local progress; evidence of a complete cumulative live cart remains a later integration gate, not another permission request for M02 tooling.
+- **Expected deliverable:** updated specs/README, versioned `docs/evidence/m01/2026-11-09/` metadata and real response samples, one focused local commit, and a clean tree. Samples are documentary data, not a production fallback dataset or configured application fixtures.
+- **Suggested commit:** `docs: verify API contracts and document integration constraints`.
+- **Traceability/checkpoint:** R-07, R-13–R-21, R-23/R-24/R-28; Q-01/Q-05; B-01. M02 is ready to be proposed, not started; the current browser/session limitation remains visible.
 
 ## M02 — Minimal tooling, routing, and shared shell
 
@@ -39,7 +43,7 @@ Status: Phase 1.1 reviewed sequence. Approved design decisions are settled, but 
 - **Scope:** proposed React/Vite JavaScript setup after approval; compatible versions and Node/npm prerequisite; committed lockfile; required start/build/test/lint scripts; Vitest/RTL setup; ESLint; two route placeholders; App's persistent shell and Header with Spanish home/breadcrumb/count markup. Add CSS Modules/global tokens only as needed. Do not pre-create separate layout/search/request-state component files.
 - **Acceptance criteria:** all four required operations are documented and executable; test command has a finite mode; routing is client-side; shell appears in both routes; home links work; no SSR, TypeScript, or third business view. README describes only this actual state.
 - **Required tests/checks:** meaningful route/header navigation integration checks; initial lint, finite test, and production build; manual development-server start check. A route/header test replaces a trivial mount-only smoke test.
-- **Dependencies:** M00 implementation approval; Spanish language is already decided. Conventional script names and routing are documented nonblocking engineering defaults. B-01 does not block the shell or product tools.
+- **Dependencies:** M00/M01 complete and explicit M02 approval still required. Spanish language and product decisions are settled. Conventional script names/routing remain engineering defaults. Accepted open B-01 does not block tooling or the shared shell; it does limit later live-integration claims.
 - **Expected deliverable:** small runnable skeleton, documented scripts/runtime, shared layout, initial tests.
 - **Suggested commit:** `chore: establish React tooling and two-view application shell`.
 - **Traceability/checkpoint:** R-01, R-02, R-08–R-10, R-22, R-24, R-26–R-29. Review dependency necessity before domain code.
@@ -112,8 +116,8 @@ Status: Phase 1.1 reviewed sequence. Approved design decisions are settled, but 
 
 ## Recommended order and stopping conditions
 
-After explicit approval: M00 -> M01 evidence/fixture baseline and M02 shell/tooling -> M03 boundary/cache -> M04 PLP -> M05 PDP -> M06 cart -> M07 browser/UX review -> M08 final verification. Phase 1.1 already performed M01's representative discovery; there is no need to keep retrying the now-accessible service merely to wait. B-01 may be resolved independently while approved local product work progresses; it gates the cumulative live-cart claim, not every milestone.
+Completed: M00 initialization and M01 contract/evidence baseline. Next, only after explicit approval: M02 shell/tooling -> M03 boundary/cache -> M04 PLP -> M05 PDP -> M06 cart -> M07 browser/UX review -> M08 final verification. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not every local tooling milestone.
 
 Stop for a decision when a material source conflict, unresolved integration policy, or unavailable contract prevents the dependent work. Empty values with the documented honest fallback do not independently block implementation. Do not reopen approved decisions or ask the user to decide routine engineering defaults. After a push/PR update with pending CI, follow the mandatory CI stop rule even if further monitoring would be convenient.
 
-Current checkpoint: Phase 1.1 documentation and live endpoint/browser discovery only. Approved decisions have been incorporated and the API snapshot has been recorded. No Git commit, application file, dependency installation, application script, or application test suite has been executed. Stop for explicit approval before implementation.
+Current checkpoint: M01 documentary contract verification, with retained current evidence and historical results dated separately. M00's commit exists; this increment produces one additional local documentation commit without remote/push. No application files, dependencies, scripts, tests or M02 setup exist. Stop after M01 and wait for explicit M02 approval.

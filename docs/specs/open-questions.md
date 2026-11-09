@@ -1,8 +1,8 @@
 # Decision register, open questions, and risks
 
-Status: Phase 1.1 review, 2026-11-06. Approved design decisions are closed and must not be requested again. Implementation still requires explicit approval. R-IDs and the complete API observations are in [requirements.md](requirements.md); architecture and milestones are in [design.md](design.md) and [tasks.md](tasks.md).
+Status: M01 verification, 2026-11-09. Approved design decisions remain closed; B-01 is accepted as an open integration risk, not resolved. M00 is complete; M02/application work remains unauthorized. R-IDs and dated observations are in [requirements.md](requirements.md); architecture and milestones are in [design.md](design.md) and [tasks.md](tasks.md). Fresh evidence is retained [here](../evidence/m01/2026-11-09/README.md).
 
-## Review evidence and outcome
+## Historical Phase 1.1 review and subsequent checkpoints
 
 - The original eight-page PDF was reread and both wireframes were visually compared with the specs. No explicit PDF requirement was missing from R-01–R-28. R-29 records the user's newly approved Spanish interface, not another requirement inferred from the PDF.
 - Phase 1's API timeout was superseded by successful Phase 1.1 discovery: the 100-record list, four real detail records, three controlled shell cart additions, one browser addition, an unknown-ID error, and cart preflight headers. Probes were bounded and POSTs were not automatically retried.
@@ -10,14 +10,16 @@ Status: Phase 1.1 review, 2026-11-06. Approved design decisions are closed and m
 - Installed Chrome with normal web security verified readable GET/JSON POST responses without credentials and a failed credentialed GET. This was a temporary diagnostic, not a React app or application E2E suite. Browser diagnostics required no dependency installation or application files.
 - Only the four existing specification files are modified in this phase. No Git repository, application source, package manifest, test suite, README, or build has been created. No application checks are claimed as passing.
 
+The bullets above describe **historical Phase 1.1**, not the present repository state. M00 subsequently initialized Git and the README in `e08a674`, without adding application code. Fresh M01 probes reproduced list/detail shapes, the unknown-ID 500 and credentialed-browser failure; exactly one current browser POST returned `1`. A first 45-second list timeout and successful second request are both retained. The old `count: 2` session-accumulation result was not replayed or promoted to fresh evidence. No new application infrastructure was created.
+
 ## Decision register
 
 ### Q-01 — API availability and representative product contract
 
-- **Status:** prior discovery blocker resolved for representative list/detail/payload structure; not an exhaustive permanent schema. Cart transport is tracked separately in B-01.
+- **Status:** representative list/detail/payload structure freshly verified and versioned in M01; not an exhaustive permanent schema. Cart transport remains B-01. The first current GET timed out; its sole retry and the subsequent probes succeeded, without establishing the timeout's cause.
 - **Established:** list records contain string `id`, `brand`, `model`, `price`, and `imgUrl`. Four real detail responses expose the required display data, option codes, missing values, and type variations. A valid cart body uses a string ID and numeric codes from `options.colors` / `options.storages`; a successful response has numeric `count`.
 - **Remaining limits:** all 100 detail variants, nullability, every error type, image loading, currency/weight units, inventory/combination rules, and session lifetime were not exhaustively established. A snapshot does not guarantee future server behavior.
-- **Action:** use the observed baseline for small boundary validators and representative fixtures after approval; handle honest absent-value and generic HTTP failure states. Do not repeatedly probe the service without a new reason or invent production data. Images are verified with the UI later.
+- **Action:** documentary samples now exist in the M01 evidence directory. Reuse them for focused validators/tests when the relevant implementation is approved; do not create test tooling in M01. Handle honest absent values and generic HTTP failures. No blanket wire-requiredness or nullability promise follows from four details. Images remain for later UI verification.
 - **Gate:** sufficient product evidence exists for local implementation after approval. No blanket API-unavailable blocker remains. Related: R-07, R-13–R-19.
 
 ### Q-02 — Product TTL and independent count persistence
@@ -49,8 +51,8 @@ Status: Phase 1.1 review, 2026-11-06. Approved design decisions are closed and m
 - **Status:** API response as source of truth and independent persistence approved; closed for those decisions. Browser session continuity remains unresolved in B-01.
 - **Approved behavior:** replace the displayed/persisted count with response `count`, even if the response is again `1` or differs from previous count plus one. No local increment or optimistic reconciliation.
 - **Implementation defaults:** show `0` only when no valid stored count exists; retain the confirmed value after failure. Reject malformed/negative/non-integer counts. Storage failure keeps in-memory state but cannot promise reload persistence. No cart-read endpoint or backend reconciliation is documented.
-- **Evidence/test implication:** requests without retained cookies returned `1`; the same payload with the first response's session cookie returned `2`. A persisted client count does not itself restore that server session. Never auto-retry an uncertain POST or treat a transport failure as proof the server did not add.
-- **Gate:** do not reopen count ownership/persistence approval. B-01 requires a transport/limitation decision before claiming cumulative live cross-origin behavior. Related: R-10, R-17, R-18, R-20.
+- **Evidence/test implication:** historical 2026-11-06 additions returned `1` without cookies and `2` when reusing the session cookie. M01 freshly confirmed only one browser POST returning `1`; it did not repeat remote additions to test accumulation. A nonmutating GET with a manually reused cookie returned 200 without another Set-Cookie, which does not prove persistent cart state. Client count persistence does not restore that session. Never auto-retry an uncertain POST.
+- **Gate:** count ownership/persistence and acceptance of B-01 as a risk are already settled. Do not claim a fully cumulative live browser cart without additional evidence or an explicit final limitation; this does not reopen permission for routine local tooling. Related: R-10, R-17, R-18, R-20.
 
 ### Q-06 — Spanish UI, price/spec formatting
 
@@ -77,25 +79,25 @@ Status: Phase 1.1 review, 2026-11-06. Approved design decisions are closed and m
 
 ### Q-09 — Repository destination and first commit
 
-- **Status:** deferred delivery choice; no current local implementation blocker after approval.
-- **Source:** A p.2 requests an open-code repository and prefers a README in the first commit. No Git repository was detected. Phases 1/1.1 do not authorize repository initialization, publication, or a PR.
-- **Plan:** after explicit implementation approval, include approved specs and an honest initial README in the first local commit before scaffolding. Decide host/owner/visibility and inclusion of the source PDF before publication. No need to publish during local implementation.
-- **Gate:** explicit implementation approval before local setup; repository destination before later authorized publication. Never merge or deploy automatically. Related: R-23, R-24, R-28.
+- **Status:** initial local repository/README completed by M00 in `e08a674`. Remote destination/visibility is a deferred delivery choice, not an M02 blocker.
+- **Source:** A p.2 requests an open-code repository and prefers a README in the first commit. That preference is satisfied locally; no remote/publication is authorized by M01. The PDF is ignored and no redistribution permission has been established.
+- **Plan:** preserve progressive history, including this focused M01 commit, without creating another initial commit or publishing the source PDF. Decide host/owner/visibility before any later authorized publication.
+- **Gate:** explicit M02 approval for tooling; separate authorization before remote publication/PR. Never merge or deploy automatically. Related: R-23, R-24, R-28.
 
 ## B-01 — Unresolved direct cross-origin cumulative-cart integration
 
-**Status: unresolved material integration blocker for a fully cumulative live browser cart; not a blocker for approved local shell/product work or isolated cart UI development.** No workaround has been implemented or approved.
+**Status: open, accepted integration risk; unresolved for a fully cumulative live browser cart, but not a blocker for separately authorized local tooling.** M00/M01 explicitly accept the risk without declaring it resolved. No proxy, credential change, client session substitute or counter workaround has been implemented.
 
 **Evidence:**
 
-1. The valid payload used a real string product ID and numeric color/storage codes. The initial shell POST returned `{count: 1}`; a deliberate independent POST without retained cookies also returned `1`; reusing the initial response's HttpOnly `session_id` cookie returned `2`.
-2. Inspected list/detail/cart responses expose `Access-Control-Allow-Origin: *` and no `Access-Control-Allow-Credentials`. The cookie has `Path=/` and `HttpOnly`, without observed SameSite/Secure attributes. No cookie values are stored in these documents.
-3. Chrome from `http://localhost:61264` could read a product GET and JSON cart POST with credentials omitted. The browser POST returned `1`. A product GET with `credentials: include` failed with `TypeError: Failed to fetch`.
-4. Browser credentialed CORS responses cannot use wildcard origin; see [MDN's browser error explanation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS/Errors/CORSNotSupportingCredentials). A curl request that manually reuses a cookie is not proof of a valid browser session flow. The specific credentialed POST was not sent in Chrome, so distinguish the observed GET failure from the inferred transport incompatibility.
+1. **Historical, 2026-11-06:** independent shell additions returned `1`; reusing the initial response's session cookie returned `2`. Original temporary traces are unavailable. This result remains dated historical evidence; M01 did not repeat that mutation sequence.
+2. **Fresh M01, 2026-11-09:** captured GET/OPTIONS headers show wildcard origin and no credential permission; Set-Cookie shows `session_id`, Path `/`, HttpOnly, without SameSite/Secure attributes. A curl GET that reused the list cookie returned 200 and no replacement cookie. Values are redacted; read success is not proof of cart-state continuity or session duration.
+3. **Fresh Chrome, normal security:** at `http://localhost:49788`, the product GET with `omit` returned 200 and the GET with `include` failed with no readable HTTP status. At `http://localhost:49823`, the sole current POST used real string/numeric identifiers and `omit`, returning 200 and `{count: 1}`. No credentialed POST was sent, and no fresh accumulated count was demonstrated. Full POST headers were not exposed/captured; GET/OPTIONS headers and browser outcomes are recorded separately.
+4. **Standards-based interpretation:** credentialed CORS cannot use wildcard origin; see [MDN's explanation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS/Errors/CORSNotSupportingCredentials). `include` does not override cookie/browser restrictions, and HttpOnly is a JavaScript-read restriction, not the cause of CORS failure. Manual curl reuse does not demonstrate browser compatibility. The GET failure is observed; the analogous credentialed POST constraint is inferred, not claimed as a fresh POST result.
 
 **Implication:** direct calls can return valid counts while losing session accumulation between calls. Persisting the latest response is correct under the approved decision, but must not be described as restoring the server cart. Simply enabling credentials is not a demonstrated fix. Cookie policy may also need attention if the API transport is changed.
 
-**Decision needed before claiming final live-cart completeness:**
+**Accepted scope and remaining gate:** risk acceptance already permits M02 tooling after explicit authorization. It does not prove cumulative-cart correctness. Before claiming final live-cart completeness, consider:
 
 - Prefer clarification or a browser-compatible API/session policy from the assignment owner. Recheck the chosen origin and session behavior once a change is available.
 - Alternatively, explicitly accept the direct-API limitation: show each actual returned count, which may repeatedly be `1`, and document the backend/session constraint. This accepts a limitation; it does not prove cumulative behavior required by the basket description.
@@ -118,4 +120,4 @@ Keep API/persistence boundaries because the required TTL and response-authoritat
 - Compare desktop structure directly with both wireframes, then check narrow screens, long content, zoom, focus, and image failure. Mocked tests cannot resolve B-01 or prove production deep-link/session behavior.
 - Record progressive commits only after implementation authorization. After a later push/PR update, check CI once; if pending/running, report and stop until the user returns. No polling/watching/waiting agents, automatic merge, or automatic deployment.
 
-The next user decision is the scope/limitation disposition for B-01 and explicit approval to start implementation. Approved cache/search/selector/language/count decisions are not reopened. No other discovered issue requires inventing requirements or blocking all local frontend work.
+M01 has recorded current evidence, preserved historical observations and retained B-01 as an accepted open risk. The exact next gate is explicit **M02** approval; do not ask again about already accepted risk or approved product decisions just to configure tools. Final cumulative integration, unverified currency/units, unsampled schema/error variants, session lifetime and real application behavior remain limitations, not grounds to fabricate a contract or expand architecture.
