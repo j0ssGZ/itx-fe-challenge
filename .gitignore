@@ -1,0 +1,48 @@
+# Dependencies, development caches, and production output
+node_modules/
+dist/
+.vite/
+.cache/
+
+# Test coverage and browser-test artifacts
+coverage/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Environment values and local credentials
+.env
+.env.*
+!.env.example
+!.env.*.example
+*.local
+/.npmrc
+/.netrc
+/.git-credentials
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Logs and temporary files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+tmp/
+temp/
+*.swp
+*.swo
+*~
+
+# Operating-system and personal editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.code-workspace
+
+# Original assignment: redistribution permission has not been established.
+/1. ITX - Front End Test 1.pdf
