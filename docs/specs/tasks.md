@@ -1,10 +1,10 @@
 # Implementation milestones
 
-Status: M00 completed in `e08a674`; M01 in `8a0f325`; M02 in `f5eb658`; M03 API/cache implemented and verified under explicit M03 authorization. B-01 remains an accepted open risk. M04 and later functionality are not authorized. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md). Historical M01 evidence is preserved unchanged.
+Status: M00 in `e08a674`, M01 in `8a0f325`, M02 in `f5eb658`, M03 in `0cf9841`; M04 catalogue/search implemented and verified under explicit authorization. B-01 remains accepted and open. M05 onward require approval. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md). Historical M01 evidence is preserved unchanged.
 
 ## Working agreement and commit checkpoints
 
-- Phases 1/1.1 originally had no Git repository. M00 initialized local `main`, added README/.gitignore and the four specs in `e08a674`, and excluded the PDF. M01 retains evidence and updates documentation only. No configured application scripts or passing application checks exist.
+- Phases 1/1.1 originally had no Git repository. M00 initialized local `main`, added README/.gitignore and the four specs in `e08a674`, and excluded the PDF. M01 retains evidence and updates documentation only. At that historical M01 checkpoint, no configured application scripts or passing application checks existed.
 - The first-commit README preference is satisfied by M00's actual commit, `docs: initialize ITX frontend challenge and SDD specifications`; do not fabricate earlier commits or initialize the repository again. M01's focused documentation commit follows that baseline.
 - Keep commits tied to working increments. Include relevant tests in the same milestone as the behavior. Commit messages below are suggestions; split further if needed, but do not fabricate historical progress or backdate commits.
 - Run the narrow checks relevant to a change, then the required lint/test/build gates before a delivery checkpoint. Do not report tests as passed before running them.
@@ -71,11 +71,16 @@ Status: M00 completed in `e08a674`; M01 in `8a0f325`; M02 in `f5eb658`; M03 API/
 
 ## M04 — Product list, search, and responsive cards
 
+- **Status:** completed after actual checks: lint exit 0 without warnings, 131 Vitest tests passed (19 added; 112 prior cases retained), production build exit 0, and 20 Chromium E2E cases passed. Existing navigation tests were adapted from the removed example link to a real fixture card; their history/direct-entry/fallback checks remain.
+- **Delivered:** PLP connects M03 `getProducts({ signal })`; owns request/query/retry locally; derives filtering; cancels obsolete reads. ProductCard owns presentation/encoded detail links and ProductImage owns stable image space/fallback. Grid uses 1/2/3/4 explicit tracks at 0/480/768/1024 px, capped at four even at 1920 px. No search API calls, truncation, sort, pagination, generic hook or new dependency.
+- **Verified:** complete M01 list, independent partial brand/model matching (mixed case and lowercase alcatel), clear/no matches, loading/empty, HTTP/network/JSON/contract errors and explicit retry with safe messages, absent fields/prices/images, keyboard/focus, StrictMode/abort and cache remount. E2E passes at 320/768/1280/1920 px, plus a 480 px two-column check; search is above/right of the grid on desktop, with no horizontal overflow. Vite development was launched and local screenshots inspected against PDF p.3, including narrow loading/error/no-results; snapshots remain outside Git.
+- **Limits/decision:** images in automated tests and local captures are synthetic fixture bytes. A separate bounded manual read of eight M01 image URLs timed out with a configured 15 s timeout per resource, without retry; live photos/catalogue availability is not reverified. B-01 stays unchanged/open. Astryx evaluation is in [the decision record](../decisions/ui-library-evaluation.md): keep the approved CSS Modules stack, do not install Astryx. PDP remains the M02 placeholder; no cart code/persistence or M05 work.
+
 - **Objective:** complete the first business view as an end-to-end vertical increment.
 - **Scope:** list read state; complete grid; card image/brand/model/price; local every-change filtering against brand/model; product links; loading, empty API, no matches, error/retry, and missing-image presentation. Style search above the grid on the right at desktop width; cap at four columns.
 - **Acceptance criteria:** empty search shows all returned products; input updates partial matches immediately and case-insensitively; clear restores list; cards navigate using real string IDs; empty-price records remain visible with “Precio no disponible”; no invented currency. Spanish controls/feedback and desktop structure match the approved design/PDF p.3; narrow widths fit and ultrawide never exceeds four columns. No sorting or pagination.
 - **Required tests/checks:** RTL tests for complete listing, independent partial brand/model matching, mixed case (including `alcatel`), clear/no results, Spanish labels, loading/error/retry, observed empty price, missing images, and link destination. Browser visual check at 320, intermediate, desktop, and wide widths; DOM tests alone are insufficient for column counts. Dataset counts are fixture facts, not hardcoded runtime requirements.
-- **Dependencies:** M02, M03. Q-03 search and Q-06 language are settled; raw price rendering avoids a speculative currency decision.
+- **Dependencies:** M02/M03 completed and explicit M04 approval obtained, including commit/normal push. Q-03/Q-06 remain settled; no currency is invented. M05 still requires approval.
 - **Expected deliverable:** functional, styled PLP and focused behavior tests; README milestone update.
 - **Suggested commit:** `feat: build responsive product listing and live search`.
 - **Traceability/checkpoint:** R-03–R-07, R-25–R-27, R-29. Compare directly with PDF p.3 before continuing.
@@ -126,8 +131,8 @@ Status: M00 completed in `e08a674`; M01 in `8a0f325`; M02 in `f5eb658`; M03 API/
 
 ## Recommended order and stopping conditions
 
-Completed: M00 initialization, M01 contract/evidence baseline, M02 shell/tooling, and M03 boundary/cache with deterministic checks. Next, only after explicit approval: M04 PLP -> M05 PDP -> M06 cart -> M07 browser/UX review -> M08 final verification. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not local tooling.
+Completed: M00 initialization, M01 evidence, M02 shell/tooling, M03 boundary/cache and M04 PLP/search. Next, only after explicit approval: M05 PDP -> M06 cart -> M07 browser/UX review -> M08 final verification. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not local tooling.
 
 Stop for a decision when a material source conflict, unresolved integration policy, or unavailable contract prevents the dependent work. Empty values with the documented honest fallback do not independently block implementation. Do not reopen approved decisions or ask the user to decide routine engineering defaults. After a push/PR update with pending CI, follow the mandatory CI stop rule even if further monitoring would be convenient.
 
-Current checkpoint: M03 API/cache verified; one focused commit and normal push to existing origin are authorized. Preserve previous commits/evidence/PDF exclusion, verify synchronization and inspect CI once. No live API calls, M04 work, PR, force-push, merge or deployment. Stop after M03 and wait for explicit M04 approval.
+Current checkpoint: M04 verified; one focused commit/normal push to existing origin are authorized. Preserve previous history/M01 evidence/PDF exclusion, verify synchronization and inspect CI once. No M05, Astryx installation, cart mutation, PR, force-push, merge or deployment. Stop after M04 and wait for explicit M05 approval.

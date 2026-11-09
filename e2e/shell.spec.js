@@ -1,21 +1,18 @@
 import { expect, test } from '@playwright/test'
+import { apiBase, firstProduct, firstProductLink, mockCatalogue } from './fixtures.js'
 
 test('shell SPA: navegación, entrada directa, recarga y fallback', async ({ page }) => {
-  const apiRequests = []
+  const apiRequests = await mockCatalogue(page)
   const pageErrors = []
   page.on('pageerror', error => pageErrors.push(error.message))
-  await page.route('**/api/**', route => {
-    apiRequests.push(route.request().url())
-    return route.abort()
-  })
 
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Productos', level: 1 })).toBeVisible()
   await expect(page.getByLabel('Carrito: 0 artículos')).toBeVisible()
   await page.evaluate(() => { document.documentElement.dataset.navigationMarker = 'same-document' })
 
-  await page.getByRole('link', { name: 'Ver detalle de ejemplo' }).click()
-  await expect(page).toHaveURL('/products/ejemplo')
+  await page.getByRole('link', { name: firstProductLink }).click()
+  await expect(page).toHaveURL(`/products/${firstProduct.id}`)
   await expect(page.getByRole('heading', { name: 'Detalle del producto', level: 1 })).toBeVisible()
   await expect(page.locator('html')).toHaveAttribute('data-navigation-marker', 'same-document')
   await expect(page.getByRole('main')).toBeFocused()
@@ -23,7 +20,7 @@ test('shell SPA: navegación, entrada directa, recarga y fallback', async ({ pag
   await page.goBack()
   await expect(page).toHaveURL('/')
   await page.goForward()
-  await expect(page).toHaveURL('/products/ejemplo')
+  await expect(page).toHaveURL(`/products/${firstProduct.id}`)
   await page.getByRole('link', { name: 'Volver a productos' }).click()
   await expect(page).toHaveURL('/')
 
@@ -35,8 +32,8 @@ test('shell SPA: navegación, entrada directa, recarga y fallback', async ({ pag
 
   await page.goto('/ruta-inexistente')
   await expect(page).toHaveURL('/')
-  await expect(page.getByRole('status')).toContainText('Página no encontrada')
+  await expect(page.getByText('Página no encontrada. Te mostramos el inicio.')).toHaveAttribute('role', 'status')
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true)
-  expect(apiRequests).toEqual([])
+  expect(apiRequests).toEqual([{ url: `${apiBase}/api/product`, method: 'GET' }])
   expect(pageErrors).toEqual([])
 })

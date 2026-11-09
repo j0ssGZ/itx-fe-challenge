@@ -1,0 +1,20 @@
+# Evaluación de librería UI — M04
+
+Fecha: 9 de noviembre de 2026. Alcance: evaluación documental y de artefactos publicados; no instalación ni prototipo Astryx. **Recomendación: mantener React + CSS Modules también en M05.** Astryx no se ha incorporado ni queda autorizado por este registro.
+
+## A — Stack actual
+
+React 19/Vite/JavaScript funcionan en el proyecto. CSS Modules ofrece control directo de la estructura del PDF, tarjetas y estados, sin añadir dependencias UI. Links, búsqueda, botones y futuros radios pueden utilizar HTML nativo. La accesibilidad exige etiquetas, foco, mensajes y pruebas propios; ninguna librería elimina esa responsabilidad. Coste de mantenimiento bajo para estas dos páginas y los controles previstos.
+
+## B — Astryx selectivo con CSS Modules
+
+- **Compatibilidad:** el proyecto declara React/React DOM >=19 y documenta Vite con JS/CSS precompilados, sin plugin de build adicional. Los exports JavaScript permiten consumirlo desde JS/JSX aunque su código fuente sea TypeScript. Es compatibilidad documental; no se ha ejecutado en este repositorio. [Guía oficial de instalación/Vite](https://github.com/meta/astryx/blob/da85f28eddd4322bf944c42753f2ff6e30792f24/packages/core/README.md).
+- **Accesibilidad:** el sistema ofrece componentes orientados a accesibilidad y coherencia de interacción. Podría ahorrar trabajo en controles compuestos. Aquí predominan enlaces, búsqueda y radios nativos: el beneficio adicional parece pequeño. Harían falta pruebas de teclado/lectores y configuración de idioma igualmente; no se afirma certificación del resultado. [Descripción oficial](https://github.com/meta/astryx/blob/da85f28eddd4322bf944c42753f2ff6e30792f24/README.md).
+- **Personalización:** permite `className` con CSS Modules y variables CSS de tema. El consumo precompilado necesita hojas de estilos y un proveedor de tema; habría que revisar reset, capas de cascada, foco y convivencia con nuestros estilos. No hace falta migrar el proyecto a StyleX. [Guía de consumo](https://github.com/meta/astryx/blob/da85f28eddd4322bf944c42753f2ff6e30792f24/packages/core/README.md).
+- **Dependencias:** el core publicado 0.7.11 requiere el peer `@stylexjs/stylex ^0.19.0`, además de React ya instalado, y depende de `intl-messageformat`. El tema neutral inspeccionado añade `lucide-react`; la CLI es otra herramienta recomendada, no una necesidad de runtime. `main` ya declara 0.7.12: no se confunde ese código con el paquete publicado consultado. [Metadatos publicados](https://registry.npmjs.org/@astryxdesign%2Fcore/0.7.11), [manifiesto del tema inspeccionado](https://github.com/meta/astryx/blob/da85f28eddd4322bf944c42753f2ff6e30792f24/packages/themes/neutral/package.json).
+- **Bundle estimado:** la hoja compartida publicada `astryx.css` 0.7.11 mide 269.224 bytes (~263 KiB), o 39.997 bytes (~39,1 KiB) comprimida con gzip local. Se obtuvo por lectura HTTP, sin instalar. No es el delta final de Vite: faltan minificación, tema, JS seleccionado y dependencias. El JS puede beneficiarse del tree-shaking; no debe asumirse que importar pocos componentes elimina el CSS compartido. El build M04 actual completo contiene 5,07 kB de CSS (1,61 kB gzip). Se estima un aumento material de CSS y un incremento JS no cuantificado; no se inventa una cifra marginal sin construir una comparación. [CSS publicado medido](https://unpkg.com/@astryxdesign/core@0.7.11/dist/astryx.css).
+- **Integración/mantenimiento:** coste mayor que A por aprendizaje, tema/proveedores, adaptación de controles y revalidación visual/accesible. El repositorio indica estado beta, por lo que también habría que vigilar cambios de API. Es un juicio proporcional al alcance, no una medición de horas ni una descalificación general.
+
+## Decisión propuesta antes de M05
+
+Conservar A: satisface la estructura, accesibilidad y estilo requeridos con menos superficie de integración. Reconsiderar Astryx solo ante una necesidad concreta de controles complejos o una ampliación autorizada del producto. Adoptarlo exigiría aprobación explícita y un pequeño experimento con build, pruebas y medidas de tamaño; este hito no realiza esa migración.

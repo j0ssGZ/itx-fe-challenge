@@ -1,0 +1,147 @@
+.toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  letter-spacing: -0.045em;
+  line-height: 1.15;
+}
+
+.intro {
+  margin: 0.75rem 0 0;
+  color: #465363;
+}
+
+.search {
+  min-width: 0;
+}
+
+.search label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.searchControl {
+  display: flex;
+  padding: 0.25rem;
+  border: 1px solid #8793a3;
+  border-radius: 0.65rem;
+  background: #fff;
+}
+
+.searchControl input {
+  width: 100%;
+  min-width: 0;
+  padding: 0.5rem 0.625rem;
+  border: 0;
+  border-radius: 0.375rem;
+  font: inherit;
+  background: transparent;
+}
+
+.searchControl input::placeholder {
+  color: #596577;
+}
+
+.searchControl button {
+  min-height: 2.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 0;
+  border-radius: 0.375rem;
+  background: #edf2fc;
+  color: #164bb5;
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.searchControl button:disabled {
+  background: transparent;
+  color: #596577;
+  cursor: default;
+}
+
+.results {
+  min-height: 1.5rem;
+  margin: 1.5rem 0 1rem;
+  color: #465363;
+  font-size: 0.875rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.grid li {
+  min-width: 0;
+}
+
+.feedback {
+  padding: clamp(1.25rem, 5vw, 3rem);
+  border: 1px solid #d8dce2;
+  border-radius: 0.75rem;
+  background: #fff;
+  overflow-wrap: anywhere;
+}
+
+.feedback h2 {
+  margin-top: 0;
+  font-size: 1.25rem;
+}
+
+.feedback p {
+  color: #465363;
+}
+
+.retry {
+  min-height: 2.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #164bb5;
+  border-radius: 0.5rem;
+  background: #164bb5;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.retry:hover {
+  background: #123d94;
+}
+
+.notice {
+  padding: 0.75rem 1rem;
+  border-left: 3px solid #164bb5;
+  background: #edf2fc;
+}
+
+@media (min-width: 30rem) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (min-width: 48rem) {
+  .toolbar {
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-between;
+  }
+
+  .search { flex: 0 1 23rem; }
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (min-width: 64rem) {
+  .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}

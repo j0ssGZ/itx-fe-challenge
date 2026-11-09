@@ -1,0 +1,69 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.25rem;
+  border: 1px solid #d8dce2;
+  border-radius: 0.875rem;
+  background: #fff;
+  color: #17202a;
+  text-decoration: none;
+  box-shadow: 0 2px 4px #17202a04;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.card:hover {
+  border-color: #8793a3;
+  box-shadow: 0 6px 20px #17202a0d;
+}
+
+.content {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding-top: 1.25rem;
+  overflow-wrap: anywhere;
+}
+
+.brand {
+  margin: 0 0 0.25rem;
+  color: #596577;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.model {
+  margin: 0 0 1rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.02em;
+}
+
+.price {
+  margin: auto 0 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.unavailable {
+  margin: auto 0 0;
+  color: #596577;
+  font-size: 0.875rem;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #edf0f4;
+  color: #164bb5;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card { transition: none; }
+}

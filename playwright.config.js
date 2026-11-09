@@ -13,7 +13,9 @@ export default defineConfig({
   },
   projects: [
     { name: 'chromium-desktop', use: { viewport: { width: 1280, height: 800 } } },
-    { name: 'chromium-mobile', use: { viewport: { width: 390, height: 844 } } },
+    { name: 'chromium-mobile', use: { viewport: { width: 320, height: 800 } } },
+    { name: 'chromium-tablet', use: { viewport: { width: 768, height: 1024 } } },
+    { name: 'chromium-wide', use: { viewport: { width: 1920, height: 1080 } } },
   ],
   webServer: {
     command: 'npm run preview -- --host 127.0.0.1 --port 4173 --strictPort',

@@ -1,8 +1,14 @@
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { MemoryRouter } from 'react-router'
-import { describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it } from 'vitest'
+import { productList } from '../test/fixtures.js'
 import App from './App.jsx'
+
+beforeEach(() => {
+  localStorage.clear()
+  fetch.mockImplementation(async () => new Response(JSON.stringify(productList)))
+})
 
 function renderRoute(path = '/') {
   return render(<MemoryRouter initialEntries={[path]}><App /></MemoryRouter>)
@@ -16,7 +22,7 @@ describe('shell y navegación de M02', () => {
     expect(screen.getByRole('heading', { name: 'Productos', level: 1 })).toBeInTheDocument()
     expect(screen.getByLabelText('Carrito: 0 artículos')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('link', { name: 'Ver detalle de ejemplo' }))
+    await user.click(await screen.findByRole('link', { name: `Ver detalle de ${productList[0].brand} ${productList[0].model}` }))
 
     expect(screen.getByRole('heading', { name: 'Detalle del producto', level: 1 })).toBeInTheDocument()
     expect(document.title).toBe('Detalle del producto | ITX Mobile')
@@ -44,6 +50,6 @@ describe('shell y navegación de M02', () => {
     renderRoute('/ruta-inexistente')
 
     expect(await screen.findByRole('heading', { name: 'Productos', level: 1 })).toBeInTheDocument()
-    expect(screen.getByRole('status')).toHaveTextContent('Página no encontrada')
+    expect(screen.getByText('Página no encontrada. Te mostramos el inicio.')).toHaveAttribute('role', 'status')
   })
 })

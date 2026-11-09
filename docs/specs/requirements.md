@@ -1,6 +1,6 @@
 # Requirements specification
 
-Status: approved decisions preserved; M00–M02 complete and M03 API/product-cache modules implemented and verified under explicit authorization. Product rendering/search/cart and M04 onward remain future work requiring separate approval. Historical API evidence is unchanged; no new live probes are claimed.
+Status: approved decisions preserved; M00–M03 complete and M04 catalogue/search implemented and verified under explicit authorization. Real detail/cart and M05 onward require separate approval. Historical API evidence is unchanged; M04 tests use mocks. Separate remote image timeouts are recorded as limited observations, not a new API contract.
 
 ## Sources and interpretation
 
@@ -12,6 +12,7 @@ Status: approved decisions preserved; M00–M02 complete and M03 API/product-cac
 - **M**: [M01 evidence, 2026-11-09](../evidence/m01/2026-11-09/README.md), with versioned [request metadata](../evidence/m01/2026-11-09/verification.json) and [response snapshots](../evidence/m01/2026-11-09/responses.json). Fresh curl and Chrome observations are separate from O. M includes exactly one cart POST; same-session cart accumulation was not replayed. B-01 remains an accepted open integration risk.
 - **S**: the user's M02 authorization: install/configure the approved stack, implement only shell/placeholders, unit/browser smoke checks, and a focused commit plus normal push to existing origin. Its permanent workflow is recorded in README/tasks; the one-check CI stop rule W still applies. The requested 404 fallback follows the approved unknown-route policy: replace-navigation to PLP with a notice, not a third business view.
 - **T**: the user's M03 authorization: native-fetch read boundary, product list/detail validation, one-hour versioned client cache, deterministic mocked tests and a verified normal push. No page integration, hooks, search, cart operations, new views or M04.
+- **V**: the user's M04 authorization: complete PLP/live search over M03, responsive/accessibility/state checks, PDF comparison, a brief Astryx evaluation without installation, documentation, verified commit/push and one CI inspection. M05/cart/deployment remain excluded.
 
 Evidence labels: **explicit** means stated in the assignment or user instructions; **approved decision** means agreed in D; **observed** means demonstrated in O, not guaranteed by the PDF; **preference** means encouraged rather than mandatory; **proposal** means an architectural recommendation; **unknown** means not established. Approved design decisions do not become quoted PDF requirements.
 
@@ -32,27 +33,27 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 3. **R-03 — Complete product listing**
    - Source/classification: A p.3, PLP; explicit functional requirement. Priority: P0.
    - Acceptance: with an empty search, render every product returned by the list endpoint. Do not silently truncate the list or introduce pagination that hides products.
-   - Verification: fixture with multiple products; assert all are represented. Milestone: M04.
+   - Verification: M04 RTL and browser tests render every item of the full M01 list (100 in that sample, not a runtime constant), without truncation. Milestone: M04.
 
 4. **R-04 — Immediate brand/model search**
    - Source/classification: A pp.3,5, SEARCH; explicit functional requirement; partial/case-insensitive matching is an approved decision in D. Priority: P0.
    - Acceptance: a text input filters products against brand and model on every input change, using partial, case-insensitive matching without requiring submission. Clearing it restores the complete list. The implementation default is a substring match in either field; see closed decision Q-03 for remaining nonessential matching details.
-   - Verification: brand match, model match, non-match, input changes, and clearing. Milestone: M04.
+   - Verification: M04 passed partial brand/model and mixed-case/alcatel queries, each input change, clear/whitespace/no matches and no extra requests; keyboard/focus and polite result feedback checked. Milestone: M04.
 
 5. **R-05 — List-to-detail navigation**
    - Source/classification: A p.3, PLP; explicit functional requirement. Priority: P0.
    - Acceptance: selecting a product navigates to that product's detail view with its identifier, using client routing.
-   - Verification: accessible-link interaction and E2E navigation. Milestones: M04, M07.
+   - Verification: M04 passed accessible real-ID links, keyboard Enter and browser navigation to the unchanged detail placeholder, retaining client history/focus checks. Real detail contents remain M05. Milestones: M04, M07.
 
 6. **R-06 — Responsive grid capped at four columns**
    - Source/classification: A p.3 text and PLP wireframe; explicit layout requirement. Priority: P0.
    - Acceptance: no row contains more than four cards at any width; fewer columns fit narrower resolutions. Preserve the header, search-above-grid, and grid hierarchy in the reference. The two rows illustrated are not an eight-product limit.
-   - Verification: browser checks at narrow, intermediate, desktop, and wide widths; inspect column counts and overflow. Milestones: M04, M07.
+   - Verification: M04 Chromium confirmed 1/3/4/4 columns at 320/768/1280/1920 px, an extra 480 px two-column check, no horizontal overflow and desktop search above/right of the grid. Local screenshots inspected against A p.3. Milestones: M04, M07.
 
 7. **R-07 — Product card content**
    - Source/classification: A p.5, ITEM; explicit functional requirement. Priority: P0.
    - Acceptance: each item displays image, brand, model, and price. O includes six empty price strings; retain those products and display an honest Spanish unavailable-price label instead of zero or an invented currency. Fallback wording is a project quality choice, not a PDF prescription.
-   - Verification: card rendering assertions with contract-validated fixtures. Milestone: M04.
+   - Verification: M04 passed complete image/brand/model/raw-price assertions, actual empty-price samples, missing/failed image fallback and absent optional data. No currency is added. Remote photos remain availability-limited; screenshots use synthetic image bytes. Milestone: M04.
 
 8. **R-08 — Header home link**
    - Source/classification: A p.5, HEADER; explicit functional requirement. Priority: P0.
@@ -136,7 +137,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 24. **R-24 — Execution README**
     - Source/classification: A p.2; README and execution explanation are explicit; inclusion in the first commit is a preference. Priority: P0 for README, P1 for first-commit placement.
-    - Acceptance: README explains prerequisites, setup, execution, and relevant notes; claims reflect actual implementation and verification. M00 included the first README; M01 recorded contracts; M02 documents the actual runtime, lockfile installation, browser setup, available scripts and shell-check results. Product functionality is still explicitly pending.
+    - Acceptance: README explains prerequisites, setup, execution, and relevant notes; claims reflect actual implementation and verification. M00 included the first README; M01 recorded contracts; M02 documents the actual runtime, lockfile installation, browser setup, available scripts and shell-check results. M04 now documents the implemented catalogue/search, actual results, fixtures/image limits and the Astryx decision; real detail/cart remain explicitly pending.
     - Verification: clean-checkout instructions checked in M08. Milestones: M00, M02, M08.
 
 25. **R-25 — Visual structure and attention to detail**
@@ -156,7 +157,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 28. **R-28 — Phase and CI approval gates**
     - Source/classification: U and W; explicit process constraints. Priority: P0.
-    - Acceptance: honor each milestone's explicit scope. M02 authorized shell/tooling; M03 authorizes API/cache modules and a verified normal push to existing `j0ssGZ/itx-fe-challenge` origin, preserving M00–M02 ancestry. From M02: implement -> test -> lint -> build -> review diff -> commit -> push -> verify -> STOP. No force-push, secrets/local environments/PDF in commits, failing/unverified pushes, PR, automatic merge/deploy, or next milestone without approval. After each push/PR update, inspect CI once; if pending/running, report and immediately stop, asking the user to return on completion/failure. No polling/watch/waiting agents. Preserve all security/approval gates.
+    - Acceptance: honor each milestone's explicit scope. M02 authorized shell/tooling; M03 authorized API/cache; M04 authorizes PLP/search, UI-library evaluation without installation and a verified normal push to existing `j0ssGZ/itx-fe-challenge` origin, preserving M00–M03 ancestry. From M02: implement -> test -> lint -> build -> review diff -> commit -> push -> verify -> STOP. No force-push, secrets/local environments/PDF in commits, failing/unverified pushes, PR, automatic merge/deploy, or next milestone without approval. After each push/PR update, inspect CI once; if pending/running, report and immediately stop, asking the user to return on completion/failure. No polling/watch/waiting agents. Preserve all security/approval gates.
     - Verification: working-tree/file inventory in Phase 1; workflow review at subsequent checkpoints. Milestones: M00–M08.
 
 29. **R-29 — Spanish interface**
@@ -288,6 +289,6 @@ No cart view, checkout, authentication, quantity picker, product sorting, server
 
 ## Completion and traceability
 
-Implementation completion requires evidence for R-01–R-29, explicit treatment of B-01 and other relevant limitations, and M08's clean-checkout checks. Acceptance of B-01 permits the agreed limited scope; it is not evidence of cumulative-cart correctness. A passing mocked test suite alone cannot prove live compatibility. Phase 1.1/M01 performed endpoint/browser diagnostics only. M02 supplied the shell; M03 adds isolated API/cache modules, with 112 unit/integration tests, lint, build and 2 shell E2E smokes actually passed. This verifies the scoped implementation, not product views or live cumulative-cart integration.
+Implementation completion requires evidence for R-01–R-29, explicit treatment of B-01 and other relevant limitations, and M08's clean-checkout checks. Acceptance of B-01 permits the agreed limited scope; it is not evidence of cumulative-cart correctness. A passing mocked test suite alone cannot prove live compatibility. Phase 1.1/M01 performed endpoint/browser diagnostics only. M02 supplied the shell; M03 added API/cache; M04 connects catalogue/search. Actual current results: 131 unit/integration tests, lint/build and 20 Chromium E2E cases passed. This verifies PLP/read behavior with fixtures, not real PDP/cart or live cumulative session integration. Eight manual image URL reads timed out at 15 s without retries; screenshots use synthetic fixture images and do not prove photo availability.
 
 Related documents: [design](design.md), [tasks](tasks.md), [open questions](open-questions.md).
