@@ -1,6 +1,6 @@
 # Implementation milestones
 
-Status: M00–M06 published through `62ec535`; M07 QA passed. M08 is explicitly authorized after M07's publication/CI gate. Current live POST remains unverified and B-01 accepted/open. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 to [open-questions.md](open-questions.md). M01/M06 evidence is preserved unchanged.
+Status: M00–M07 published through `a68518b`; M08 clean verification/documentation passed locally, ready for its authorized focused commit/push. Current live POST remains unverified and B-01 accepted/open. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 to [open-questions.md](open-questions.md). M01/M06 evidence is preserved unchanged. Stop after M08 for manual review.
 
 ## Working agreement and commit checkpoints
 
@@ -133,6 +133,10 @@ Status: M00–M06 published through `62ec535`; M07 QA passed. M08 is explicitly 
 
 ## M08 — Clean-checkout validation and delivery documentation
 
+- **Status:** completed locally on 2026-11-10; [verification](../qa/m08.md). A fresh isolated clone of M07 with independent node_modules passed npm ci, Playwright browser setup, lint, all 222 Vitest tests, build and all 60 E2E cases. Development and preview served catalogue/direct detail/refresh with mocked browser checks. No original local env file, ignored artifacts or assignment PDF was required. Source/dependencies are unchanged in M08.
+- **Delivered:** concise English reviewer README, R-01–R-29 classifications and linked code/test/manual/live evidence; current read-only integration observations. HTTP list/detail/two JPEGs returned 200, and a normal-security Chromium production-preview context rendered one real detail/photo. Zero live POSTs. B-01 stays open; current POST/accumulation/session, assistive technology and eventual host rewrites remain human verification gates. npm reported deprecated ESLint and an optional fsevents-script warning, with actual commands still passing and no environment-policy changes.
+- **Final gate:** publish the focused documentation commit, verify clean main/origin synchronization, inspect CI once and stop. No submission, PR, merge, deployment or additional milestone. Public repository/history were verified; absent checks are not a CI pass.
+
 - **Objective:** make the final submission reproducible and defensible.
 - **Scope:** finish README from design.md's outline; update decisions/limitations and R-ID evidence; verify actual Node/npm versions, lockfile install, four required scripts, optional E2E/preview commands, and deep-link behavior. Inspect milestone history. If CI/repository publication is later authorized, document only the actual setup and honor the one-check policy.
 - **Acceptance criteria:** a reviewer can follow a clean checkout to development, lint, finite tests, E2E, build, and preview. Docs distinguish observed/live evidence from mocks; remaining API or environment limits are explicit. No unverified coverage badges/features; no automatic merge/deploy or unrequested PR.
@@ -144,8 +148,8 @@ Status: M00–M06 published through `62ec535`; M07 QA passed. M08 is explicitly 
 
 ## Recommended order and stopping conditions
 
-Completed: M00 initialization, M01 evidence, M02 shell/tooling, M03 boundary/cache, M04 PLP/search, M05 detail and M06 options/confirmed-count frontend. Next, only after explicit approval: M07 browser/UX review -> M08 final verification. Current live POST/cumulative integration remains unverified. Do not rerun contract probes merely to wait or repeatedly mutate the cart. B-01 remains accepted and open; it gates the cumulative live-cart claim, not local tooling.
+Completed: M00 initialization, M01 evidence, M02 tooling, M03 API/cache, M04 catalogue, M05 detail, M06 options/count, M07 QA and M08 reproducibility/documentation. Stop for manual review after M08 publication. Current live POST/cumulative integration remains unverified. Do not rerun contract probes merely to wait or mutate the live cart. B-01 remains accepted/open; deployment/submission require separate explicit authorization.
 
 Stop for a decision when a material source conflict, unresolved integration policy, or unavailable contract prevents the dependent work. Empty values with the documented honest fallback do not independently block implementation. Do not reopen approved decisions or ask the user to decide routine engineering defaults. After a push/PR update with pending CI, follow the mandatory CI stop rule even if further monitoring would be convenient.
 
-Current checkpoint: M07 QA passed; focused commit/normal push to existing origin authorized. Preserve history/M01/M06 evidence/PDF exclusion, verify synchronization and inspect CI once. If no checks are pending/running, continue to the explicitly authorized M08 clean verification/documentation. No UI library, proxy/backend, PR, force-push, merge, submission or deployment. Stop after independently verified/published M08, or earlier if the CI stop rule applies.
+Current checkpoint: M08 passed locally; its focused commit/normal push to existing origin is authorized. Preserve history/M01/M06 evidence/PDF exclusion, verify clean synchronization and inspect CI once. Then STOP for the user's manual review. No UI library, proxy/backend, PR, force-push, merge, submission or deployment. Pending/running CI still requires immediately stopping without polling.

@@ -1,0 +1,50 @@
+{
+  "startedAt": "2026-11-10T01:49:06.041Z",
+  "browser": "158.0.8127.18",
+  "mockedServing": [
+    {
+      "port": 5180,
+      "catalogue": true,
+      "directDetail": true,
+      "refresh": true,
+      "errors": []
+    },
+    {
+      "port": 4174,
+      "catalogue": true,
+      "directDetail": true,
+      "refresh": true,
+      "errors": []
+    }
+  ],
+  "live": {
+    "credentials": "omit",
+    "fetchTimeoutMs": 10000,
+    "postRequests": 0,
+    "requests": [
+      {
+        "method": "GET",
+        "url": "https://itx-frontend-test.onrender.com/api/product/ZmGrkLRPXOTpxsU4jjAcv"
+      },
+      {
+        "method": "GET",
+        "url": "https://itx-frontend-test.onrender.com/images/ZmGrkLRPXOTpxsU4jjAcv.jpg"
+      }
+    ],
+    "responses": [
+      {
+        "url": "https://itx-frontend-test.onrender.com/api/product/ZmGrkLRPXOTpxsU4jjAcv",
+        "status": 200
+      },
+      {
+        "url": "https://itx-frontend-test.onrender.com/images/ZmGrkLRPXOTpxsU4jjAcv.jpg",
+        "status": 200
+      }
+    ],
+    "failures": [],
+    "origin": "http://127.0.0.1:4174",
+    "detailRendered": true,
+    "photoRendered": true
+  },
+  "finishedAt": "2026-11-10T01:49:09.463Z"
+}

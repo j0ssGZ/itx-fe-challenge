@@ -1,0 +1,78 @@
+{
+  "startedAt": "2026-11-10T01:42:44.461Z",
+  "finishedAt": "2026-11-10T01:42:44.736Z",
+  "method": "GET only; curl, not browser CORS evidence",
+  "connectTimeoutSeconds": 5,
+  "totalTimeoutSeconds": 15,
+  "retries": 0,
+  "postRequests": 0,
+  "records": [
+    {
+      "kind": "list",
+      "url": "https://itx-frontend-test.onrender.com/api/product",
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "durationSeconds": 0.164163,
+      "bytes": 16627,
+      "contentType": "application/json; charset=utf-8",
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-origin": "*"
+      },
+      "error": null,
+      "shape": {
+        "array": true,
+        "length": 100
+      }
+    },
+    {
+      "kind": "detail",
+      "url": "https://itx-frontend-test.onrender.com/api/product/ZmGrkLRPXOTpxsU4jjAcv",
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "durationSeconds": 0.213637,
+      "bytes": 1397,
+      "contentType": "application/json; charset=utf-8",
+      "headers": {
+        "content-type": "application/json; charset=utf-8",
+        "access-control-allow-origin": "*"
+      },
+      "error": null,
+      "shape": {
+        "id": "ZmGrkLRPXOTpxsU4jjAcv",
+        "optionGroups": [
+          "colors",
+          "storages"
+        ]
+      }
+    },
+    {
+      "kind": "image-1",
+      "url": "https://itx-frontend-test.onrender.com/images/ZmGrkLRPXOTpxsU4jjAcv.jpg",
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "durationSeconds": 0.162553,
+      "bytes": 8403,
+      "contentType": "image/jpeg",
+      "headers": {
+        "content-type": "image/jpeg",
+        "access-control-allow-origin": "*"
+      },
+      "error": null
+    },
+    {
+      "kind": "image-2",
+      "url": "https://itx-frontend-test.onrender.com/images/pMZMhe_ZaAPZoaCCtlDrg.jpg",
+      "curlExitCode": 0,
+      "httpStatus": 200,
+      "durationSeconds": 0.16416,
+      "bytes": 14701,
+      "contentType": "image/jpeg",
+      "headers": {
+        "content-type": "image/jpeg",
+        "access-control-allow-origin": "*"
+      },
+      "error": null
+    }
+  ]
+}
