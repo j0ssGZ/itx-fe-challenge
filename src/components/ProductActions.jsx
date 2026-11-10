@@ -10,7 +10,7 @@ export default function ProductActions({ product }) {
   const [status, setStatus] = useState('idle')
   const submitting = useRef(false)
   const mounted = useRef(false)
-  const { confirmCount } = useCart()
+  const { count, beginAdd, confirmCount } = useCart()
   const valid = colors.some(option => option.code === colorCode) && storages.some(option => option.code === storageCode)
   const missing = colors.length === 0 || storages.length === 0
 
@@ -23,11 +23,12 @@ export default function ProductActions({ product }) {
     event.preventDefault()
     if (!valid || submitting.current) return
     submitting.current = true
+    const addId = beginAdd()
     setStatus('pending')
     try {
       // Do not abort/replay mutations on navigation: the server may already add it.
       const { count } = await addToCart({ id: product.id, colorCode, storageCode })
-      confirmCount(count)
+      confirmCount(count, addId)
       if (mounted.current) setStatus('success')
     } catch {
       if (mounted.current) setStatus('error')
@@ -69,7 +70,7 @@ export default function ProductActions({ product }) {
         </button>
         <p role="status" aria-atomic="true" className={styles.message}>
           {status === 'pending' ? 'Añadiendo el producto…'
-            : status === 'success' ? 'Producto añadido. Contador actualizado con la respuesta del servicio.' : ''}
+            : status === 'success' ? `Producto añadido. Carrito: ${count} artículos.` : ''}
         </p>
         {status === 'error' && <p role="alert" className={styles.error}>
           No hemos podido confirmar la operación. El contador anterior se conserva. Comprueba tu conexión antes de volver a intentarlo.

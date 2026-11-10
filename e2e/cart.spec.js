@@ -80,7 +80,8 @@ test('cart: failed POST preserves choices and confirmed count; product switch re
   let requests = 0
   await page.route(`${apiBase}/api/cart`, async route => {
     requests += 1
-    await route.fulfill({ status: 500, body: 'private server diagnostic' })
+    if (requests === 1) await route.fulfill({ status: 500, body: 'private server diagnostic' })
+    else await route.fulfill({ json: { count: 2 } })
   })
   await page.goto(`/products/${first.id}`)
   await page.getByRole('radio', { name: '32 GB' }).check()
@@ -91,11 +92,44 @@ test('cart: failed POST preserves choices and confirmed count; product switch re
   await expect(page.getByRole('button', { name: 'Añadir', exact: true })).toBeEnabled()
   expect(requests).toBe(1)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  await page.getByRole('button', { name: 'Añadir', exact: true }).click()
+  await expect(header(page, 2)).toBeVisible()
+  await expect(page.getByRole('alert')).toHaveCount(0)
+  expect(requests).toBe(2)
   await page.getByRole('link', { name: 'Volver a productos' }).click()
   await page.getByRole('link', { name: `Ver detalle de ${second.brand} ${second.model}`, exact: true }).click()
   await expect(page.getByRole('group', { name: 'Color', exact: true }).getByRole('radio', { checked: true })).toHaveCount(0)
   await expect(page.getByRole('button', { name: 'Añadir', exact: true })).toBeDisabled()
-  await expect(header(page, 7)).toBeVisible()
+  await expect(header(page, 2)).toBeVisible()
+})
+
+test('cart: a late older response cannot replace a newer confirmed count after navigation', async ({ page }) => {
+  await mockCatalogue(page)
+  let releaseOlder
+  const olderGate = new Promise(resolve => { releaseOlder = resolve })
+  let requests = 0
+  await page.route(`${apiBase}/api/cart`, async route => {
+    requests += 1
+    if (requests === 1) {
+      await olderGate
+      await route.fulfill({ json: { count: 3 } })
+    } else await route.fulfill({ json: { count: 8 } })
+  })
+  await page.goto(`/products/${single.id}`)
+  await page.getByRole('button', { name: 'Añadir', exact: true }).click()
+  await page.getByRole('link', { name: 'Volver a productos' }).click()
+  await page.getByRole('link', { name: `Ver detalle de ${second.brand} ${second.model}`, exact: true }).click()
+  await page.getByRole('radio', { name: 'White' }).check()
+  await page.getByRole('button', { name: 'Añadir', exact: true }).click()
+  await expect(header(page, 8)).toBeVisible()
+  releaseOlder()
+  // The browser has consumed A's reply before checking the durable value.
+  await expect.poll(() => page.evaluate(() => performance.getEntriesByType('resource')
+    .filter(entry => entry.name.endsWith('/api/cart')).length)).toBe(2)
+  await expect(header(page, 8)).toBeVisible()
+  await page.reload()
+  await expect(header(page, 8)).toBeVisible()
+  expect(requests).toBe(2)
 })
 
 test('cart: invalid options cannot submit, corrupted count safely defaults to zero', async ({ page }) => {

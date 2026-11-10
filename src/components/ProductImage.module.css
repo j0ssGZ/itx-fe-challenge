@@ -1,5 +1,6 @@
 .frame {
   display: grid;
+  grid-template: minmax(0, 1fr) / minmax(0, 1fr);
   place-items: center;
   min-width: 0;
   height: 13rem;

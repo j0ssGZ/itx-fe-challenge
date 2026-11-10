@@ -1,6 +1,8 @@
-# Proposed design
+# Application design
 
-Status: M06 options, POST and independently persisted confirmed count now implemented over M03/M05. Approved decisions and [M01 evidence](../evidence/m01/2026-11-09/README.md) are preserved. B-01 stays accepted/open; current live POST could not be verified after a bounded pre-read failure. M07 onward require approval.
+M07 review: [technical, visual and accessibility evidence](../qa/m07.md). The two-view architecture and dependencies are preserved. To repair a reproduced navigation race, CartProvider now gives each initiated add an ordering number and accepts an older response only when no newer valid confirmation exists. It still stores the exact server count; failed newer operations do not invalidate older successful responses. This ordering is local and does not prove backend session continuity. Header announces changes politely; image grid tracks now constrain intrinsic image size. M08 final verification is explicitly authorized after M07 publication/CI gate.
+
+Status: M07 QA passed over the implemented M06 application. Approved decisions and [M01 evidence](../evidence/m01/2026-11-09/README.md) are preserved. B-01 stays accepted/open; current live POST could not be verified after a bounded pre-read failure. M08 final verification is authorized after M07 publication/CI gate.
 
 ## Architecture overview
 

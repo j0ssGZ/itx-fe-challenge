@@ -20,6 +20,17 @@ test('PDP: direct entry, responsive image/description layout, refresh and keyboa
   } else {
     expect(imageBox.y + imageBox.height).toBeLessThan(titleBox.y)
   }
+  const initialViewport = page.viewportSize()
+  // Intermediate phone widths exposed an intrinsic-size grid overflow during QA.
+  for (const width of initialViewport.width === 320 ? [320, 375, 480] : [initialViewport.width]) {
+    await page.setViewportSize({ ...initialViewport, width })
+    const frame = await photo.locator('..').boundingBox()
+    const image = await photo.boundingBox()
+    expect(image.y).toBeGreaterThanOrEqual(frame.y)
+    expect(image.y + image.height).toBeLessThanOrEqual(frame.y + frame.height + 1)
+    expect(image.x + image.width).toBeLessThanOrEqual(frame.x + frame.width + 1)
+  }
+  await page.setViewportSize(initialViewport)
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   const breadcrumb = page.getByRole('navigation', { name: 'Ruta de navegación' })
   await expect(breadcrumb.getByText('Detalle del producto')).toHaveAttribute('aria-current', 'page')

@@ -10,7 +10,7 @@ export default function Header() {
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link to="/" className={styles.brand} aria-label="ITX Mobile, inicio">ITX Mobile</Link>
-        <span className={styles.cart} aria-label={`Carrito: ${count} artículos`}>
+        <span className={styles.cart} aria-label={`Carrito: ${count} artículos`} aria-live="polite" aria-atomic="true">
           Carrito <strong>{count}</strong>
         </span>
         <nav className={styles.breadcrumbs} aria-label="Ruta de navegación">

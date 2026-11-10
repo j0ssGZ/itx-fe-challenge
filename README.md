@@ -4,7 +4,9 @@ SPA React del reto frontend ITX para consultar dispositivos móviles y añadir o
 
 ## Estado actual
 
-**M06 completado: catálogo, detalle, opciones y contador confirmado por API. La verificación frontend pasa; el POST actual en vivo no pudo comprobarse y B-01 sigue abierto.**
+**M07 completado: recorridos, accesibilidad y revisión técnica verificados. M08 está autorizado para la validación final. El POST actual en vivo no pudo comprobarse y B-01 sigue abierto.**
+
+[Revisión M07](docs/qa/m07.md): 222 pruebas unitarias/integración, 60 E2E, lint y build aprobados. Se corrigen una respuesta antigua de carrito que podía sobrescribir una confirmación posterior y el desbordamiento vertical de imágenes PDP. Revisión visual en seis anchos y zoom nativo 200%; sin dependencias nuevas. Los resultados M06 de abajo quedan como registro histórico hasta la guía final M08.
 
 - `/`: catálogo completo obtenido mediante `getProducts()` de M03, con imagen, marca, modelo, precio y enlace al ID real de cada producto. Búsqueda local inmediata por marca/modelo, parcial y sin distinguir mayúsculas; limpiar restaura el listado.
 - `/products/:id`: detalle real mediante `getProduct(id, { signal })`, con once atributos, imagen/fallback reutilizados, resumen de modelo/precio, enlace de vuelta explícito y breadcrumbs. Admite entrada directa y recarga local. Escritorio: imagen izquierda/información derecha; móvil: imagen antes de la descripción.
@@ -12,7 +14,7 @@ SPA React del reto frontend ITX para consultar dispositivos móviles y añadir o
 - Las rutas desconocidas redirigen al listado mediante reemplazo de historial y muestran un aviso de página no encontrada. Se sigue el diseño aprobado, sin añadir una tercera vista de negocio ni simular un estado HTTP 404 del servidor.
 - La PLP reutiliza la caché de una hora de M03. Distingue carga, API vacía, búsqueda sin coincidencias y error con reintento explícito. Precios vacíos muestran “Precio no disponible”; imágenes ausentes o fallidas tienen fallback accesible. No hay paginación ni ordenación. Las opciones y el alta se integran únicamente en PDP.
 - M00 y M01 conservan sus commits y las evidencias API del 9 de noviembre de 2026. B-01 sigue abierto como riesgo aceptado.
-- Repositorio: [j0ssGZ/itx-fe-challenge](https://github.com/j0ssGZ/itx-fe-challenge). No hay PR ni despliegue. M07 requiere aprobación explícita.
+- Repositorio: [j0ssGZ/itx-fe-challenge](https://github.com/j0ssGZ/itx-fe-challenge). No hay PR ni despliegue. M08 está autorizado después del gate de publicación/CI de M07.
 
 ## Requisitos e instalación
 

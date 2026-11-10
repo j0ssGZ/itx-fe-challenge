@@ -1,6 +1,6 @@
 # Implementation milestones
 
-Status: M00 in `e08a674`, M01 in `8a0f325`, M02 in `f5eb658`, M03 in `0cf9841`, M04 in `cebff55`; M05 published in `3652c5e`; M06 options/POST/count implemented and verified locally under explicit approval. The bounded live pre-read failed, so current POST is unverified. B-01 remains accepted/open; M07 onward require approval. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 refer to [open-questions.md](open-questions.md). Historical M01 evidence is preserved unchanged.
+Status: M00–M06 published through `62ec535`; M07 QA passed. M08 is explicitly authorized after M07's publication/CI gate. Current live POST remains unverified and B-01 accepted/open. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 to [open-questions.md](open-questions.md). M01/M06 evidence is preserved unchanged.
 
 ## Working agreement and commit checkpoints
 
@@ -119,6 +119,9 @@ Status: M00 in `e08a674`, M01 in `8a0f325`, M02 in `f5eb658`, M03 in `0cf9841`, 
 
 ## M07 — Critical browser journeys and visual/accessibility review
 
+- **Status:** completed 2026-11-10; [review evidence](../qa/m07.md). Baseline clean/M06 preserved. Final gates passed: lint, 222 Vitest tests, build, 60 Chromium E2E cases. Two reproduced defects repaired: older cart replies overwriting newer confirmations, and intrinsic image overflow at intermediate phone widths. Six-width visual review and native 200% zoom completed. B-01 stays accepted/open; no live POST occurred.
+- **Authorization:** M07 commit/push and M08 are explicitly approved in the same request. Inspect CI once after publishing M07; stop if pending/running, otherwise proceed to the independently verified M08. This supersedes earlier per-milestone approval checkpoints without authorizing deployment/submission/PR.
+
 - **Objective:** verify that the two views work together in a real browser and respect the wireframes.
 - **Scope:** extend M02's existing Playwright setup/smoke with contract-based network interception, isolated storage, product browse/search/detail/back and direct refresh, add/count/navigation/reload, read retry and mutation error, responsive and keyboard checks. Resolve defects without expanding product scope.
 - **Acceptance criteria:** journeys are deterministic, issue no accidental live POSTs, and exercise real routes/components with Spanish visible/accessibility copy. The maximum four-column rule holds at ultrawide width; PDP columns/mobile stack follow the reviewed design; count remains visible; focus, contrast, zoom, and long content are usable. Deep-link serving works locally. A mock returning accumulated counts is not described as proof that B-01 is resolved.
@@ -145,4 +148,4 @@ Completed: M00 initialization, M01 evidence, M02 shell/tooling, M03 boundary/cac
 
 Stop for a decision when a material source conflict, unresolved integration policy, or unavailable contract prevents the dependent work. Empty values with the documented honest fallback do not independently block implementation. Do not reopen approved decisions or ask the user to decide routine engineering defaults. After a push/PR update with pending CI, follow the mandatory CI stop rule even if further monitoring would be convenient.
 
-Current checkpoint: M06 verified frontend; one focused commit/normal push to existing origin are authorized. Preserve history/M01 evidence/PDF exclusion, verify synchronization and inspect CI once. No M07, dependency/UI library installation, additional live POST, proxy/backend, PR, force-push, merge or deployment. Stop after M06 and wait for explicit M07 approval.
+Current checkpoint: M07 QA passed; focused commit/normal push to existing origin authorized. Preserve history/M01/M06 evidence/PDF exclusion, verify synchronization and inspect CI once. If no checks are pending/running, continue to the explicitly authorized M08 clean verification/documentation. No UI library, proxy/backend, PR, force-push, merge, submission or deployment. Stop after independently verified/published M08, or earlier if the CI stop rule applies.

@@ -217,4 +217,25 @@ describe('confirmed shared count, errors and mutation lifecycle', () => {
     expect(count(3)).toBeInTheDocument()
     expect(posts()).toHaveLength(1)
   })
+
+  it.each(['success', 'failure'])('does not let an older add overwrite a newer %s outcome', async outcome => {
+    let finishOlder
+    mutate.mockImplementationOnce(() => new Promise(resolve => { finishOlder = resolve }))
+    const user = userEvent.setup()
+    renderProduct(single, true)
+    await user.click(await ready(single))
+    await user.click(screen.getByRole('link', { name: 'Otro producto' }))
+    await ready(second)
+    await user.click(group('Color').getByRole('radio', { name: 'White' }))
+    mutate.mockResolvedValueOnce(outcome === 'success' ? json({ count: 8 }) : new Response('failure', { status: 500 }))
+    await user.click(screen.getByRole('button', { name: 'Añadir', exact: true }))
+    if (outcome === 'success') await waitFor(() => expect(count(8)).toBeInTheDocument())
+    else await screen.findByRole('alert')
+    await act(async () => finishOlder(json({ count: 3 })))
+    // A failed newer add supplies no confirmation; the older valid reply still counts.
+    const expected = outcome === 'success' ? 8 : 3
+    expect(count(expected)).toBeInTheDocument()
+    expect(JSON.parse(localStorage.getItem(CART_COUNT_KEY)).count).toBe(expected)
+    expect(posts()).toHaveLength(2)
+  })
 })

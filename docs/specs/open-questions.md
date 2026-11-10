@@ -1,6 +1,8 @@
 # Decision register, open questions, and risks
 
-Status: M06 options, POST and confirmed-count frontend completed under explicit authorization. Approved decisions remain closed and B-01 stays accepted/open. M00–M05 history and [dated API evidence](../evidence/m01/2026-11-09/README.md) are preserved. M07 onward remain unauthorized. [M06 live attempt](../evidence/m06/2026-11-10/README.md) failed before options/POST; no current POST success is claimed. R-IDs are in [requirements.md](requirements.md); architecture/milestones in [design.md](design.md) and [tasks.md](tasks.md).
+M07 checkpoint: [QA evidence](../qa/m07.md), 222 unit/integration and 60 E2E cases passing with lint/build. Reproduced cart-response ordering and image containment defects are repaired. No approved functional decision was reopened. M07 and M08 are explicitly authorized together; after M07's publish/CI gate, proceed to M08. B-01 remains open/accepted; assistive-technology review and final live compatibility remain limitations.
+
+Status: M07 QA passed; M08 is authorized after its publication/CI gate. Approved decisions remain closed and B-01 stays accepted/open. M00–M06 history and [dated API evidence](../evidence/m01/2026-11-09/README.md) are preserved. [M06 live attempt](../evidence/m06/2026-11-10/README.md) failed before options/POST; no current POST success is claimed. R-IDs are in [requirements.md](requirements.md); architecture/milestones in [design.md](design.md) and [tasks.md](tasks.md).
 
 ## Historical Phase 1.1 review and subsequent checkpoints
 

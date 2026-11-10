@@ -1,6 +1,8 @@
 # Requirements specification
 
-Status: M00–M05 published; M06 options/POST/confirmed-count frontend implemented and verified under explicit approval. M07 onward require approval. M01 evidence/approved decisions are preserved. A bounded M06 live detail pre-read failed and no POST was sent; current POST and cumulative integration are not verified. B-01 remains open/accepted.
+M07 checkpoint: [QA evidence](../qa/m07.md) covers the full two-view journeys, semantic/keyboard checks, six responsive widths, native 200% zoom and two focused repairs. Actual gates: lint, 222 unit/integration tests, build and 60 mocked E2E cases passed. M07 publication and M08 are explicitly authorized together, subject to independent gates and the single CI check. M08 will record final R-01–R-29 classifications; B-01 remains open/accepted.
+
+Status: M00–M06 published; M07 QA passed. M08 is explicitly authorized after M07 publication/CI gate. M01 evidence/approved decisions are preserved. A bounded M06 live detail pre-read failed and no POST was sent; current POST and cumulative integration are not verified. B-01 remains open/accepted.
 
 ## Sources and interpretation
 

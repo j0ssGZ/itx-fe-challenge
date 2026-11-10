@@ -1,0 +1,29 @@
+import { expect, test } from '@playwright/test'
+import { firstProduct, mockCatalogue } from './fixtures.js'
+
+test('accessibility: keyboard skip link, visible focus and semantic detail structure', async ({ page }) => {
+  await mockCatalogue(page)
+  await page.goto('/')
+  const skip = page.getByRole('link', { name: 'Saltar al contenido' })
+  await skip.focus()
+  await expect(skip).toBeInViewport()
+  await page.keyboard.press('Enter')
+  await expect(page.getByRole('main')).toBeFocused()
+  await page.keyboard.press('Tab')
+  const search = page.getByRole('searchbox', { name: 'Buscar por marca o modelo' })
+  await expect(search).toBeFocused()
+  expect(await search.evaluate(element => getComputedStyle(element).outlineStyle)).toBe('solid')
+  await expect(page.locator('#product-results')).toHaveAttribute('aria-atomic', 'true')
+  await page.getByRole('link', { name: `Ver detalle de ${firstProduct.brand} ${firstProduct.model}` }).click()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
+  await expect(page.getByRole('term')).toHaveCount(11)
+  await expect(page.getByRole('definition')).toHaveCount(11)
+  for (const label of ['Color', 'Almacenamiento']) {
+    await expect(page.getByRole('group', { name: label, exact: true })).toBeVisible()
+  }
+  await expect(page.getByLabel('Carrito: 0 artículos', { exact: true })).toHaveAttribute('aria-live', 'polite')
+  await page.getByRole('link', { name: 'Volver a productos' }).focus()
+  await page.keyboard.press('Enter')
+  await expect(search).toBeVisible()
+  await expect(page.getByRole('main')).toBeFocused()
+})
