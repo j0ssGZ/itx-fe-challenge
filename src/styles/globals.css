@@ -1,39 +1,61 @@
 :root {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: #17202a;
-  background: #f5f6f8;
+  --ink: #202027;
+  --muted: #62616c;
+  --paper: #faf9f6;
+  --surface: #fff;
+  --line: #dedde4;
+  --accent: #6045d6;
+  --accent-dark: #4c32bb;
+  --accent-soft: #eeebfa;
+  --radius: 1.5rem;
+  --page-width: 82rem;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
   font-synthesis: none;
   line-height: 1.6;
 }
-
 * {
   box-sizing: border-box;
 }
-
 body {
   min-width: 20rem;
   margin: 0;
 }
-
 a {
-  color: #164bb5;
+  color: var(--accent-dark);
 }
-
+button, input {
+  font: inherit;
+}
+button, a, input {
+  -webkit-tap-highlight-color: transparent;
+}
+::selection {
+  color: var(--ink);
+  background: #ded6ff;
+}
 :focus-visible {
-  outline: 3px solid #164bb5;
+  outline: 3px solid var(--accent);
   outline-offset: 4px;
 }
-
 .skip-link {
   position: absolute;
-  z-index: 1;
-  top: 0.5rem;
-  left: 0.5rem;
-  padding: 0.75rem 1rem;
-  background: #fff;
+  z-index: 10;
+  top: .5rem;
+  left: .5rem;
+  padding: .75rem 1rem;
+  border-radius: .5rem;
+  background: var(--surface);
   transform: translateY(-200%);
 }
-
 .skip-link:focus {
   transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
 }

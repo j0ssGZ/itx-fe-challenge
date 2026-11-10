@@ -46,8 +46,10 @@ function ProductDetails({ id }) {
       {status === 'success' ? (
         <div className={styles.layout}>
           <div className={styles.imagePanel}>
+            <p className={styles.imageLabel}>Una mirada más cerca</p>
             <ProductImage key={product.id} src={product.imgUrl} variant="detail"
               alt={[product.brand, product.model].filter(Boolean).join(' ') || 'Dispositivo móvil'} />
+            <p className={styles.imageCaption}>Cada detalle cuenta.</p>
           </div>
           <div className={styles.information}>
             <div className={styles.summary}>

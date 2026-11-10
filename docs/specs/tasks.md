@@ -153,3 +153,13 @@ Completed: M00 initialization, M01 evidence, M02 tooling, M03 API/cache, M04 cat
 Stop for a decision when a material source conflict, unresolved integration policy, or unavailable contract prevents the dependent work. Empty values with the documented honest fallback do not independently block implementation. Do not reopen approved decisions or ask the user to decide routine engineering defaults. After a push/PR update with pending CI, follow the mandatory CI stop rule even if further monitoring would be convenient.
 
 Current checkpoint: M08 passed locally; its focused commit/normal push to existing origin is authorized. Preserve history/M01/M06 evidence/PDF exclusion, verify clean synchronization and inspect CI once. Then STOP for the user's manual review. No UI library, proxy/backend, PR, force-push, merge, submission or deployment. Pending/running CI still requires immediately stopping without polling.
+
+## Post-M08 — Premium visual redesign, Stage A
+
+- **Status:** implementation and local verification completed 2026-11-10. Explicit user authorization covers one focused commit and push, followed by a single CI check and STOP. This supersedes the historical M08 checkpoint above for this stage only.
+- **Objective/scope:** original Specter-inspired visual system, Header, catalogue and PDP presentation using existing CSS Modules; preserve the two views and all API/cache/cart behavior. No new dependencies.
+- **Acceptance evidence:** [Stage A visual review](../qa/visual-redesign-stage-a.md), eight widths from 320–1920px without overflow, maximum four columns, required PDP structure/eleven attributes, native 200% zoom, keyboard/focus/reduced-motion and error/fallback presentation.
+- **Required checks/result:** final `npm run lint` passed with zero warnings; `npm test` passed **222 tests / 10 files**; `npm run build` passed (115 modules); `npm run test:e2e` passed **60 Chromium cases**. Existing empty-state coverage gained two assertions; no test cases were removed. No live POSTs.
+- **Dependencies/deliverable:** completed M00–M08, existing fixtures and tooling; visual source changes and synchronized documentation. Traceability: R-04–R-06, R-08–R-18, R-25–R-27; B-01 remains open.
+- **Commit:** `style: redesign premium storefront experience`.
+- **Next checkpoint:** Stage B (responsive cart confirmation) is **not started** and requires explicit approval after Stage A review. Keep inline success/error behavior until then. No deployment or submission.

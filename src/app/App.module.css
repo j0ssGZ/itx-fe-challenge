@@ -1,10 +1,10 @@
 .main {
-  width: min(100% - 2rem, 70rem);
-  margin: 2rem auto;
+  width: min(100% - 2rem, var(--page-width));
+  margin: 2rem auto 5rem;
 }
-
 @media (min-width: 48rem) {
   .main {
-    margin-top: 3rem;
+    width: min(100% - 4rem, var(--page-width));
+    margin-top: 3.5rem;
   }
 }

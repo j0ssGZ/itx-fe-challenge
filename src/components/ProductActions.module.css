@@ -1,95 +1,97 @@
 .actions {
-  margin-top: 1.5rem;
-  padding: 1.25rem;
-  border: 1px solid #d8dce2;
-  border-radius: 0.875rem;
-  background: #fff;
-  font-size: 0.875rem;
+  margin-top: 2rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--ink);
+  border-radius: var(--radius);
+  background: var(--ink);
+  color: #fff;
+  font-size: .875rem;
   overflow-wrap: anywhere;
 }
-
 .actions h2 {
-  margin: 0 0 1.25rem;
-  font-size: 1.125rem;
-  letter-spacing: -0.02em;
+  margin: 0 0 1.5rem;
+  font-size: 1.375rem;
+  font-weight: 500;
+  letter-spacing: -.035em;
 }
-
 .actions fieldset {
-  margin: 0 0 1.25rem;
+  margin: 0 0 1.5rem;
   padding: 0;
   border: 0;
   min-width: 0;
 }
-
 .actions legend {
   padding: 0;
-  margin-bottom: 0.625rem;
-  color: #465363;
-  font-weight: 600;
+  margin-bottom: .75rem;
+  color: #dedbe9;
+  font-size: .75rem;
 }
-
 .choices {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.625rem;
+  gap: .625rem;
 }
-
 .choice {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: .625rem;
   min-height: 2.75rem;
   max-width: 100%;
-  padding: 0.625rem 0.875rem;
-  border: 1px solid #b7bfcc;
-  border-radius: 0.5rem;
+  padding: .625rem 1rem;
+  border: 1px solid #87838f;
+  border-radius: .75rem;
   cursor: pointer;
+  transition: border-color 160ms ease, background 160ms ease;
 }
-
 .choice:has(:checked) {
-  border-color: #164bb5;
-  background: #eef3ff;
+  border-color: #c9baff;
+  background: #44385c;
 }
-
+.choice:has(:focus-visible) {
+  outline: 3px solid #c9baff;
+  outline-offset: 4px;
+}
 .choice input {
   margin: 0;
-  accent-color: #164bb5;
+  accent-color: #c9baff;
   flex-shrink: 0;
 }
-
 .help, .message {
-  color: #465363;
+  color: #dedbe9;
+  font-size: .8125rem;
   line-height: 1.6;
 }
-
+.help {
+  margin-bottom: 1.5rem;
+}
 .message:empty {
   margin: 0;
 }
-
 .actions button {
-  min-height: 2.75rem;
-  padding: 0.75rem 1.25rem;
-  border: 1px solid #164bb5;
-  border-radius: 0.5rem;
-  background: #164bb5;
+  width: 100%;
+  min-height: 3.25rem;
+  padding: .875rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 2rem;
+  background: var(--accent);
   color: #fff;
-  font: inherit;
   font-weight: 600;
   cursor: pointer;
+  transition: background 160ms ease;
 }
-
 .actions button:hover:enabled {
-  background: #123d94;
+  background: var(--accent-dark);
 }
-
+.actions button:focus-visible {
+  outline-color: #c9baff;
+}
 .actions button:disabled {
-  background: #edf0f4;
-  border-color: #d8dce2;
-  color: #596577;
+  background: #39383f;
+  border-color: #706c7a;
+  color: #d1ced9;
   cursor: not-allowed;
 }
-
 .error {
-  color: #8d2434;
+  color: #ffc6ce;
   line-height: 1.6;
 }

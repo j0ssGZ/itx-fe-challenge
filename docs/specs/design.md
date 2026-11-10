@@ -158,6 +158,8 @@ The TTL measures time since receipt, rather than since the most recent read. One
 
 ## UI and UX approach
 
+The explicitly authorized post-M08 Stage A redesign refines this presentation into an editorial storefront: shared ink/paper/violet tokens, system sans-serif typography, an original compact ITX monogram, stronger catalogue introduction, inset imagery and a dark options panel. It preserves the wireframe structure and all state/API decisions below. See [Stage A review](../qa/visual-redesign-stage-a.md) for actual visual evidence and limitations. Stage B's confirmation dialog is not implemented or authorized by this checkpoint; success remains inline.
+
 Keep the visual hierarchy of A pp.3–4, with generous but restrained spacing, consistent type, neutral surfaces, visible controls, and product images given stable, contained space. No new logo, external font download, stock photography, hero area, carousel, or unrelated commerce feature is required.
 
 - **PLP:** content container under the header; labeled search above and right-aligned with the grid on desktop; full available width on narrow screens. CSS Grid uses explicitly capped tracks: one column initially, then two, optionally three, and at most four. Proposed content-driven starting breakpoints are approximately 480/768/1024 CSS px; validate card width instead of treating those numbers as assignment requirements. Keep the cap at ultrawide widths.

@@ -49,12 +49,17 @@ export default function ProductListPage() {
       {state?.notFound && <p className={styles.notice} role="status">Página no encontrada. Te mostramos el inicio.</p>}
       <div className={styles.toolbar}>
         <div>
+          <p className={styles.eyebrow}>Tecnología personal · ITX Mobile</p>
           <h1 id="products-title" className={styles.title}>Productos</h1>
-          <p className={styles.intro}>Explora el catálogo de dispositivos móviles.</p>
+          <p className={styles.intro}>Encuentra el móvil que encaja contigo.</p>
         </div>
         <search className={styles.search} aria-label="Buscar en el catálogo">
           <label htmlFor="product-search">Buscar por marca o modelo</label>
           <div className={styles.searchControl}>
+            <svg className={styles.searchIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+              <path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
             <input id="product-search" ref={searchRef} type="search" placeholder="Marca o modelo"
               value={query} onChange={event => setQuery(event.target.value)} aria-describedby="product-results" />
             <button type="button" onClick={clearSearch} disabled={!query} aria-label="Limpiar búsqueda">Limpiar</button>
@@ -62,6 +67,17 @@ export default function ProductListPage() {
         </search>
       </div>
       <p id="product-results" role="status" aria-atomic="true" className={styles.results}>{announcement}</p>
+      {request.status === 'loading' && (
+        <div className={styles.skeletonGrid} aria-hidden="true">
+          {[0, 1, 2, 3].map(item => <div className={styles.skeleton} key={item}><span /><span /></div>)}
+        </div>
+      )}
+      {request.status === 'success' && request.products.length === 0 && (
+        <div className={styles.feedback}>
+          <h2>El catálogo está en pausa</h2>
+          <p>Los productos aparecerán aquí cuando estén disponibles.</p>
+        </div>
+      )}
       {request.status === 'error' && (
         <div className={styles.feedback}>
           <div role="alert">

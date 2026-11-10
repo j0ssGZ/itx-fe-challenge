@@ -97,6 +97,8 @@ describe('PLP catalogue and derived live search', () => {
     respond([])
     renderList()
     expect(await screen.findByText('No hay productos disponibles en este momento.')).toHaveAttribute('role', 'status')
+    expect(screen.getByRole('heading', { name: 'El catálogo está en pausa' })).toBeInTheDocument()
+    expect(screen.getByText('Los productos aparecerán aquí cuando estén disponibles.')).toBeInTheDocument()
     expect(screen.queryByRole('list')).not.toBeInTheDocument()
     expect(screen.getByRole('searchbox')).toHaveAccessibleName('Buscar por marca o modelo')
     expect(screen.queryByRole('button', { name: 'Reintentar' })).not.toBeInTheDocument()

@@ -80,6 +80,8 @@ The confirmed value persists separately under `itx:cart-count:v1`, without produ
 
 Landmarks, skip navigation, breadcrumbs, route title/focus updates, visible focus, labeled search, native fieldsets/legends, semantic `dl/dt/dd`, polite result/cart announcements and error alerts are included. The grid caps at four columns. PDP is image-left/details-right on desktop and image-first stacked on mobile, with actions below the description.
 
+The [Stage A visual redesign](docs/qa/visual-redesign-stage-a.md) introduces an editorial type scale, warm neutral surfaces, violet accents, inset product imagery and a contrasting options panel using existing CSS Modules. It preserves the two-view layout and business behavior. Eight widths from 320 to 1920px were checked; low-resolution upstream photos can still appear soft when enlarged. The proposed cart confirmation drawer is a separate, unimplemented Stage B awaiting approval.
+
 [M07 QA](docs/qa/m07.md) covers 320/375/480/768/1280/1920 px, native 200% zoom, palette contrast and reproduced race/image-containment repairs. Tests reuse sanitized M01 samples plus labeled synthetic failures. Mocked count sequences never prove backend accumulation. Screenshots stay outside Git. Human screen-reader testing and engines beyond Chromium remain unverified; no accessibility certification is claimed.
 
 ## Known external limitations and delivery
