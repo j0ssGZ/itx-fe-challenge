@@ -21,11 +21,13 @@ export default function App() {
       <a className="skip-link" href="#contenido">Saltar al contenido</a>
       <Header />
       <main id="contenido" ref={mainRef} tabIndex={-1} className={styles.main}>
-        <Routes>
-          <Route path="/" element={<ProductListPage />} />
-          <Route path="/products/:id" element={<ProductDetailsPage />} />
-          <Route path="*" element={<Navigate to="/" replace state={{ notFound: true }} />} />
-        </Routes>
+        <div key={pathname} className={styles.page}>
+          <Routes>
+            <Route path="/" element={<ProductListPage />} />
+            <Route path="/products/:id" element={<ProductDetailsPage />} />
+            <Route path="*" element={<Navigate to="/" replace state={{ notFound: true }} />} />
+          </Routes>
+        </div>
       </main>
     </CartProvider>
   )

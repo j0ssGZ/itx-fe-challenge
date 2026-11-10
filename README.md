@@ -58,6 +58,8 @@ docs/           SDD, decisions, dated API evidence and QA
 
 Pages own request/search state; ProductActions owns selections/submission feedback; CartProvider shares only confirmed count and mutation-order bookkeeping. Native fetch/storage keep boundaries explicit without Redux, query frameworks or generic resource hooks. [The Astryx evaluation](docs/decisions/ui-library-evaluation.md) retains native controls/CSS Modules. Dependencies are pinned in one lockfile.
 
+Route content enters with a 200ms CSS fade and 8px upward movement, disabled for reduced-motion preferences. Only the current pathname's content animates; the Header and portal-based cart confirmation remain independent, and fetching/navigation are not delayed.
+
 ## API, cache and errors
 
 Base URL: `https://itx-frontend-test.onrender.com`.

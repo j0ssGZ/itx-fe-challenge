@@ -24,8 +24,11 @@ test('PDP: direct entry, responsive image/description layout, refresh and keyboa
   // Intermediate phone widths exposed an intrinsic-size grid overflow during QA.
   for (const width of initialViewport.width === 320 ? [320, 375, 480] : [initialViewport.width]) {
     await page.setViewportSize({ ...initialViewport, width })
-    const frame = await photo.locator('..').boundingBox()
-    const image = await photo.boundingBox()
+    // Measure both boxes in the same frame while the route may be entering.
+    const { frame, image } = await photo.evaluate(element => ({
+      frame: element.parentElement.getBoundingClientRect().toJSON(),
+      image: element.getBoundingClientRect().toJSON(),
+    }))
     expect(image.y).toBeGreaterThanOrEqual(frame.y)
     expect(image.y + image.height).toBeLessThanOrEqual(frame.y + frame.height + 1)
     expect(image.x + image.width).toBeLessThanOrEqual(frame.x + frame.width + 1)
