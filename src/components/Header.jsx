@@ -1,16 +1,17 @@
 import { Link, useMatch } from 'react-router'
+import { useCart } from '../app/CartProvider.jsx'
 import styles from './Header.module.css'
 
 export default function Header() {
+  const { count } = useCart()
   const isDetailsPage = Boolean(useMatch('/products/:id'))
 
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
         <Link to="/" className={styles.brand} aria-label="ITX Mobile, inicio">ITX Mobile</Link>
-        {/* Indicador estático de M02; sin estado ni persistencia de carrito. */}
-        <span className={styles.cart} aria-label="Carrito: 0 artículos">
-          Carrito <strong>0</strong>
+        <span className={styles.cart} aria-label={`Carrito: ${count} artículos`}>
+          Carrito <strong>{count}</strong>
         </span>
         <nav className={styles.breadcrumbs} aria-label="Ruta de navegación">
           <ol>

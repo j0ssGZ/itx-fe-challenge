@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { Navigate, Route, Routes, useLocation } from 'react-router'
+import CartProvider from './CartProvider.jsx'
 import Header from '../components/Header.jsx'
 import ProductListPage from '../pages/ProductListPage.jsx'
 import ProductDetailsPage from '../pages/ProductDetailsPage.jsx'
@@ -16,7 +17,7 @@ export default function App() {
   }, [pathname])
 
   return (
-    <>
+    <CartProvider>
       <a className="skip-link" href="#contenido">Saltar al contenido</a>
       <Header />
       <main id="contenido" ref={mainRef} tabIndex={-1} className={styles.main}>
@@ -26,6 +27,6 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace state={{ notFound: true }} />} />
         </Routes>
       </main>
-    </>
+    </CartProvider>
   )
 }

@@ -1,6 +1,6 @@
 # Requirements specification
 
-Status: approved decisions preserved; M00–M04 complete and M05 read-only PDP implemented/verified under explicit approval. Options/cart and M06 onward require separate approval. Historical API evidence is unchanged; tests use mocks and no remote probes occurred in M05. M04 image timeouts remain historical, not a new API contract.
+Status: M00–M05 published; M06 options/POST/confirmed-count frontend implemented and verified under explicit approval. M07 onward require approval. M01 evidence/approved decisions are preserved. A bounded M06 live detail pre-read failed and no POST was sent; current POST and cumulative integration are not verified. B-01 remains open/accepted.
 
 ## Sources and interpretation
 
@@ -14,6 +14,7 @@ Status: approved decisions preserved; M00–M04 complete and M05 read-only PDP i
 - **T**: the user's M03 authorization: native-fetch read boundary, product list/detail validation, one-hour versioned client cache, deterministic mocked tests and a verified normal push. No page integration, hooks, search, cart operations, new views or M04.
 - **V**: the user's M04 authorization: complete PLP/live search over M03, responsive/accessibility/state checks, PDF comparison, a brief Astryx evaluation without installation, documentation, verified commit/push and one CI inspection. M05/cart/deployment remain excluded.
 - **P**: the user's M05 authorization: real read-only PDP over M03, all eleven attributes, cancellation/stale-response protection, deterministic unit/browser and local visual checks, documentation/commit/push/one CI inspection. Options/cart/persistence and M06 remain excluded.
+- **C**: the user's M06 authorization: product options, exact POST with omit credentials, independent server-confirmed count persistence, deterministic tests, local browser review and focused commit/push. No M07, proxy/backend, new page, UI library or deployment. [M06 integration evidence](../evidence/m06/2026-11-10/README.md) records a bounded failed prerequisite GET, zero POSTs and no new cumulative claim.
 
 Evidence labels: **explicit** means stated in the assignment or user instructions; **approved decision** means agreed in D; **observed** means demonstrated in O, not guaranteed by the PDF; **preference** means encouraged rather than mandatory; **proposal** means an architectural recommendation; **unknown** means not established. Approved design decisions do not become quoted PDF requirements.
 
@@ -69,12 +70,12 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 10. **R-10 — Header cart count**
     - Source/classification: A pp.5,6, HEADER and ACTIONS; explicit functional/layout requirement. Priority: P0.
     - Acceptance: the number of added items appears on the right side of the header in both views. It is a count indicator; no cart page is required.
-    - Verification: shared-header rendering and updates following a successful add. Milestones: M02, M06.
+    - Verification: M06 passed response-driven Header updates on both routes and reload, preserving the previous value on failed/invalid POSTs; no cart page was added. Milestones: M02, M06.
 
 11. **R-11 — Detail layout and image**
     - Source/classification: A pp.3–5, PDP, IMAGE, and PDP wireframe; explicit layout/content requirement. Priority: P0.
     - Acceptance: at a suitable desktop width, the image occupies the left column and description/actions the right column, with description above actions. Show the product image. Stacking on small screens is a responsive proposal, subject to Q-07.
-    - Verification: M05 reused ProductImage and passed image-left/details-right at desktop, image-first mobile stack, missing-image fallback, no overflow at 320/768/1280/1920 px and local capture review against A p.4. Actions remain M06. Milestones: M05, M07.
+    - Verification: M05 reused ProductImage and passed image-left/details-right at desktop, image-first mobile stack, missing-image fallback, no overflow at 320/768/1280/1920 px and local capture review against A p.4. M06 verifies actions below the description at all four widths. Milestones: M05–M07.
 
 12. **R-12 — Explicit return-to-list link**
     - Source/classification: A p.3, PDP; explicit functional requirement. Priority: P0.
@@ -89,27 +90,27 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 14. **R-14 — Color and storage controls**
     - Source/classification: A p.6, ACTIONS; explicit functional requirement. Priority: P0.
     - Acceptance: show controls for selecting storage capacity and color using options supplied for the current product. Do not hardcode selectable codes from the PDF's examples.
-    - Verification: option rendering and changes for both groups. Milestone: M06.
+    - Verification: M06 passed native-radio rendering/keyboard and actual M01 options, with absent/invalid groups disabled and explained; codes are checked against the current product. Milestone: M06.
 
 15. **R-15 — Visible, selected singleton options**
     - Source/classification: A p.6, ACTIONS; singleton behavior is explicit. D approves initially unselected groups with multiple options. Priority: P0.
     - Acceptance: each singleton group remains visible with its option preselected. Each group with multiple options is initially unselected and requires a user choice. The PDF contains no contrary multi-option default. Q-04 is closed.
-    - Verification: singleton/singleton and mixed singleton/multiple-option fixtures. Milestone: M06.
+    - Verification: M06 passed all three observed mixed/singleton patterns, plus a synthetic multiple/multiple case, both initially unselected; navigation resets selections. Milestone: M06.
 
 16. **R-16 — Add selected product**
     - Source/classification: A p.6, ACTIONS; explicit functional requirement. Priority: P0.
     - Acceptance: provide an “Añadir” button that submits the current product and selected color/storage after both selections are valid. Spanish copy follows D, rather than the English labels used to identify wireframe regions.
-    - Verification: selections followed by submit; invalid or absent options do not produce a request. Milestone: M06.
+    - Verification: M06 passed form validity, disabled incomplete/pending state, immediate double-submit guard and selection retention on HTTP/network/JSON/count errors. Missing price does not fabricate stock restrictions. Milestone: M06.
 
 17. **R-17 — Cart request contract**
     - Source/classification: A pp.6–8, ACTIONS and API; explicit API requirement. Priority: P0.
     - Acceptance: send `POST /api/cart` with fields `id`, `colorCode`, and `storageCode`, using actual product/option values. O and M confirm a string ID and numeric codes from `options.colors` and `options.storages`. Do not send display labels, stringify codes accidentally through DOM input values, or add unsupported quantity fields.
-    - Verification: inspect the outgoing request in boundary/integration tests. Milestones: M01, M06.
+    - Verification: M06 inspected exact string/numeric JSON payload in unit/integration/browser mocks, including numeric zero; no extra quantity, POST caching or retry. The one live browser attempt failed at prerequisite GET, so no current POST was verified/sent. Milestones: M01, M06.
 
 18. **R-18 — Authoritative, persistent cart count**
     - Source/classification: A p.6 and p.8 response example; explicit requirement. D approves response authority and persistence independent from product TTL. Priority: P0.
     - Acceptance: replace the shared header count with successful response `count` and persist it independently of product-cache expiration. Do not increment locally or treat the response as a delta. Reload must restore the last confirmed count when browser storage is available. Cookie-dependent accumulation is historical evidence in O; M freshly confirms one count-bearing POST and the credentialed-browser constraint, without replaying accumulation. B-01 remains open despite acceptance of its risk.
-    - Verification: responses deliberately different from previous count plus one, including repeated `1`; route changes; reload; product-cache expiry without resetting the count. Milestone: M06.
+    - Verification: M06 passed exact replacement with decreases/repeated `1`, persistence/remount/browser reload/routes, invalid count preservation, storage corruption/denial/quota and independent expiry. These are mocked frontend checks, not proof of live accumulation or session restoration. Milestone: M06.
 
 19. **R-19 — Product API integration**
     - Source/classification: A p.7, Integración API; explicit API requirement. Priority: P0.
@@ -119,7 +120,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 20. **R-20 — Client-side response cache**
     - Source/classification: A p.8, Persistencia de datos; explicit technical requirement. Priority: P0.
     - Acceptance: retain API data on the client and reuse it to avoid unnecessary requests. Both browser storage and memory are permitted by A. D approves product-data caching separately from cart-count persistence. Cache successful list/detail GETs; never suppress or replay a POST from a read cache. Q-02 is closed.
-    - Verification: M03 passed repeated list/detail hits, per-ID/base isolation, reload reuse, corrupt/invalid payload/version checks and storage-failure memory fallback. An independent count test key stays untouched; no cart persistence is implemented. Milestone: M03.
+    - Verification: M03 passed repeated list/detail hits, per-ID/base isolation, reload reuse, corrupt/invalid payload/version checks and storage-failure memory fallback. An independent count test key stays untouched; M06 additionally verifies the real separate count key/persistence during expiry. Milestone: M03.
 
 21. **R-21 — One-hour cache expiration**
     - Source/classification: A p.8, Persistencia de datos; explicit technical requirement, confirmed by D. Priority: P0.
@@ -138,7 +139,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 24. **R-24 — Execution README**
     - Source/classification: A p.2; README and execution explanation are explicit; inclusion in the first commit is a preference. Priority: P0 for README, P1 for first-commit placement.
-    - Acceptance: README explains prerequisites, setup, execution, and relevant notes; claims reflect actual implementation and verification. M00 included the first README; M01 recorded contracts; M02 documents the actual runtime, lockfile installation, browser setup, available scripts and shell-check results. M04 now documents the implemented catalogue/search, actual results, fixtures/image limits and the Astryx decision; M05 now records the real read-only detail, its maps/lifecycle and actual tests/visual limits; options/cart remain explicitly pending.
+    - Acceptance: README explains prerequisites, setup, execution, and relevant notes; claims reflect actual implementation and verification. M00 included the first README; M01 recorded contracts; M02 documents the actual runtime, lockfile installation, browser setup, available scripts and shell-check results. M04 now documents the implemented catalogue/search, actual results, fixtures/image limits and the Astryx decision; M05 now records the real read-only detail, its maps/lifecycle and actual tests/visual limits; M06 documents actual options/POST/confirmed count, memory fallback and the failed live pre-read; M07 remains pending.
     - Verification: clean-checkout instructions checked in M08. Milestones: M00, M02, M08.
 
 25. **R-25 — Visual structure and attention to detail**
@@ -158,7 +159,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
 
 28. **R-28 — Phase and CI approval gates**
     - Source/classification: U and W; explicit process constraints. Priority: P0.
-    - Acceptance: honor each milestone's explicit scope. M02 authorized shell/tooling; M03 authorized API/cache; M04 authorized PLP/search/evaluation; M05 authorizes read-only PDP and a verified normal push to existing `j0ssGZ/itx-fe-challenge` origin, preserving M00–M04 ancestry. From M02: implement -> test -> lint -> build -> review diff -> commit -> push -> verify -> STOP. No force-push, secrets/local environments/PDF in commits, failing/unverified pushes, PR, automatic merge/deploy, or next milestone without approval. After each push/PR update, inspect CI once; if pending/running, report and immediately stop, asking the user to return on completion/failure. No polling/watch/waiting agents. Preserve all security/approval gates.
+    - Acceptance: honor each milestone's explicit scope. M02 authorized shell/tooling; M03 authorized API/cache; M04 authorized PLP/search/evaluation; M05 authorized read-only PDP; M06 authorizes options/cart/count frontend and a verified normal push to existing `j0ssGZ/itx-fe-challenge` origin, preserving M00–M05 ancestry. From M02: implement -> test -> lint -> build -> review diff -> commit -> push -> verify -> STOP. No force-push, secrets/local environments/PDF in commits, failing/unverified pushes, PR, automatic merge/deploy, or next milestone without approval. After each push/PR update, inspect CI once; if pending/running, report and immediately stop, asking the user to return on completion/failure. No polling/watch/waiting agents. Preserve all security/approval gates.
     - Verification: working-tree/file inventory in Phase 1; workflow review at subsequent checkpoints. Milestones: M00–M08.
 
 29. **R-29 — Spanish interface**
@@ -290,6 +291,6 @@ No cart view, checkout, authentication, quantity picker, product sorting, server
 
 ## Completion and traceability
 
-Implementation completion requires evidence for R-01–R-29, explicit treatment of B-01 and other relevant limitations, and M08's clean-checkout checks. Acceptance of B-01 permits the agreed limited scope; it is not evidence of cumulative-cart correctness. A passing mocked test suite alone cannot prove live compatibility. Phase 1.1/M01 performed endpoint/browser diagnostics only. M02 supplied the shell, M03 API/cache, M04 catalogue/search and M05 read-only PDP. Actual current results: 156 unit/integration tests, lint/build and 36 Chromium E2E cases passed. This verifies PLP/PDP read behavior with M01 fixtures, not cart/options or live cumulative session integration. M04 photo timeouts remain historical; M05 local captures force the working image fallback and do not establish current remote photo availability.
+Implementation completion requires evidence for R-01–R-29, explicit treatment of B-01 and other relevant limitations, and M08's clean-checkout checks. Acceptance of B-01 permits the agreed limited scope; it is not evidence of cumulative-cart correctness. A passing mocked test suite alone cannot prove live compatibility. Phase 1.1/M01 performed endpoint/browser diagnostics only. M02 supplied the shell, M03 API/cache, M04 catalogue/search, M05 read-only detail and M06 options/POST/confirmed count. Actual current results: 220 unit/integration tests, lint/build and 52 Chromium E2E cases passed. This verifies frontend behavior with M01 fixtures and labeled synthetic cases, not live accumulation. The bounded M06 real-browser detail attempt received no readable HTTP response and sent zero POSTs; M01 remains the historical POST baseline. M04 photo timeouts remain historical and M06 local mock/fallback captures do not establish photo availability. No approved functional decision was reopened.
 
 Related documents: [design](design.md), [tasks](tasks.md), [open questions](open-questions.md).

@@ -22,15 +22,16 @@ export function assertNotAborted(signal) {
   if (signal?.aborted) throw new ApiError('aborted', { cause: signal.reason })
 }
 
-// Read-only boundary for M03. No retries, credentials or server error text.
-export async function requestJson(path, { signal } = {}) {
+// Shared GET/POST JSON boundary. No retries or server error text.
+export async function requestJson(path, { signal, method = 'GET', body } = {}) {
   assertNotAborted(signal)
   const url = new URL(path.replace(/^\/+/, ''), `${API_BASE_URL}/`)
   let response
   try {
     response = await fetch(url.href, {
-      method: 'GET',
-      headers: { Accept: 'application/json' },
+      method,
+      headers: { Accept: 'application/json', ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) },
+      ...(body === undefined ? {} : { body: JSON.stringify(body) }),
       credentials: 'omit',
       signal,
     })

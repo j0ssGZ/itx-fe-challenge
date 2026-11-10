@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router'
 import { getProduct } from '../api/products.js'
 import ProductImage from '../components/ProductImage.jsx'
+import ProductActions from '../components/ProductActions.jsx'
 import ProductDescription from '../components/ProductDescription.jsx'
 import styles from './ProductDetailsPage.module.css'
 
@@ -57,6 +58,7 @@ function ProductDetails({ id }) {
               </p>
             </div>
             <ProductDescription product={product} />
+            <ProductActions key={product.id} product={product} />
           </div>
         </div>
       ) : (

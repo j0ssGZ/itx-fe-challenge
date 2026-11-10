@@ -1,0 +1,25 @@
+{
+  "startedAt": "2026-11-10T00:02:01.503Z",
+  "origin": "http://127.0.0.1:5173",
+  "browser": "158.0.8127.18",
+  "credentials": "omit",
+  "timeoutMs": 12000,
+  "automaticRetries": 0,
+  "requests": [
+    {
+      "method": "GET",
+      "url": "https://itx-frontend-test.onrender.com/api/product/ZmGrkLRPXOTpxsU4jjAcv"
+    },
+    {
+      "method": "GET",
+      "url": "https://itx-frontend-test.onrender.com/api/product/ZmGrkLRPXOTpxsU4jjAcv"
+    }
+  ],
+  "postAttempts": 0,
+  "observed": {
+    "limitation": "Bounded live product GET failed; no POST sent.",
+    "feedback": "No hemos podido cargar el producto\n\nComprueba tu conexión y vuelve a intentarlo."
+  },
+  "finishedAt": "2026-11-10T00:02:14.616Z",
+  "evidenceNote": "One bounded manual integration attempt against the real development app. No API mocks or POST retries. Images were blocked intentionally. No readable HTTP response was observed; no POST was sent. React development StrictMode emitted two GET request events; exact per-event failure reasons were not captured. This is not evidence of a universal outage, successful POST, credentialed CORS change or cumulative cart behavior."
+}

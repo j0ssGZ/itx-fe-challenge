@@ -1,0 +1,95 @@
+.actions {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid #d8dce2;
+  border-radius: 0.875rem;
+  background: #fff;
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.actions h2 {
+  margin: 0 0 1.25rem;
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
+}
+
+.actions fieldset {
+  margin: 0 0 1.25rem;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.actions legend {
+  padding: 0;
+  margin-bottom: 0.625rem;
+  color: #465363;
+  font-weight: 600;
+}
+
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.625rem;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  max-width: 100%;
+  padding: 0.625rem 0.875rem;
+  border: 1px solid #b7bfcc;
+  border-radius: 0.5rem;
+  cursor: pointer;
+}
+
+.choice:has(:checked) {
+  border-color: #164bb5;
+  background: #eef3ff;
+}
+
+.choice input {
+  margin: 0;
+  accent-color: #164bb5;
+  flex-shrink: 0;
+}
+
+.help, .message {
+  color: #465363;
+  line-height: 1.6;
+}
+
+.message:empty {
+  margin: 0;
+}
+
+.actions button {
+  min-height: 2.75rem;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid #164bb5;
+  border-radius: 0.5rem;
+  background: #164bb5;
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.actions button:hover:enabled {
+  background: #123d94;
+}
+
+.actions button:disabled {
+  background: #edf0f4;
+  border-color: #d8dce2;
+  color: #596577;
+  cursor: not-allowed;
+}
+
+.error {
+  color: #8d2434;
+  line-height: 1.6;
+}

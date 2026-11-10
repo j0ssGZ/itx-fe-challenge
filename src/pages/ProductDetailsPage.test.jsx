@@ -58,8 +58,8 @@ describe('PDP read-only attributes and contract mappings', () => {
     expect(valueFor('Cámaras')).toHaveTextContent(`Secundaria: ${secondaryCamera}`)
     expect(valueFor('Resolución de pantalla')).not.toHaveTextContent(product.displayResolution)
     expect(screen.getByRole('img', { name: `${product.brand} ${product.model}` })).toHaveAttribute('src', product.imgUrl)
-    expect(screen.queryByRole('button', { name: /añadir/i })).not.toBeInTheDocument()
-    expect(screen.queryByRole('radio')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Añadir' })).toBeInTheDocument()
+    expect(screen.getAllByRole('radio')).toHaveLength(product.options.colors.length + product.options.storages.length)
     expect(fetch).toHaveBeenCalledWith(expect.stringContaining(detailPath(product.id)), expect.objectContaining({ method: 'GET', credentials: 'omit' }))
   })
 
@@ -111,7 +111,7 @@ describe('PDP loading, error states and navigation', () => {
     let finish
     fetch.mockImplementation(() => new Promise(resolve => { finish = resolve }))
     renderDetail()
-    expect(screen.getByRole('status')).toHaveTextContent('Cargando el producto…')
+    expect(screen.getAllByRole('status')[0]).toHaveTextContent('Cargando el producto…')
     expect(screen.getByRole('link', { name: 'Volver a productos' })).toHaveAttribute('href', '/')
     expect(screen.getByLabelText('Carrito: 0 artículos')).toBeInTheDocument()
     const breadcrumb = screen.getByRole('navigation', { name: 'Ruta de navegación' })
@@ -119,7 +119,7 @@ describe('PDP loading, error states and navigation', () => {
     expect(within(breadcrumb).getByRole('link', { name: 'Productos' })).toHaveAttribute('href', '/')
     finish(new Response(JSON.stringify(first)))
     await screen.findByRole('heading', { name: first.model })
-    expect(screen.getByRole('status')).toHaveTextContent('Información del producto cargada.')
+    expect(screen.getAllByRole('status')[0]).toHaveTextContent('Información del producto cargada.')
   })
 
   it.each(['500', '404', 'network', 'json', 'contract', 'mismatched-id'])(
@@ -197,7 +197,7 @@ describe('PDP route lifecycle and stale-response protection', () => {
     await screen.findByRole('heading', { name: first.model })
     await user.click(screen.getByRole('link', { name: 'Abrir B' }))
     expect(screen.queryByRole('heading', { name: first.model })).not.toBeInTheDocument()
-    expect(screen.getByRole('status')).toHaveTextContent('Cargando el producto…')
+    expect(screen.getAllByRole('status')[0]).toHaveTextContent('Cargando el producto…')
     finishB(new Response(JSON.stringify(second)))
     await screen.findByRole('heading', { name: second.model })
     expect(valueFor('Modelo')).toHaveTextContent(second.model)
