@@ -163,3 +163,14 @@ Current checkpoint: M08 passed locally; its focused commit/normal push to existi
 - **Dependencies/deliverable:** completed M00–M08, existing fixtures and tooling; visual source changes and synchronized documentation. Traceability: R-04–R-06, R-08–R-18, R-25–R-27; B-01 remains open.
 - **Commit:** `style: redesign premium storefront experience`.
 - **Next checkpoint:** Stage B (responsive cart confirmation) is **not started** and requires explicit approval after Stage A review. Keep inline success/error behavior until then. No deployment or submission.
+
+## Post-M08 — Premium add-to-cart experience, Stage B
+
+- **Status:** implemented and locally verified 2026-11-10 after explicit user approval. Supersedes Stage A's historical approval gate above. One focused normal commit/push is authorized; inspect CI once and STOP.
+- **Objective/scope:** responsive native confirmation dialog, mobile purchase priority and clearer product-image states within the existing two-view/CSS Modules architecture. No dependencies or API/cache/storage/provider policy changes.
+- **Acceptance evidence:** [Stage B QA](../qa/cart-confirmation-stage-b.md). Success-only snapshot, exact selected options and confirmed count; drawer/sheet, keyboard containment, Escape, both close actions, focus restoration, catalogue continuation and reversible scroll lock. Mobile uses one form before specifications; desktop retains assignment order. Deliberate pending/missing/error photo states and bounded enlargement.
+- **Required checks/result:** final lint passed with zero warnings, **232 Vitest tests / 11 files**, production build passed (117 modules), **72 Chromium E2E cases passed**. Added 10 unit/integration cases and 12 E2E cases; preserved existing assertions except genuine success/modal and mobile-order adaptations. No live POSTs.
+- **Visual checkpoint:** all eight requested widths (320/375/390/480/768/1280/1440/1920px), no horizontal overflow/page errors; actual render inspection and native 200% zoom with internal sheet scrolling. Screenshots stay outside Git. B-01 remains accepted/open; physical-device/screen-reader checks remain human verification items.
+- **Deliverable/commit:** confirmation component/styles/tests, scoped PDP/image changes, E2E coverage and synchronized README/SDD; `feat: introduce premium responsive cart confirmation`.
+- **Traceability/dependencies:** completed Stage A and M00–M08; R-10–R-18, R-25–R-27, R-29. No new route/cart-read claim, fake total or cumulative-count inference.
+- **Stopping condition:** publish verified changes, confirm synchronization, inspect CI once and STOP for the user's review. No Stage C, deployment, PR or submission is authorized.

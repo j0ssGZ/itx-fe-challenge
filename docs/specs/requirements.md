@@ -79,6 +79,7 @@ Priorities: **P0 / Must** for explicit mandatory behavior and delivery constrain
     - Source/classification: A pp.3–5, PDP, IMAGE, and PDP wireframe; explicit layout/content requirement. Priority: P0.
     - Acceptance: at a suitable desktop width, the image occupies the left column and description/actions the right column, with description above actions. Show the product image. Stacking on small screens is a responsive proposal, subject to Q-07.
     - Verification: M05 reused ProductImage and passed image-left/details-right at desktop, image-first mobile stack, missing-image fallback, no overflow at 320/768/1280/1920 px and local capture review against A p.4. M06 verifies actions below the description at all four widths. Milestones: M05–M07.
+    - Approved Stage B adaptation: mobile now prioritizes identity/price, the single purchase form and then all eleven specifications; desktop preserves image-left/details-right and specifications before actions. This is the user's explicit mobile UX decision, not a newly inferred PDF requirement. [Stage B evidence](../qa/cart-confirmation-stage-b.md) also covers response-only confirmation without a third route, errors, unchanged count authority and accessible image states (R-10, R-13–R-18, R-25–R-27).
 
 12. **R-12 — Explicit return-to-list link**
     - Source/classification: A p.3, PDP; explicit functional requirement. Priority: P0.

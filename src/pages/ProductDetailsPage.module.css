@@ -51,8 +51,18 @@
   font-size: .75rem;
 }
 .information {
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   overflow-wrap: anywhere;
+}
+.purchase {
+  order: 1;
+  margin-top: -2rem;
+}
+.specifications {
+  order: 2;
+  margin-top: 2rem;
 }
 .summary {
   padding: .25rem 0 2rem;
@@ -112,6 +122,14 @@
   background: var(--accent-dark);
 }
 @media (min-width: 48rem) {
+  .purchase {
+    order: 2;
+    margin-top: 0;
+  }
+  .specifications {
+    order: 1;
+    margin-top: 0;
+  }
   .layout {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
     gap: clamp(2rem, 5vw, 5rem);

@@ -4,6 +4,8 @@ A two-view React SPA for browsing mobile devices, inspecting specifications and 
 
 The frontend is implemented. M07 and the M08 clean checkout passed **222 unit/integration tests and 60 mocked Chromium E2E cases**, lint and build. [M08 verification](docs/qa/m08.md) records final reproducibility and delivery limits. The project has not been deployed or submitted. No GitHub CI checks are configured; local results are not a CI pass.
 
+The subsequently approved [Stage B](docs/qa/cart-confirmation-stage-b.md) passed **232 unit/integration tests and 72 mocked Chromium E2E cases**, lint and build after the responsive confirmation and image-state changes.
+
 ## Setup and execution
 
 Verified environment: **Node 24.19.0** (`.nvmrc`), **npm 11.17.0**. Manifest ranges are Node `>=24.15.0 <25` and npm `>=11 <12`; other versions in those ranges have not been tested here.
@@ -45,7 +47,7 @@ React/React DOM **19.3.1**, React Router **8.5.1** (declarative), Vite **8.3.7**
 src/
   app/          shell, routes and shared confirmed-count Context
   pages/        catalogue/search and detail request lifecycle
-  components/   Header, ProductCard/Image/Description/Actions
+  components/   Header, ProductCard/Image/Description/Actions, CartConfirmation
   api/          fetch/JSON errors, product reads and cart POST
   storage/      guarded JSON storage, product cache and cart count
   styles/       global typography, reset and focus
@@ -70,7 +72,9 @@ Read effects abort on cleanup and ignore stale results; changing detail ID reset
 
 ## Options and confirmed cart count
 
-Native Color/Almacenamiento radio groups use actual API options. Singletons remain visible/preselected; multiple groups start unselected. Add requires valid option membership, is disabled while incomplete/pending and blocks duplicate events. Missing/invalid groups are explained. Numeric zero codes remain numbers; empty price does not invent a stock rule.
+Native Color/Almacenamiento radio groups use actual API options. Singletons remain visible/preselected; multiple groups start unselected. Add requires valid option membership, is disabled while incomplete/pending and blocks duplicate events. Missing/invalid groups are explained. Numeric zero codes remain numbers; empty price does not invent a stock rule. On mobile the single purchase form precedes technical specifications; desktop retains specifications before actions.
+
+A valid POST opens a native modal confirmation: a right drawer from 768px and a scrollable, safe-area-aware bottom sheet below that width. It shows the submitted product/options and the latest server-confirmed count, without claiming complete cart contents. Escape/close restore Add focus; “Seguir comprando” closes and navigates to the catalogue. The native top layer blocks background interaction, boundary Tab handling keeps focus inside, and body scroll styles are restored on close/navigation/unmount. Inline errors remain; duplicate inline success announcements were removed. Reduced-motion preferences disable the entrance animation.
 
 Only a nonnegative safe integer response `count` is accepted. It **replaces** the prior count, including decreases/repeated `1`; there is no local increment, optimistic update, POST cache or automatic replay. Errors preserve selections/count. Navigation does not cancel a possibly received POST; late confirmations can update Header. A small ordering guard prevents older replies replacing newer valid confirmations, while a failed newer add does not discard an older valid reply.
 
@@ -80,7 +84,7 @@ The confirmed value persists separately under `itx:cart-count:v1`, without produ
 
 Landmarks, skip navigation, breadcrumbs, route title/focus updates, visible focus, labeled search, native fieldsets/legends, semantic `dl/dt/dd`, polite result/cart announcements and error alerts are included. The grid caps at four columns. PDP is image-left/details-right on desktop and image-first stacked on mobile, with actions below the description.
 
-The [Stage A visual redesign](docs/qa/visual-redesign-stage-a.md) introduces an editorial type scale, warm neutral surfaces, violet accents, inset product imagery and a contrasting options panel using existing CSS Modules. It preserves the two-view layout and business behavior. Eight widths from 320 to 1920px were checked; low-resolution upstream photos can still appear soft when enlarged. The proposed cart confirmation drawer is a separate, unimplemented Stage B awaiting approval.
+The [Stage A visual redesign](docs/qa/visual-redesign-stage-a.md) introduces an editorial type scale, warm neutral surfaces, violet accents, inset product imagery and a contrasting options panel using existing CSS Modules. [Stage B](docs/qa/cart-confirmation-stage-b.md) adds responsive confirmation, mobile purchase priority and deliberate image states. ProductImage distinguishes loading from missing/failed sources, preserves fixed frames and caps loaded images at 1.5× their natural dimensions. It neither retries images nor guesses whether an error means a timeout or broken URL. Pending browser requests keep the loading message until load/error; upstream low resolution remains a data limitation.
 
 [M07 QA](docs/qa/m07.md) covers 320/375/480/768/1280/1920 px, native 200% zoom, palette contrast and reproduced race/image-containment repairs. Tests reuse sanitized M01 samples plus labeled synthetic failures. Mocked count sequences never prove backend accumulation. Screenshots stay outside Git. Human screen-reader testing and engines beyond Chromium remain unverified; no accessibility certification is claimed.
 

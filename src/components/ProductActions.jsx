@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { addToCart } from '../api/cart.js'
 import { useCart } from '../app/CartProvider.jsx'
+import CartConfirmation from './CartConfirmation.jsx'
 import styles from './ProductActions.module.css'
 
 export default function ProductActions({ product }) {
@@ -8,6 +9,8 @@ export default function ProductActions({ product }) {
   const [colorCode, setColorCode] = useState(() => colors.length === 1 ? colors[0].code : null)
   const [storageCode, setStorageCode] = useState(() => storages.length === 1 ? storages[0].code : null)
   const [status, setStatus] = useState('idle')
+  const [confirmation, setConfirmation] = useState(null)
+  const addRef = useRef(null)
   const submitting = useRef(false)
   const mounted = useRef(false)
   const { count, beginAdd, confirmCount } = useCart()
@@ -29,7 +32,11 @@ export default function ProductActions({ product }) {
       // Do not abort/replay mutations on navigation: the server may already add it.
       const { count } = await addToCart({ id: product.id, colorCode, storageCode })
       confirmCount(count, addId)
-      if (mounted.current) setStatus('success')
+      if (mounted.current) {
+        setStatus('success')
+        setConfirmation({ product, color: colors.find(option => option.code === colorCode).name,
+          storage: storages.find(option => option.code === storageCode).name })
+      }
     } catch {
       if (mounted.current) setStatus('error')
     } finally {
@@ -65,17 +72,18 @@ export default function ProductActions({ product }) {
           {missing ? 'No hay opciones válidas suficientes para añadir este producto.'
             : 'Selecciona un color y una capacidad de almacenamiento para añadir el producto.'}
         </p>
-        <button type="submit" disabled={!valid || status === 'pending'}>
+        <button ref={addRef} type="submit" disabled={!valid || status === 'pending'}>
           {status === 'pending' ? 'Añadiendo…' : 'Añadir'}
         </button>
         <p role="status" aria-atomic="true" className={styles.message}>
-          {status === 'pending' ? 'Añadiendo el producto…'
-            : status === 'success' ? `Producto añadido. Carrito: ${count} artículos.` : ''}
+          {status === 'pending' ? 'Añadiendo el producto…' : ''}
         </p>
         {status === 'error' && <p role="alert" className={styles.error}>
           No hemos podido confirmar la operación. El contador anterior se conserva. Comprueba tu conexión antes de volver a intentarlo.
         </p>}
       </form>
+      {confirmation && <CartConfirmation confirmation={confirmation} count={count}
+        returnFocusRef={addRef} onDismiss={() => setConfirmation(null)} />}
     </section>
   )
 }

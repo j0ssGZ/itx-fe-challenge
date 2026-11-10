@@ -59,8 +59,8 @@ function ProductDetails({ id }) {
                 {product.price ?? 'Precio no disponible'}
               </p>
             </div>
-            <ProductDescription product={product} />
-            <ProductActions key={product.id} product={product} />
+            <div className={styles.purchase}><ProductActions key={product.id} product={product} /></div>
+            <div className={styles.specifications}><ProductDescription product={product} /></div>
           </div>
         </div>
       ) : (

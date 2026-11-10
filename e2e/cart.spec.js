@@ -28,11 +28,16 @@ test('cart: keyboard options, exact payload, response authority across routes an
   await expect(add).toBeFocused()
   await page.keyboard.press('Enter')
   await expect(header(page, 5)).toBeVisible()
-  await expect(page.getByRole('status').filter({ hasText: 'Producto añadido' })).toBeVisible()
+  await expect(page.getByRole('dialog', { name: 'Producto añadido.' })).toBeVisible()
+  await page.getByRole('button', { name: 'Cerrar', exact: true }).click()
   expect(bodies[0]).toEqual({ id: first.id, colorCode: 1000, storageCode: 2001 })
   const descriptionBox = await page.getByRole('region', { name: 'Especificaciones' }).boundingBox()
   const actionsBox = await page.getByRole('region', { name: 'Opciones del producto' }).boundingBox()
-  expect(actionsBox.y).toBeGreaterThanOrEqual(descriptionBox.y + descriptionBox.height)
+  if (page.viewportSize().width >= 768) {
+    expect(actionsBox.y).toBeGreaterThanOrEqual(descriptionBox.y + descriptionBox.height)
+  } else {
+    expect(descriptionBox.y).toBeGreaterThanOrEqual(actionsBox.y + actionsBox.height)
+  }
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.getByRole('link', { name: 'Volver a productos' }).click()
   await expect(header(page, 5)).toBeVisible()
@@ -42,6 +47,8 @@ test('cart: keyboard options, exact payload, response authority across routes an
   await expect(page.getByRole('radio', { checked: true })).toHaveCount(2)
   for (let i = 0; i < 2; i += 1) {
     await add.click()
+    await expect(page.getByRole('dialog')).toBeVisible()
+    await page.getByRole('button', { name: 'Cerrar', exact: true }).click()
     await expect(add).toBeEnabled()
     await expect(header(page, 1)).toBeVisible()
   }
@@ -87,6 +94,7 @@ test('cart: failed POST preserves choices and confirmed count; product switch re
   await page.getByRole('radio', { name: '32 GB' }).check()
   await page.getByRole('button', { name: 'Añadir', exact: true }).click()
   await expect(page.getByRole('alert')).toContainText('No hemos podido confirmar la operación')
+  await expect(page.getByRole('dialog')).toHaveCount(0)
   await expect(header(page, 7)).toBeVisible()
   await expect(page.getByRole('radio', { name: '32 GB' })).toBeChecked()
   await expect(page.getByRole('button', { name: 'Añadir', exact: true })).toBeEnabled()
@@ -94,6 +102,7 @@ test('cart: failed POST preserves choices and confirmed count; product switch re
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
   await page.getByRole('button', { name: 'Añadir', exact: true }).click()
   await expect(header(page, 2)).toBeVisible()
+  await page.getByRole('button', { name: 'Cerrar', exact: true }).click()
   await expect(page.getByRole('alert')).toHaveCount(0)
   expect(requests).toBe(2)
   await page.getByRole('link', { name: 'Volver a productos' }).click()

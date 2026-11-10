@@ -1,0 +1,215 @@
+.dialog {
+  position: fixed;
+  inset: auto 0 0;
+  width: 100%;
+  max-width: none;
+  max-height: 92dvh;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-bottom: 0;
+  border-radius: 1.75rem 1.75rem 0 0;
+  background: var(--paper);
+  color: var(--ink);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 -12px 60px #20202716;
+}
+.dialog[open] {
+  animation: sheet-in 240ms ease-out;
+}
+.dialog::backdrop {
+  background: #20202765;
+  animation: backdrop-in 180ms ease-out;
+}
+.content {
+  padding: 1.25rem max(1.25rem, env(safe-area-inset-right)) max(1.25rem, env(safe-area-inset-bottom)) max(1.25rem, env(safe-area-inset-left));
+  overflow-wrap: anywhere;
+}
+.topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.eyebrow {
+  color: var(--accent-dark);
+  font-size: .6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+.eyebrow span {
+  margin-right: .5rem;
+}
+.close {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+.content h2 {
+  margin: 1rem 0 .75rem;
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.05;
+  font-weight: 500;
+  letter-spacing: -.055em;
+}
+.description {
+  margin: 0 0 1.5rem;
+  color: var(--muted);
+  font-size: .875rem;
+}
+.product {
+  display: grid;
+  grid-template-columns: 6.5rem minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem;
+}
+.image {
+  padding: .75rem;
+  background: var(--accent-soft);
+  border-radius: 1rem;
+}
+.image > div {
+  height: 7.5rem;
+}
+.image img {
+  mix-blend-mode: multiply;
+}
+.image span {
+  font-size: .625rem;
+}
+.image small {
+  display: none;
+}
+.brand {
+  margin: 0 0 .5rem;
+  color: var(--accent-dark);
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  font-size: .6875rem;
+  font-weight: 600;
+}
+.identity h3 {
+  margin: 0;
+  font-size: 1.375rem;
+  line-height: 1.2;
+  letter-spacing: -.035em;
+  font-weight: 500;
+}
+.options {
+  margin: 1.5rem 0;
+  font-size: .875rem;
+}
+.options > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: .75rem 0;
+  border-top: 1px solid var(--line);
+}
+.options dt {
+  color: var(--muted);
+}
+.options dd {
+  margin: 0;
+  text-align: right;
+}
+.count {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: .5rem 1rem;
+  padding: 1rem;
+  border: 1px solid #d7d0ee;
+  border-radius: 1rem;
+  background: var(--accent-soft);
+}
+.count p {
+  margin: 0;
+  font-size: .8125rem;
+}
+.count strong {
+  color: var(--accent-dark);
+  font-size: 2rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.count span {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: .75rem;
+}
+.footer {
+  display: grid;
+  gap: .5rem;
+  margin-top: 1.5rem;
+}
+.continue, .dismiss {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  min-height: 3.25rem;
+  padding: .75rem 1rem;
+  border-radius: 2rem;
+  font-size: .875rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+}
+.continue {
+  background: var(--accent);
+  color: #fff;
+}
+.continue:hover {
+  background: var(--accent-dark);
+}
+.dismiss {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+}
+.dismiss:hover, .close:hover {
+  background: var(--accent-soft);
+}
+@media (min-width: 48rem) {
+  .dialog {
+    inset: 0 0 0 auto;
+    width: 30rem;
+    height: 100dvh;
+    max-height: 100dvh;
+    border: 0;
+    border-left: 1px solid var(--line);
+    border-radius: 1.75rem 0 0 1.75rem;
+  }
+  .dialog[open] {
+    animation-name: drawer-in;
+  }
+  .content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    padding: 2rem;
+  }
+  .footer {
+    margin-top: auto;
+    padding-top: 2rem;
+  }
+}
+@keyframes sheet-in {
+  from { transform: translateY(100%); opacity: .5; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes drawer-in {
+  from { transform: translateX(100%); opacity: .5; }
+  to { transform: translateX(0); opacity: 1; }
+}
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

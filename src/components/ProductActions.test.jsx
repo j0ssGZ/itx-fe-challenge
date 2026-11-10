@@ -51,7 +51,8 @@ describe('visible native product options and valid exact requests', () => {
     await user.click(add)
     await waitFor(() => expect(count(1)).toBeInTheDocument())
     expect(JSON.parse(posts()[0][1].body)).toEqual({ id: first.id, colorCode: 1000, storageCode: 2001 })
-    expect(screen.getByText(/Producto añadido/)).toHaveAttribute('role', 'status')
+    expect(screen.getByRole('dialog', { name: 'Producto añadido.' })).toBeInTheDocument()
+    expect(within(screen.getByRole('dialog')).getAllByRole('definition').map(item => item.textContent)).toEqual(['Black', '32 GB'])
   })
 
   it('preselects singleton storage but waits for a choice between multiple colors', async () => {
@@ -157,6 +158,8 @@ describe('confirmed shared count, errors and mutation lifecycle', () => {
       await user.click(add)
       await waitFor(() => expect(count(value)).toBeInTheDocument())
       expect(JSON.parse(localStorage.getItem(CART_COUNT_KEY))).toEqual({ version: 1, count: value })
+      expect(within(screen.getByRole('dialog')).getByText(String(value), { selector: 'strong' })).toBeInTheDocument()
+      await user.click(screen.getByRole('button', { name: 'Cerrar', exact: true }))
     }
     expect(posts()).toHaveLength(5)
     await user.click(screen.getByRole('link', { name: 'Volver a productos' }))
@@ -180,6 +183,7 @@ describe('confirmed shared count, errors and mutation lifecycle', () => {
       await user.click(screen.getByRole('button', { name: 'Añadir', exact: true }))
       expect(await screen.findByRole('alert')).toHaveTextContent('No hemos podido confirmar la operación')
       expect(screen.queryByText(/private/)).not.toBeInTheDocument()
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
       expect(count(5)).toBeInTheDocument()
       expect(group('Almacenamiento').getByRole('radio', { name: '32 GB' })).toBeChecked()
       expect(posts()).toHaveLength(1)
@@ -194,6 +198,7 @@ describe('confirmed shared count, errors and mutation lifecycle', () => {
     await user.click(await ready(single))
     await waitFor(() => expect(count(1)).toBeInTheDocument())
     expect(screen.queryByRole('alert')).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: 'Cerrar', exact: true }))
     await user.click(screen.getByRole('link', { name: 'Volver a productos' }))
     expect(count(1)).toBeInTheDocument()
   })
@@ -215,6 +220,7 @@ describe('confirmed shared count, errors and mutation lifecycle', () => {
     expect(count(0)).toBeInTheDocument()
     await act(async () => finish(json({ count: 3 })))
     expect(count(3)).toBeInTheDocument()
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(posts()).toHaveLength(1)
   })
 
