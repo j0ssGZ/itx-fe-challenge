@@ -1,103 +1,119 @@
 # ITX Frontend Challenge
 
-A two-view React SPA for browsing mobile devices, inspecting specifications and adding a color/storage configuration through the assignment API. The application interface is **Spanish**. Development follows Spec-Driven Development (SDD) with independently verified milestones.
+A Spanish-language, two-view smartphone storefront implementing the ITX Front-End Test: browse the catalogue, inspect specifications and add a selected color/storage configuration through the assignment API.
 
-The frontend is implemented. M07 and the M08 clean checkout passed **222 unit/integration tests and 60 mocked Chromium E2E cases**, lint and build. [M08 verification](docs/qa/m08.md) records final reproducibility and delivery limits. The project has not been deployed or submitted. No GitHub CI checks are configured; local results are not a CI pass.
+**Delivery status: READY WITH DOCUMENTED LIMITATIONS.** The [final technical audit](docs/qa/final-delivery-audit.md) maps the original assignment to code and test evidence. A fresh GitHub clone passed **232 unit/integration tests and 72 Chromium E2E cases**, lint and build on 11 November 2026. The external cart-session limitation remains open; this repository has not been deployed or submitted.
 
-The subsequently approved [Stage B](docs/qa/cart-confirmation-stage-b.md) passed **232 unit/integration tests and 72 mocked Chromium E2E cases**, lint and build after the responsive confirmation and image-state changes.
+## Features
 
-## Setup and execution
+- Complete catalogue with immediate, case-insensitive partial search by brand or model.
+- Product details with eleven labeled attributes and direct URL/refresh support.
+- Real color/storage options, visible singleton preselection and validated Add requests.
+- Success-only cart confirmation: desktop drawer, mobile bottom sheet, close and continue-shopping actions.
+- Shared Header count taken exactly from the API response and persisted independently.
+- Responsive grid capped at four columns; mobile purchasing controls precede technical specifications.
+- Loading, error/retry, empty-result and unavailable-image/value states.
 
-Verified environment: **Node 24.19.0** (`.nvmrc`), **npm 11.17.0**. Manifest ranges are Node `>=24.15.0 <25` and npm `>=11 <12`; other versions in those ranges have not been tested here.
+Routes: `/` and `/products/:id`. Unknown paths return to the catalogue with a notice; there is no cart or checkout route.
+
+## Tech stack and decisions
+
+React/React DOM **19.3.1**, Vite **8.3.7**, React Router **8.5.1**, JavaScript/JSX and CSS Modules. Quality tooling: Vitest, React Testing Library, jsdom, Playwright and ESLint. Exact versions are pinned in [package.json](package.json) and [package-lock.json](package-lock.json).
+
+React + Vite provide a small client-rendered SPA without SSR. React Router handles navigation/history; CSS Modules keep styling local. Native fetch and guarded browser storage make API/cache behavior explicit. Local state handles pages and selections; Context shares only the confirmed cart count and mutation ordering. No Redux, query framework or UI component library is needed for two views. See the [design](docs/specs/design.md) and [UI library decision](docs/decisions/ui-library-evaluation.md).
+
+## Getting started
+
+Verified on macOS arm64 with **Node 24.19.0** ([.nvmrc](.nvmrc)) and **npm 11.17.0**. Supported manifest ranges are Node `>=24.15.0 <25` and npm `>=11 <12`; use the verified versions for reproduction.
 
 ```sh
 git clone https://github.com/j0ssGZ/itx-fe-challenge.git
 cd itx-fe-challenge
 npm ci
-npx playwright install chromium
 npm run start
 ```
 
-Vite normally serves `http://localhost:5173`; use its printed URL. No environment file, API credentials or secrets are required. The live application needs the remote service unless product data is cached. Automated tests intercept requests and never mutate the live cart.
-
-Playwright browsers are separate from npm packages. On Linux, system dependencies may require `npx playwright install --with-deps chromium`; that OS setup was not verified on macOS.
-
-- `npm run start`: development server.
-- `npm test`: finite Vitest/React Testing Library suite.
-- `npm run test:watch`: interactive Vitest.
-- `npm run lint`: ESLint; warnings fail the command.
-- `npm run build`: production assets in ignored `dist/`.
-- `npm run preview`: local build preview, normally `http://localhost:4173`.
-- `npm run test:e2e`: Chromium journeys against the production build. **Build first.** Playwright manages preview on `127.0.0.1:4173`; keep that port free.
+Open the URL printed by Vite, normally `http://localhost:5173`. No environment file, API key or local secret is required. Live browsing requires access to the external API unless fresh product data is cached.
 
 ```sh
+npm run build
+npm run preview
+```
+
+Preview normally runs at `http://localhost:4173`; it is a local build check, not a production server. A future host must serve `index.html` for frontend deep links. Development and preview routing/refresh were independently verified; no public hosting configuration is claimed.
+
+## Available scripts
+
+- `npm run start` — Vite development server.
+- `npm run build` — production compilation into ignored `dist/`.
+- `npm test` — finite unit/integration suite.
+- `npm run test:watch` — interactive Vitest.
+- `npm run lint` — ESLint; warnings fail the command.
+- `npm run preview` — serve the built application locally.
+- `npm run test:e2e` — Chromium E2E suite against the production build; build first.
+
+## Architecture
+
+```text
+src/app/         routes, shell and shared CartProvider
+src/pages/       catalogue/search and detail request lifecycles
+src/components/  Header, product presentation/actions and confirmation
+src/api/         HTTP/JSON errors, product contracts and cart POST
+src/storage/     guarded storage, one-hour product cache and cart count
+src/styles/      global tokens, focus and reduced-motion rules
+src/test/        setup and sanitized contract fixtures
+e2e/             intercepted browser journeys
+docs/            specifications, decisions, API evidence and QA
+```
+
+Pages abort obsolete reads and ignore late responses. Product ID changes reset selections. Mutations are not automatically retried or cancelled on navigation: a server may already have processed them. Late valid responses can update the shared count; older replies cannot overwrite newer confirmations.
+
+## API integration
+
+Base URL: `https://itx-frontend-test.onrender.com`.
+
+- `GET /api/product` — full catalogue; search runs locally with no request per keystroke.
+- `GET /api/product/:id` — product detail with string IDs.
+- `POST /api/cart` — exactly `{ id, colorCode, storageCode }`, with a string ID and numeric option codes; accepts only a nonnegative safe integer `count`.
+
+Each valid count **replaces** the Header value, including repeated `1`, decreases or zero. There is no local increment, optimistic update, cart-read endpoint or manufactured total. Confirmation shows only the submitted product/configuration; the count remains in the Header. HTTP transport uses `credentials: 'omit'` under the documented B-01 policy.
+
+Successful validated product reads use separate versioned list/detail keys in localStorage, with a fixed **3,600,000ms TTL** from receipt. At exactly one hour or later, the next read revalidates; reads do not extend expiry. Invalid/corrupt/future-dated entries miss. Failed or aborted responses are not cached. Cart mutations are never cached; the last confirmed count persists separately without product TTL.
+
+Storage denial/quota failures fall back to memory for the instance lifetime; reload restores only successfully persisted values. HTTP, network, JSON and contract errors produce safe UI feedback. There are no automatic retries or production request deadlines. Missing prices never become zero; unknown IDs historically returned HTTP 500, so a 404 contract is not assumed.
+
+The observed API mappings retain `displaySize` for pixel resolution and the misspelled `secondaryCmera`/`dimentions` keys. String arrays become readable text; currency and measurement units are not invented.
+
+## Testing and quality
+
+```sh
+npx playwright install chromium
 npm run lint
 npm test
 npm run build
 npm run test:e2e
 ```
 
-Routes are `/` (catalogue) and `/products/:id` (detail). Both support direct entry and refresh locally. A future static host must return `index.html` for frontend deep links; Vite development/preview fallback is verified, not public hosting. Unmatched paths return to the catalogue with a Spanish notice. Preview is not a production server.
+Playwright browser binaries are a separate installation. Linux may need `npx playwright install --with-deps chromium`; that OS setup was not verified here. E2E manages its own preview on `127.0.0.1:4173`, so keep that port free.
 
-## Stack and architecture
+Latest independent results: **232 tests in 11 Vitest files; 72 E2E cases** across 320/768/1280/1920px. Tests mock fetch/browser requests using sanitized M01 data and explicit robustness fixtures; they never mutate the live cart. Coverage includes TTL boundaries, cancellation, stale/mutation ordering, persistence failures, search, option validation and native dialog keyboard/cleanup behavior. Mocked cumulative counts do not prove live session continuity.
 
-React/React DOM **19.3.1**, React Router **8.5.1** (declarative), Vite **8.3.7**, JavaScript/JSX and CSS Modules. Testing uses Vitest **5.1.0**, React Testing Library **16.3.3**, jsdom **31.0.0**, Playwright **1.65.0** and ESLint **9.39.5**. ESLint 9 is deprecated/unsupported upstream but fits the installed accessibility plugin's peer range; no forced peers hide this maintenance limitation.
+Lint and production build passed. `npm audit` reported zero known vulnerabilities at audit time; this is not a security certification. No GitHub CI workflow is configured, so local results are not a CI pass. [Audit details](docs/qa/final-delivery-audit.md).
 
-```text
-src/
-  app/          shell, routes and shared confirmed-count Context
-  pages/        catalogue/search and detail request lifecycle
-  components/   Header, ProductCard/Image/Description/Actions, CartConfirmation
-  api/          fetch/JSON errors, product reads and cart POST
-  storage/      guarded JSON storage, product cache and cart count
-  styles/       global typography, reset and focus
-  test/         setup and M01-based fixtures
-e2e/            intercepted journeys and responsive/accessibility checks
-docs/           SDD, decisions, dated API evidence and QA
-```
+## Design and accessibility
 
-Pages own request/search state; ProductActions owns selections/submission feedback; CartProvider shares only confirmed count and mutation-order bookkeeping. Native fetch/storage keep boundaries explicit without Redux, query frameworks or generic resource hooks. [The Astryx evaluation](docs/decisions/ui-library-evaluation.md) retains native controls/CSS Modules. Dependencies are pinned in one lockfile.
+The visual system uses warm neutrals, ink typography and violet accents, inspired by Specter without copying its branding/assets. Native controls, semantic specifications, labeled search, breadcrumbs, skip navigation, route focus, visible focus and status/error announcements support keyboard use.
 
-Route content enters with a 200ms CSS fade and 8px upward movement, disabled for reduced-motion preferences. Only the current pathname's content animates; the Header and portal-based cart confirmation remain independent, and fetching/navigation are not delayed.
+The native modal blocks background interaction, contains keyboard focus, supports Escape/close, restores focus and releases scroll lock on cleanup. Continue shopping returns to the catalogue. Route content has a 200ms fade/8px entrance; Header and confirmation remain independent. Reduced-motion preferences disable animations. Human screen-reader and physical-device testing remain unverified; no accessibility certification is claimed.
 
-## API, cache and errors
+## Known limitations
 
-Base URL: `https://itx-frontend-test.onrender.com`.
+- **B-01 — accepted external limitation, not fixed:** user-reported session reuse produced **1 → 2 in Postman** and **1 → 1 in Chrome**. Recorded credentialed Chromium access failed under wildcard-origin CORS, and the cross-site session cookie was rejected. `omit` prevents cookie continuity; changing to `include` alone does not solve the observed policy. The frontend displays the actual validated response. See the [investigation and evidence distinctions](docs/qa/cart-session-investigation.md#later-session-follow-up-2026-11-10). No proxy or fake count is implemented.
+- Remote API/photos can be slow on a first load; browser caches can improve later visits. Fresh contexts and full-page captures can precede lazy-image completion. Low-resolution assets remain low-resolution. Existing loading/fallback behavior does not infer a network-error cause or retry images.
+- ESLint 9 is deprecated upstream but fits the installed accessibility plugin's peer range. The clean install and lint pass; a future tooling upgrade requires compatibility review.
 
-- `GET /api/product`: full catalogue. Search is local, immediate, partial and case-insensitive by brand/model; no request per keystroke.
-- `GET /api/product/:id`: matching string ID and eleven labeled specifications. Resolution uses observed `displaySize`; typo keys `secondaryCmera` and `dimentions` are preserved. String arrays become readable text; currency/units are not invented.
-- `POST /api/cart`: exactly `{ id, colorCode, storageCode }`, with string ID and finite numeric codes. JSON transport uses **`credentials: 'omit'`**.
+## Assignment, specifications and delivery
 
-Successful validated product responses use versioned, URL-specific localStorage entries with fixed **3,600,000 ms** TTL from receipt. Reads do not extend expiry. At exactly one hour or later the next read revalidates. List/detail/IDs are independent; malformed, incompatible or future-dated entries miss. Failed/aborted reads never become fresh entries. There is no background refresh or stale-as-fresh fallback.
+The supplied eight-page assignment PDF was inspected directly, including both wireframes. It is intentionally excluded from Git because redistribution permission is unestablished; obtain the original from the challenge provider. [Requirements](docs/specs/requirements.md), [design](docs/specs/design.md), [milestones](docs/specs/tasks.md) and [risks](docs/specs/open-questions.md) retain the SDD history. The [final audit](docs/qa/final-delivery-audit.md) is the current delivery checkpoint; older test totals are dated milestone evidence.
 
-Read effects abort on cleanup and ignore stale results; changing detail ID resets data/selections. HTTP/network/JSON/contract failures produce safe Spanish feedback and deliberate read retry. Unknown IDs historically returned 500, not an established 404 contract. There are no automatic retries or production request timeouts. Missing prices/specifications and broken images have honest accessible fallbacks; no substitute product photos are bundled.
-
-## Options and confirmed cart count
-
-Native Color/Almacenamiento radio groups use actual API options. Singletons remain visible/preselected; multiple groups start unselected. Add requires valid option membership, is disabled while incomplete/pending and blocks duplicate events. Missing/invalid groups are explained. Numeric zero codes remain numbers; empty price does not invent a stock rule. On mobile the single purchase form precedes technical specifications; desktop retains specifications before actions.
-
-A valid POST opens a native modal confirmation: a right drawer from 768px and a scrollable, safe-area-aware bottom sheet below that width. It shows “Producto añadido.” and the submitted product/options. The response count appears only in the shared Header; the confirmation contains no technical explanation or additional total that could imply verified cumulative cart contents. Escape/close restore Add focus; “Seguir comprando” closes and navigates to the catalogue. The native top layer blocks background interaction, boundary Tab handling keeps focus inside, and body scroll styles are restored on close/navigation/unmount. Inline errors remain; duplicate inline success announcements were removed. Reduced-motion preferences disable the entrance animation.
-
-Only a nonnegative safe integer response `count` is accepted. It **replaces** the prior count, including decreases/repeated `1`; there is no local increment, optimistic update, POST cache or automatic replay. Errors preserve selections/count. Navigation does not cancel a possibly received POST; late confirmations can update Header. A small ordering guard prevents older replies replacing newer valid confirmations, while a failed newer add does not discard an older valid reply.
-
-The confirmed value persists separately under `itx:cart-count:v1`, without product TTL. Corrupt/invalid data defaults to initial `0`. Guarded storage falls back to memory on denial/quota errors; reload recovers only successfully persisted values and can restore an older count after failed writes. Storage failure does not turn server success into an API failure. Count persistence does not restore remote cart items or session continuity.
-
-## Accessibility, responsive design and evidence
-
-Landmarks, skip navigation, breadcrumbs, route title/focus updates, visible focus, labeled search, native fieldsets/legends, semantic `dl/dt/dd`, polite result/cart announcements and error alerts are included. The grid caps at four columns. PDP is image-left/details-right on desktop and image-first stacked on mobile; actions follow specifications on desktop and precede them on mobile.
-
-The [Stage A visual redesign](docs/qa/visual-redesign-stage-a.md) introduces an editorial type scale, warm neutral surfaces, violet accents, inset product imagery and a contrasting options panel using existing CSS Modules. [Stage B](docs/qa/cart-confirmation-stage-b.md) adds responsive confirmation, mobile purchase priority and deliberate image states. ProductImage distinguishes loading from missing/failed sources, preserves fixed frames and caps loaded images at 1.5× their natural dimensions. It neither retries images nor guesses whether an error means a timeout or broken URL. Pending browser requests keep the loading message until load/error; upstream low resolution remains a data limitation.
-
-[M07 QA](docs/qa/m07.md) covers 320/375/480/768/1280/1920 px, native 200% zoom, palette contrast and reproduced race/image-containment repairs. Tests reuse sanitized M01 samples plus labeled synthetic failures. Mocked count sequences never prove backend accumulation. Screenshots stay outside Git. Human screen-reader testing and engines beyond Chromium remain unverified; no accessibility certification is claimed.
-
-## Known external limitations and delivery
-
-**B-01 remains open/accepted.** M01 browser evidence showed credential-free success and one POST returning `1`; credentialed GET failed under the observed wildcard CORS policy. M06's bounded browser pre-read failed and sent zero POSTs. M08 HTTP diagnostics returned 200 for list/detail and two JPEGs; a separate Chromium production-preview read rendered one real remote detail/photo with both GETs returning 200. Zero live POSTs were sent. These do not establish current browser POST compatibility or cumulative server counting. See [dated integration findings](docs/evidence/m08/2026-11-10/README.md).
-
-The app displays each validated API response exactly, even repeated `1`. Later user-reported manual checks produced **1 → 2 in the same Postman session** and **1 → 1 in Chrome**. The recorded credentialed Chromium diagnostic failed under wildcard-origin CORS and rejected the cross-site session cookie; `credentials: 'omit'` also prevents browser cookie continuity. The [cart investigation follow-up](docs/qa/cart-session-investigation.md#later-session-follow-up-2026-11-10) distinguishes those observations from the original bounded timeout and mocked frontend tests. **The session limitation has not been fixed.**
-
-No proxy, backend, cookie manipulation, compensating local total or disabled browser security was introduced. B-01 remains open. Final live cart behavior, assistive technology and a future host's SPA rewrite require separate human verification before claiming unrestricted delivery readiness.
-
-[Requirements/traceability](docs/specs/requirements.md), [design](docs/specs/design.md), [milestones](docs/specs/tasks.md) and [risks](docs/specs/open-questions.md) preserve source/evidence distinctions. The PDF stays ignored because redistribution permission is unestablished; historical source links require the local copy.
-
-Milestones follow **Implement → Test → Lint → Build → Review → Commit → Push → Verify → STOP**. CI is checked once per push; pending/running checks require stopping until the user returns. No force-push, automatic merge, deployment or submission. M08 ends at manual review.
+Progressive conventional commits preserve implementation history. Changes follow implement → test → lint → build → review → commit → push → verify → stop. CI is checked once after a push; pending/running checks require stopping without polling. Deployment, submission and further work require explicit authorization.

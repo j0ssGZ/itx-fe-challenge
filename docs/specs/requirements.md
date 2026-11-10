@@ -1,5 +1,9 @@
 # Requirements specification
 
+Current delivery checkpoint (2026-11-11): [final audit](../qa/final-delivery-audit.md), directly checked against all eight PDF pages and current code. M00–M08, Stage A/B and the final copy/transition refinements are published. A new GitHub clone passed **232 unit/integration tests and 72 E2E cases**, lint/build, start/preview and deep-link refresh. Verdict: **READY WITH DOCUMENTED LIMITATIONS**; B-01 remains accepted/open. This supersedes historical publication gates below without changing the requirements or authorizing submission/deployment.
+
+## Historical M08 checkpoint
+
 Final M08 checkpoint: [M07 QA](../qa/m07.md) and [M08 reproducibility](../qa/m08.md) record full journeys, semantic/keyboard checks, six widths, native 200% zoom, two focused repairs and a clean isolated install. Both milestone gates passed: lint, 222 unit/integration tests, build and 60 mocked E2E cases. M07 is published in `a68518b`; M08's documentation commit/push is authorized. Final R-01–R-29 classifications appear below. B-01 remains open/accepted.
 
 Status: M00–M07 published; M08 final review passed locally. M01/M06 evidence and approved decisions are preserved. M08 HTTP reads and one live browser detail/photo succeeded; current POST and cumulative cart/session integration remain unverified. Stop after M08 publication/CI gate for manual delivery review.

@@ -1,6 +1,8 @@
 # Implementation milestones
 
-Status: M00–M07 published through `a68518b`; M08 clean verification/documentation passed locally, ready for its authorized focused commit/push. Current live POST remains unverified and B-01 accepted/open. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 to [open-questions.md](open-questions.md). M01/M06 evidence is preserved unchanged. Stop after M08 for manual review.
+Current delivery checkpoint (2026-11-11): M00–M08, Stage A/B, copy cleanup and subtle route transitions are published through `7affed6`. The [final audit](../qa/final-delivery-audit.md) independently reproduced **232 unit/integration tests and 72 E2E cases**, lint/build, start/preview and direct refresh. This authorized checkpoint changes documentation only, then commits/pushes normally, verifies synchronization and checks CI once before STOP. Verdict: **READY WITH DOCUMENTED LIMITATIONS**; B-01 stays open. No deployment, submission, PR or backend challenge is authorized.
+
+Historical M08 status: M00–M07 published through `a68518b`; M08 clean verification/documentation passed locally, ready for its authorized focused commit/push. Current live POST remains unverified and B-01 accepted/open. R-IDs refer to [requirements.md](requirements.md); Q-IDs/B-01 to [open-questions.md](open-questions.md). M01/M06 evidence is preserved unchanged. Stop after M08 for manual review.
 
 ## Working agreement and commit checkpoints
 
