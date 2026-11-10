@@ -45,7 +45,7 @@ test('PDP: direct entry, responsive image/description layout, refresh and keyboa
   await page.keyboard.press('Enter')
   await expect(page).toHaveURL('/')
   await expect(page.getByRole('heading', { name: 'Productos', level: 1 })).toBeVisible()
-  expect(requests).toEqual([
+  await expect.poll(() => requests).toEqual([
     { url: `${apiBase}/api/product/${firstProduct.id}`, method: 'GET' },
     { url: `${apiBase}/api/product`, method: 'GET' },
   ])

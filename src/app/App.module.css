@@ -2,6 +2,9 @@
   width: min(100% - 2rem, var(--page-width));
   margin: 2rem auto 5rem;
 }
+.main:focus-visible {
+  outline: none;
+}
 @media (min-width: 48rem) {
   .main {
     width: min(100% - 4rem, var(--page-width));
