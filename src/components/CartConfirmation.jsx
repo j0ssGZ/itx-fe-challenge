@@ -4,7 +4,7 @@ import { createPortal } from 'react-dom'
 import ProductImage from './ProductImage.jsx'
 import styles from './CartConfirmation.module.css'
 
-export default function CartConfirmation({ confirmation, count, onDismiss, returnFocusRef }) {
+export default function CartConfirmation({ confirmation, onDismiss, returnFocusRef }) {
   const dialogRef = useRef(null)
   const { product, color, storage } = confirmation
 
@@ -68,10 +68,6 @@ export default function CartConfirmation({ confirmation, count, onDismiss, retur
           <div><dt>Color</dt><dd>{color}</dd></div>
           <div><dt>Almacenamiento</dt><dd>{storage}</dd></div>
         </dl>
-        <div className={styles.count}>
-          <p>Último contador confirmado</p><strong>{count}</strong>
-          <span>Último valor confirmado. No representa un desglose del carrito.</span>
-        </div>
         <div className={styles.footer}>
           <Link to="/" className={styles.continue} onClick={() => dismiss(false)}>Seguir comprando <span aria-hidden="true">↗</span></Link>
           <button type="button" className={styles.dismiss} onClick={() => dismiss()}>Cerrar</button>

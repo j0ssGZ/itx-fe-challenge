@@ -119,31 +119,6 @@
   margin: 0;
   text-align: right;
 }
-.count {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  align-items: center;
-  gap: .5rem 1rem;
-  padding: 1rem;
-  border: 1px solid #d7d0ee;
-  border-radius: 1rem;
-  background: var(--accent-soft);
-}
-.count p {
-  margin: 0;
-  font-size: .8125rem;
-}
-.count strong {
-  color: var(--accent-dark);
-  font-size: 2rem;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-}
-.count span {
-  grid-column: 1 / -1;
-  color: var(--muted);
-  font-size: .75rem;
-}
 .footer {
   display: grid;
   gap: .5rem;

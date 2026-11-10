@@ -158,7 +158,7 @@ describe('confirmed shared count, errors and mutation lifecycle', () => {
       await user.click(add)
       await waitFor(() => expect(count(value)).toBeInTheDocument())
       expect(JSON.parse(localStorage.getItem(CART_COUNT_KEY))).toEqual({ version: 1, count: value })
-      expect(within(screen.getByRole('dialog')).getByText(String(value), { selector: 'strong' })).toBeInTheDocument()
+      expect(screen.getByRole('dialog')).not.toHaveTextContent(/contador|último valor|desglose/i)
       await user.click(screen.getByRole('button', { name: 'Cerrar', exact: true }))
     }
     expect(posts()).toHaveLength(5)

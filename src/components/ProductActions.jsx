@@ -13,7 +13,7 @@ export default function ProductActions({ product }) {
   const addRef = useRef(null)
   const submitting = useRef(false)
   const mounted = useRef(false)
-  const { count, beginAdd, confirmCount } = useCart()
+  const { beginAdd, confirmCount } = useCart()
   const valid = colors.some(option => option.code === colorCode) && storages.some(option => option.code === storageCode)
   const missing = colors.length === 0 || storages.length === 0
 
@@ -82,7 +82,7 @@ export default function ProductActions({ product }) {
           No hemos podido confirmar la operación. El contador anterior se conserva. Comprueba tu conexión antes de volver a intentarlo.
         </p>}
       </form>
-      {confirmation && <CartConfirmation confirmation={confirmation} count={count}
+      {confirmation && <CartConfirmation confirmation={confirmation}
         returnFocusRef={addRef} onDismiss={() => setConfirmation(null)} />}
     </section>
   )

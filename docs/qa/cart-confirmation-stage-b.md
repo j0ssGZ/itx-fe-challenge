@@ -2,6 +2,10 @@
 
 Date: 2026-11-10. Explicitly authorized after Stage A review. Baseline main: `722da9730e3c35c1500b317164ef9da3de1e3cad` (Stage A plus two requested focus refinements). No new dependency, route, proxy, deployment or live cart mutation.
 
+Final authorized copy cleanup after `eaa7f2be08ce207906382300f83845062a0fd70d`: removed the additional “Último contador confirmado” panel and its explanation. The confirmation now shows the product/configuration only; the Header retains the exact API count. This supersedes the original dialog-count descriptions/screenshots below. ProductImage, lazy loading, URLs and all image/cache/retry behavior are unchanged by this cleanup. Slow initial remote loads and fresh browser contexts can explain screenshots taken before lazy images settle; they do not alone establish a frontend defect.
+
+Cleanup verification: lint, all **232 unit/integration tests**, build and all **72 E2E cases** passed. Desktop (1440px) and mobile (390px) Chromium renders were inspected after scrolling the product image into view and waiting for load completion. The dialog contains no technical count explanation, preserves the actual configuration and returns focus after Escape. Captures: `/tmp/itx-cart-cleanup-1440.png` and `/tmp/itx-cart-cleanup-390.png` (M01-based mocked API/count, previously downloaded real photo; not live session evidence). No new remote probe or POST was made.
+
 ## Behavior and boundaries
 
 ProductActions retains exact numeric selections and POST validation/duplicate protection. Only a validated successful response updates the existing provider and creates a confirmation snapshot of that submitted product and option names. Unmounted forms do not open stale dialogs; late valid mutations still update the shared provider under M07 ordering protections. Failure preserves selections/count and the existing inline alert; no modal opens. There is no local increment or invented cart total/content.

@@ -2,11 +2,22 @@
 
 Date: 2026-11-10. Baseline: published M08 `2fe7dbe7c744652d895384e90eebb9a2ee9b19b2`; clean `main` before investigation. Scope: diagnose the reported counter staying at `1`, without fabricating totals or introducing deployment infrastructure.
 
-## Result
+## Result of the original bounded investigation
 
 **No justified frontend fix was found; the live symptom could not be freshly reproduced.** The bounded browser attempt failed at the prerequisite product read and sent **zero POSTs**. Current consecutive live responses, POST headers and session continuity therefore remain unverified. B-01 stays open. A frontend displaying repeated server responses of `1` is behaving according to the approved contract; that does not establish a working cumulative backend cart.
 
 The best-supported explanation remains an incompatible cross-origin session integration: the client intentionally omits credentials; historical responses use wildcard CORS without credential permission and a session cookie unsuitable for ordinary cross-site fetch continuity. This mechanism is supported by earlier observations and browser standards, **not a fresh proof of the reported two-addition sequence**. No current server-side implementation or session lifetime was established.
+
+## Later session follow-up (2026-11-10)
+
+This supplements the original run below; it does not replace its failed-read/zero-POST record. Sources are the user's manual results and the subsequent diagnostic recorded in this project conversation, not new probes during the final UI cleanup. No raw session values or diagnostic traces are committed.
+
+- **User-reported manual observations:** two POSTs with the same Postman session returned `{"count":1}` then `{"count":2}`; consecutive Chrome additions returned `{"count":1}` then `{"count":1}`. The Postman observation establishes cumulative behavior with session continuity in that environment; it is not browser CORS evidence or a frontend fix.
+- **Recorded Chromium diagnostic, 21:12 UTC:** from `http://127.0.0.1:5173` to `https://itx-frontend-test.onrender.com`, a credentialed product GET showed HTTP 200 in network diagnostics, but frontend JavaScript received `TypeError: Failed to fetch`. CDP reported `WildcardOriginNotAllowed`: `Access-Control-Allow-Origin: *` and no `Access-Control-Allow-Credentials`. Relevant preflight responses had the same incompatible policy. A network-visible 200 was not a readable fetch response.
+- **Cookie rejection:** the observed `session_id` cookie had `Path=/`, `HttpOnly`, and no observed `SameSite` or `Secure`. Chromium reported `SchemefulSameSiteUnspecifiedTreatedAsLax` and accepted no API cookie. The diagnostic sent no live POSTs. HttpOnly alone is not the cause; it prevents JavaScript access, not permitted HTTP cookie transport.
+- **Frontend policy:** `credentials: 'omit'` excludes outgoing credentials and ignores response cookies, so it cannot maintain this cookie-based browser session. Switching to `include` alone is not a solution under the observed CORS/cookie policy. The frontend continues replacing the Header/persisted value with each validated server count, with no local increment.
+
+**B-01 stays open and unfixed.** A direct credentialed browser solution requires an explicit allowed frontend origin plus credential permission, compatible preflight responses, and an appropriately secured cross-site cookie policy (subject to browser third-party-cookie restrictions). Alternatively, an explicitly approved production-compatible same-origin plan could be evaluated. Neither is implemented. The final copy cleanup removes technical explanations from the confirmation and leaves the response count only in the Header; it does not repair session continuity. No fresh API requests were made for that cleanup.
 
 ## Contract and state ownership
 

@@ -14,7 +14,7 @@ function renderConfirmation() {
   const view = render(<MemoryRouter initialEntries={['/product']}>
     <button ref={returnFocusRef}>Añadir</button>
     <Routes>
-      <Route path="/product" element={<CartConfirmation confirmation={confirmation} count={7}
+      <Route path="/product" element={<CartConfirmation confirmation={confirmation}
         returnFocusRef={returnFocusRef} onDismiss={onDismiss} />} />
       <Route path="/" element={<h1>Catálogo</h1>} />
     </Routes>
@@ -22,7 +22,7 @@ function renderConfirmation() {
   return { ...view, onDismiss, returnFocusRef }
 }
 
-it('opens a named modal with actual product/options/count, without an extra live success region', () => {
+it('opens a named modal with actual product/options and no technical count explanation or extra live success region', () => {
   renderConfirmation()
   const dialog = screen.getByRole('dialog', { name: 'Producto añadido.' })
   expect(dialog).toHaveAttribute('open')
@@ -30,7 +30,7 @@ it('opens a named modal with actual product/options/count, without an extra live
   expect(screen.getByRole('heading', { name: confirmation.product.model })).toBeInTheDocument()
   expect(screen.getByText('Black')).toBeInTheDocument()
   expect(screen.getByText('32 GB')).toBeInTheDocument()
-  expect(screen.getByText('7', { selector: 'strong' })).toBeInTheDocument()
+  expect(dialog).not.toHaveTextContent(/contador|último valor|desglose|CORS|cookie|persistencia/i)
   expect(screen.queryByRole('status')).not.toBeInTheDocument()
   expect(screen.getByRole('button', { name: 'Cerrar confirmación' })).toHaveFocus()
 })
