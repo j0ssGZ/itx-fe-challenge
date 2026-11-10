@@ -63,6 +63,9 @@
 .searchControl input::placeholder {
   color: var(--muted);
 }
+.searchControl input:focus-visible {
+  outline: none;
+}
 .searchControl button {
   min-height: 2.75rem;
   padding: .5rem .875rem;
