@@ -98,7 +98,20 @@ Playwright browser binaries are a separate installation. Linux may need `npx pla
 
 Latest independent results: **232 tests in 11 Vitest files; 72 E2E cases** across 320/768/1280/1920px. Tests mock fetch/browser requests using sanitized M01 data and explicit robustness fixtures; they never mutate the live cart. Coverage includes TTL boundaries, cancellation, stale/mutation ordering, persistence failures, search, option validation and native dialog keyboard/cleanup behavior. Mocked cumulative counts do not prove live session continuity.
 
-Lint and production build passed. `npm audit` reported zero known vulnerabilities at audit time; this is not a security certification. No GitHub CI workflow is configured, so local results are not a CI pass. [Audit details](docs/qa/final-delivery-audit.md).
+Lint and production build passed. `npm audit` reported zero known vulnerabilities at audit time; this is not a security certification. Local results do not establish a GitHub-hosted CI pass. [Audit details](docs/qa/final-delivery-audit.md).
+
+## Continuous integration
+
+[Frontend CI](.github/workflows/ci.yml) runs on pushes to `main`, pull requests targeting `main` and manual dispatch. Two independent `ubuntu-latest` jobs use Node 24 from `.nvmrc`, lockfile-based npm download caching and `npm ci`:
+
+- **Code quality:** lint, the finite Vitest suite and production build.
+- **Chromium E2E:** `npx playwright install --with-deps chromium`, production build and `npm run test:e2e`. Playwright starts its configured Vite preview; no additional development server is started. A separate small build keeps jobs independent without transferring build artifacts.
+
+The workflow uses official SHA-pinned actions, read-only repository permissions, disabled checkout credential persistence, timeouts and cancellation of superseded runs. Existing failure traces/screenshots/context files (and reports, if present) are uploaded only on failure, retained for seven days; generated outputs stay ignored. The existing list reporter provides readable logs without adding a reporting framework.
+
+Reproduce checks with `npm ci` followed by the commands in **Testing and quality** above. On Linux, the browser job installs Chromium's system dependencies as shown above. Tests intercept API/images using sanitized fixtures and fresh browser contexts, so they require no remote API availability, saved cookies or local server process. They verify frontend response handling, **not live session continuity or B-01 resolution**.
+
+See [GitHub Actions executions](https://github.com/j0ssGZ/itx-fe-challenge/actions/workflows/ci.yml) for actual hosted results. This configuration's local validation is not a claim that its first hosted run has succeeded.
 
 ## Design and accessibility
 
